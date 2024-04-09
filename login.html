@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,34 +12,79 @@
 <body>
 
     <header>
-        <a href="#" class="logo">Logo</a>
+        <a href="#" class="logo">CuPo</a>
 
         <nav>
             <ul class="sidebar">
-                <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+                <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                            viewBox="0 -960 960 960" width="24">
+                            <path fill="white"
+                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                        </svg></a></li>
                 <li><a href="#home" onclick="hideSidebar()">Home</a></li>
                 <li><a href="#about" onclick="hideSidebar()">About</a></li>
-                <li><a href="#signup" onclick="hideSidebar()">Sign up</a></li>
                 <li><a href="#login" onclick="hideSidebar()">Log in</a></li>
-                
+
             </ul>
             <a href="#home" class="hideOnMobile">Home</a>
             <a href="#about" class="hideOnMobile">About</a>
-            <a href="#signup" class="hideOnMobile">Sign up</a>
             <a href="#login" class="hideOnMobile">Log in</a>
-            <a href="#" class="menu-button" onclick=showSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -1200 960 960" width="24"><path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a>
+            <a href="#" class="menu-button" onclick=showSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -1200 960 960" width="24">
+                    <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg></a>
         </nav>
-        
     </header>
 
     <div class="sections">
-        <section class="sect1" id="home"><h1>Home</h1></section>
-        <section class="sect2" id="about"><h1>About</h1></section>
-        <section class="sect3" id="signup"><h1>Sign up</h1></section>
-        <section class="sect4" id="login"><h1>Log in</h1></section>
+        <section class="sect1" id="home">
+            <div class="overlay-text">
+                <h1 class="welcome">
+                    <span>A</span>
+                    <span>web</span>
+                    <span>application</span>
+                    <span>for</span>
+                    <span>choosing</span>
+                    <span>your</span>
+                    <span>culinary</span>
+                    <span>preferences</span>
+                  </h1>
+            </div>
+        </section>
+        
+        <section class="sect2" id="about">
+            <div class="about-text">About our project - Culinary Preferences Organizer</div>
+            <div class="about">
+            <p class="textAbout">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </section>
+        
+        <section class="sect3" id="login">
+            <div class="container">
+                <div class="main">
+                    <input type="checkbox" id="check" aria-hidden="true">
+
+                    <div class="signup">
+                        <form>
+                            <label for="check" aria-hidden="true">Sign up</label>
+                            <input type="text" name="txt" placeholder="User name" required="">
+                            <input type="password" name="pswd" placeholder="Password" required="">
+                            <button>Sign up</button>
+                        </form>
+                    </div>
+
+                    <div class="login">
+                        <form>
+                            <label for="check" aria-hidden="true">Login</label>
+                            <input type="text" name="txt" placeholder="User name" required="">
+                            <input type="password" name="pswd" placeholder="Password" required="">
+                            <button>Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-
-    
-
 </body>
+
 </html>
