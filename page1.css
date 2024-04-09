@@ -1,0 +1,16 @@
+:root{
+    --alb: #fbf2c0;
+    --maroDeschis: #48392A;
+    --maroInchis: #43281C;
+    --rosuInchis: #c06e52;
+    --rosuDeschis: #f96f5d;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
