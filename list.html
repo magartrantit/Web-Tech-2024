@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuPo</title>
+    <link rel="stylesheet" href="list.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+
+    </div>
+
+    <div class="main">
+        <div class="all-tasks">
+            <h2 class="task-list-title">My lists</h2>
+            <ul class="task-list" data-lists>
+                <!--<li class="list-name isactive-list">Ustensile</li>
+                <li class="list-name">Carne</li>
+                <li class="list-name">Condimente</li>-->
+            </ul>
+
+            <form action="" data-new-list-form>
+                <input type="text" class="new list" data-new-list-input placeholder="new list name" aria-label="new list name">
+                <button class="btn list" aria-label="create-new-list">+</button>
+            </form>
+        </div>
+        
+        <div class=todo-list" data-list-display-container>
+            <div class="to-do-header">
+                <h2 class="to-do-title" data-list-title>Ustensile</h2>
+                <p class="task-count" data-list-count>3 tsks remaining</p>
+            </div>
+
+            <div class="to-do-body">
+                <div class="tasks" data-tasks>                    
+                </div>
+
+                <div class="new-task-creator">
+                    <form action="" data-new-task-form>
+                        <input type="text" data-new-task-input class="new task" placeholder="new task name" aria-label="new task name">
+                        <button class="btn task" aria-label="create new task">+</button>
+                    </form>
+                </div>
+
+                <div class="delete">
+                    <button class="btn delete" data-clear-tasks-button>Clear list</button>
+                    <button class="btn delete" data-delete-list-button>Delete list</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <template id="task-template">
+        <div class="task">
+            <input type="checkbox">
+            <label>
+                <span class="custom-checkbox"></span>
+            </label>
+        </div>
+    </template>
+</body>
+</html>
