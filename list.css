@@ -22,11 +22,42 @@ body{
     font-size: 1.5rem;
 }
 
-.sidebar{
-    flex: 20%;
-    background-color: var(--maroInchis);
+.sidebar {
+    position: fixed;
+    top: 0;
+    left:0;
     height: 100vh;
+    width: 20%;
+    background-color: var(--maroInchis);
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2); 
+    border-radius: 0 15px 15px 0; 
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    list-style-type: none;
 }
+
+
+.sidebar li {
+    margin-bottom: 40px;
+    margin-top: 50px;
+    margin-right: 20px;
+}
+
+
+.sidebar li a {
+    color: var(--alb);
+    text-decoration: none; 
+    font-size: 2rem;
+}
+
+.sidebar li a:hover {
+    color: var(--rosuDeschis);
+    transition: color .2s ease-in-out;
+}
+
 
 .main{
     flex: 80%;
@@ -37,6 +68,7 @@ body{
     justify-content: space-evenly;
     align-items: center;
     padding-bottom: 250px;
+    padding-left: 200px;
 }
 
 .task-list{
@@ -239,11 +271,47 @@ body{
     }
 }
 
+@media(min-width: 650px){
+    .burger{
+        display: none;
+    }
+    .ics{
+        display: none;
+    }
+}
+
 @media(max-width: 850px)
 {
     .main{
         flex-direction: column;
         padding-bottom: 0;
-
     }
+    .burger
+    {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+    }
+}
+
+@media(max-width: 650px){
+    .all-tasks{
+        width: 80%;
+    }
+    
+    .to-do-header{
+        padding: 5px;
+    }
+    .to-do-body{
+        padding: 5px;
+    }
+    
+    .main{
+        padding-left: 0px;
+        flex: 100%;
+    }
+    .sidebar{
+        width: 100%;
+    }
+    
 }
