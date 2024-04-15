@@ -136,7 +136,7 @@ section:nth-child(odd){
 	height: 100%;
 }
 
-.signup input[type="text"], .signup input[type="password"], .signup input[type="mail"]{
+.signup input[type="text"], .signup input[type="password"], .signup input[type="email"]{
     border: 1px solid black;
 }
 

@@ -48,17 +48,20 @@
                     <span>your</span>
                     <span>culinary</span>
                     <span>preferences</span>
-                  </h1>
+                </h1>
             </div>
         </section>
-        
+
         <section class="sect2" id="about">
             <div class="about-text">About our project - Culinary Preferences Organizer</div>
             <div class="about">
-            <p class="textAbout">The Culinary Preferences Organizer is a web application that manages culinary preferences using data from Open Food Facts and a custom REST/GraphQL API. It handles categories, prices, ingredients, restrictions, and more. It also supports shopping list creation, user management, and exports statistics in CSV and PDF formats.</p>
+                <p class="textAbout">The Culinary Preferences Organizer is a web application that manages culinary
+                    preferences using data from Open Food Facts and a custom REST/GraphQL API. It handles categories,
+                    prices, ingredients, restrictions, and more. It also supports shopping list creation, user
+                    management, and exports statistics in CSV and PDF formats.</p>
             </div>
         </section>
-        
+
         <section class="sect3" id="login">
             <div class="container">
                 <div class="main">
@@ -66,25 +69,37 @@
                     <div class="signup">
                         <form action="page1.html">
                             <label for="check" aria-hidden="true">Sign up</label>
-                            <input type="mail" name="mil" placeholder="Mail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                            <input type="email" name="mil" placeholder="Mail" required
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                             <input type="text" name="txt" placeholder="User name" required="">
                             <input type="password" name="pswd" placeholder="Password" required="">
-                            <button >Sign up</button>
+                            <button>Sign up</button>
                         </form>
                     </div>
 
                     <div class="login">
-                        <form action="page1.html">
-                            <label for="check" aria-hidden="true">Login</label>
-                            <input type="text" name="txt" placeholder="User name" required="">
-                            <input type="password" name="pswd" placeholder="Password" required="">
-                            <button>Login</button>
-                        </form>
+
+                        <label for="check" aria-hidden="true">Login</label>
+                        <input type="text" name="txt" placeholder="User name" required="">
+                        <input type="password" name="pswd" placeholder="Password" required="">
+                        <button onclick="loginGo()">Login</button>
+                        <button onclick="adminGo()">Admin</button>
+
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <script>
+        function adminGo() {
+            window.location.href = "admin.html";
+        }
+
+        function loginGo() {
+            window.location.href = "page1.html";
+        }
+    </script>
 </body>
 
 </html>

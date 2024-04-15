@@ -12,9 +12,9 @@
         
         <ul class="sidebar">
             <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></li>
-            <li><a href="">Profile</a></li>
-            <li><a href="">Grocery</a></li>
-            <li><a href="">Sign out</a></li>
+            <li><a href="profil.html">Profile</a></li>
+            <li><a href="list.html">Grocery</a></li>
+            <li><a href="login.html">Sign out</a></li>
         </ul>
     </nav>
 
@@ -25,13 +25,13 @@
             <ul class="task-list" data-lists>
             </ul>
 
-            <form action="" data-new-list-form>
+            <form data-new-list-form>
                 <input type="text" class="new list" data-new-list-input placeholder="new list name" aria-label="new list name">
                 <button class="btn list" aria-label="create-new-list">+</button>
             </form>
         </div>
         
-        <div class=todo-list" data-list-display-container>
+        <div class="todo-list" data-list-display-container>
             <div class="to-do-header">
                 <h2 class="to-do-title" data-list-title>Ustensile</h2>
                 <p class="task-count" data-list-count>3 tsks remaining</p>
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="new-task-creator">
-                    <form action="" data-new-task-form>
+                    <form data-new-task-form>
                         <input type="text" data-new-task-input class="new task" placeholder="new task name" aria-label="new task name">
                         <button class="btn task" aria-label="create new task">+</button>
                     </form>

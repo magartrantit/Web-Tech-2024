@@ -1,83 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style1.css">
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CuPo</title>
+  <link rel="stylesheet" href="style1.css">
+  <script src="script.js"></script>
+  <script>
+    let currentSlide = 0;
+    function changeSlide(direction) {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+
+      currentSlide += direction;
+      if (currentSlide === totalSlides) 
+        currentSlide = 0;
+     else if (currentSlide < 0)  
+        currentSlide = totalSlides - 1;
+
+      const slider = document.querySelector('.slider');
+      slider.style.transform = `translateX(-${currentSlide * 100}px)`;
+    }
+  </script>
 </head>
+
 <body>
-    <nav>
-        <ul class="sidebar">
-            <li><a href="">Profile</a></li>
-            <li><a href="">Grocery</a></li>
-            <li><a href="">Sign out</a></li>
-        </ul>
-    </nav>
-    <input type="text" class="search-bar" placeholder="Search...">
-    <div class="indicatie">
-        <p>Alege o categorie</p>
-    </div>
-    <div class="categorii">
-<div class="slider-container">
-    <div class="slider-arrow left-arrow" onclick="changeSlide(-1)">❮</div>
-    <div class="slider-arrow right-arrow" onclick="changeSlide(1)">❯</div>
-  
-    <div class="slider">
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">GREEK</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('mancare.jpg');">
-        <span class="label">ENGLISH</span>
-      </div>
-      <div class="slide" style="background-image: url('paste.jpg');">
-        <span class="label">ENGLISH</span>
+  <nav>
+    <ul class="sidebar">
+      <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></li>
+      <li><a href="profil.html">Profile</a></li>
+      <li><a href="list.html">Grocery</a></li>
+      <li><a href="login.html">Sign out</a></li>
+  </ul>
+  </nav>
+  <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></div>
+  <input type="text" class="search-bar" placeholder="Search...">
+  <div class="indicatie">
+    <p>Alege o categorie</p>
+  </div>
+  <div class="categorii">
+    <div class="slider-container">
+      <div class="slider-arrow left-arrow" onclick="changeSlide(-1)">❮</div>
+      <div class="slider-arrow right-arrow" onclick="changeSlide(1)">❯</div>
+
+      <div class="slider">
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">GREEK</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('mancare.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
+        <div class="slide" style="background-image: url('paste.jpg');">
+          <span class="label">ENGLISH</span>
+        </div>
       </div>
     </div>
   </div>
-    </div>
+  <div class="produse">
+    <div class="mancare">
 
-   
-    <script src="script.js"></script> 
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+    <div class="mancare">
+      
+    </div>
+   </div>
 </body>
+
 </html>

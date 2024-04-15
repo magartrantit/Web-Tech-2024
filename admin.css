@@ -1,0 +1,168 @@
+:root{
+    --alb: #fbf2c0;
+    --maroDeschis: #48392A;
+    --maroInchis: #43281C;
+    --rosuInchis: #c06e52;
+    --rosuDeschis: #f96f5d;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+header{
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    background-color: var(--maroInchis);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    
+}
+
+
+
+header .logo{
+    color: var(--alb);
+    font-weight: 600;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #FFC0CB; /* Light pink (rosudeschis) */
+}
+
+nav a{
+    color: var(--alb);
+    font-size: 22px;
+    font-weight: 500;
+    margin-left: 40px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+nav a svg path{
+    transition: .3s;
+}
+
+nav a:hover,
+nav a.active{
+    color: var(--rosuDeschis);
+}
+
+nav a:hover svg path,
+nav a.active svg path {
+    fill: var(--rosuDeschis);
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    right: 0px;
+    height: 100vh;
+    width: 250px;
+    background-color: var(--maroInchis);
+    box-shadow: -5px 0 10px rgba(0,0,0,0.1);
+    z-index: 999;
+    display: none;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: flex-start;
+    list-style-type: none;
+}
+.sidebar li {
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.menu-button{
+    display: none;
+}
+
+#addProduct {
+    border: 1px solid #000;
+    padding: 20px;
+    margin: 10px;
+}
+
+#addProduct h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#addProduct input {
+    margin-right: 10px;
+}
+
+#addProduct button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    width: 80%; /* Adjust as needed */
+    background-color: #800000; /* Maroon (marodeschis) */
+}
+
+#adminAccount, #userMessages, #addProduct {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #000;
+    background-color: #FFC0CB; /* Light pink (rosudeschis) */
+}
+
+#adminAccount button, #userMessages button, #addProduct button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#adminAccount input, #userMessages input, #addProduct input {
+    margin-right: 10px;
+}
+
+@media(max-width: 800px){
+    .hideOnMobile{
+        display: none;
+    }
+    .menu-button{
+        display: block;
+    }
+}
+
+@media(max-width: 500px){
+    .sidebar
+    {
+        width: 100%;
+    }
+}
