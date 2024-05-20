@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,3 +63,69 @@
 
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/script.js"></script>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">ADMIN</a>
+
+        <nav>
+            <ul class="sidebar">
+                <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                            viewBox="0 -960 960 960" width="24">
+                            <path fill="white"
+                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                        </svg></a></li>
+                <li><a href="#home" onclick="hideSidebar()">Home</a></li>
+                <li><a href="#about" onclick="hideSidebar()">About</a></li>
+                <li><a href="#login.html" onclick="hideSidebar()">Log out</a></li>
+
+            </ul>
+            <a href="#home" class="hideOnMobile">Home</a>
+            <a href="#about" class="hideOnMobile">About</a>
+            <a href="login.html" class="hideOnMobile">Log out</a>
+            <a href="#" class="menu-button" onclick=showSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -1200 960 960" width="24">
+                    <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg></a>
+        </nav>
+    </header>
+
+    <div class="main">
+        <div id="adminAccount">
+            <h2>Administrate Account of User</h2>
+            <input type="text" id="searchUser" placeholder="Search User">
+            <button onclick="deleteUser()">Delete User</button>
+            <button onclick="blockUser()">Block User</button>
+            <button onclick="modifyDates()">Modify Dates</button>
+        </div>
+    
+        <div id="userMessages">
+            <h2>Messages from Users</h2>
+            <p id="messageContent">Message content goes here</p>
+            <button onclick="respondToMessage()">Respond</button>
+        
+            <button onclick="deleteMessage()">Delete</button>
+        </div>
+        
+    
+
+    <div id="addProduct">
+        <h2>Add Product</h2>
+        <input type="text" id="productName" placeholder="Product Name">
+        <button onclick="addProduct()">+</button>
+    </div>
+
+</div>
+
+</body>
+</html>
+>>>>>>> f78417584b38e16b8223ca54ce80068a6090ad45

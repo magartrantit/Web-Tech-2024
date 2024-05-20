@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root{
   --alb: #fbf2c0;
   --maroDeschis: #48392A;
@@ -261,4 +262,269 @@ body{
   .mancare {
     flex-basis: 45%; 
   }
+=======
+:root{
+  --alb: #fbf2c0;
+  --maroDeschis: #48392A;
+  --maroInchis: #43281C;
+  --rosuInchis: #c06e52;
+  --rosuDeschis: #f96f5d;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+body{
+  background-color: var(--maroDeschis);
+}
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left:0;
+  height: 100vh;
+  width: 20%;
+  background-color: var(--maroInchis);
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.2); 
+  border-radius: 0 15px 15px 0; 
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+}
+
+.sidebar li {
+  margin-bottom: 40px;
+  margin-top: 50px;
+  margin-right: 20px;
+}
+
+
+.sidebar li a {
+  color: var(--alb);
+  text-decoration: none; 
+  font-size: 2rem;
+}
+
+.sidebar li a:hover {
+  color: var(--rosuDeschis);
+  transition: color .2s ease-in-out;
+}
+
+.search-bar {
+  position: fixed;
+  left: 20%; 
+  top: 5%; 
+  border: none;
+  outline: none;
+  border-bottom: 2px solid var(--alb);
+  background: transparent;
+  width: 80%;
+  padding: 10px;
+  color: var(--alb);
+  margin-right: 5%;
+  font-size: 1.5em;
+}
+
+
+.slider-container {
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 100%; 
+  margin: auto;
+  overflow: hidden;
+}
+
+.slider {
+  white-space: nowrap;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  display: inline-block;
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%;
+  background-size: cover;
+  position: relative;
+  margin-right:10px;
+}
+
+.label {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 0.75em;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  z-index: 2;
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .slide {
+    width: 75px;
+    height: 75px;
+  }
+
+  .slider-arrow {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .slide {
+    width: 50px;
+    height: 50px;
+  }
+
+  .slider-arrow {
+    font-size: 12px;
+  }
+}
+
+
+.categorii {
+  position: fixed;
+  top: 35%; 
+  left: 20%; 
+  width: 80%; 
+  height: 8.0em;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+.indicatie {
+  position: fixed;
+  top: 10%; 
+  left: 20%; 
+  width: 80%; 
+  height: 8.0em;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  font-size: 2.0em;
+  color: var(--alb);
+}
+
+.produse {
+  position: fixed;
+  bottom:0;
+  right:1.5%;
+  width: 77%;
+  height: 45%;
+  background-color: var(--rosuInchis);
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.2); 
+  display:flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  overflow:auto;
+  justify-content: center;
+  align-items: center;
+  border-radius:15px;
+}
+
+.mancare {
+  flex-basis: 150px; 
+  height: 150px; 
+  margin: 2%;
+  box-sizing: border-box; 
+  background-image: url('../html/paste.jpg'); 
+  background-size: cover; 
+  background-position: center; 
+  border-radius: 15px;
+}
+
+@media(min-width: 650px){
+  .burger{
+      display: none;
+  }
+  .ics{
+      display: none;
+  }
+  
+}
+
+@media(max-width: 850px)
+{
+    .burger
+    {
+        position: fixed;
+        top: 10px;
+        left: 20px;
+    }
+}
+
+@media(max-width: 650px){
+  .sidebar{
+      width: 100%;
+  }
+  .produse{
+      width: 90%;
+      position: fixed;
+      bottom: 0;
+      right: 5%;
+      left: 5%;
+  }
+  .search-bar{
+      position: fixed;
+      top: 10%;
+      left: 5%;
+      width: 90%;
+  }
+  .indicatie{
+      position: fixed;
+      top: 5%;
+      left: 5%;
+      width: 90%;
+  }
+  .categorii{
+      position: fixed;
+      left: 5%;
+      width: 90%;
+  }
+}
+
+
+
+@media (max-width: 900px) {
+  .mancare {
+    flex-basis: 30%;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .mancare {
+    flex-basis: 45%; 
+  }
+>>>>>>> f78417584b38e16b8223ca54ce80068a6090ad45
 }
