@@ -1,0 +1,12 @@
+{
+  "name": "web-tech-2024",
+  "version": "1.0.0",
+  "description": "Web-Tech-2024",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
