@@ -1,16 +1,59 @@
-const User = require('../models/user');
+const pool = require('../config/dbConfig');
+const bcrypt = require('bcrypt');
 
-const users = [];
+const createUser = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', async () => {
+        const { email, username, password } = JSON.parse(body);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-const createUser = (req, res) => {
-    const { email, username, password } = req.body;
-    const newUser = new User(Date.now(), email, username, password);
-    users.push(newUser);
-    res.status(201).json(newUser);
+        try {
+            const newUser = await pool.query(
+                'INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING *',
+                [email, username, hashedPassword]
+            );
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(newUser.rows[0]));
+        } catch (err) {
+            console.error(err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
 };
 
-const getUsers = (req, res) => {
-    res.status(200).json(users);
+const loginUser = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', async () => {
+        const { username, password } = JSON.parse(body);
+
+        try {
+            const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+            if (user.rows.length > 0) {
+                const validPassword = await bcrypt.compare(password, user.rows[0].password);
+                if (validPassword) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Login successful' }));
+                } else {
+                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Invalid credentials' }));
+                }
+            } else {
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid credentials' }));
+            }
+        } catch (err) {
+            console.error(err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
 };
 
-module.exports = { createUser, getUsers };
+module.exports = { createUser, loginUser };
