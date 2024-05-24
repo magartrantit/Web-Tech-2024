@@ -1,5 +1,9 @@
 const pool = require('../config/dbConfig');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Secret key pentru semnarea JWT-ului
+const secretKey = 'mySecretKey';
 
 const createUser = async (req, res) => {
     let body = '';
@@ -18,7 +22,7 @@ const createUser = async (req, res) => {
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(newUser.rows[0]));
         } catch (err) {
-            console.error(err);
+            console.error('Database error:', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Database error' }));
         }
@@ -38,8 +42,10 @@ const loginUser = async (req, res) => {
             if (user.rows.length > 0) {
                 const validPassword = await bcrypt.compare(password, user.rows[0].password);
                 if (validPassword) {
+                    // Generăm JWT
+                    const token = jwt.sign({ id: user.rows[0].id, username: user.rows[0].username }, secretKey, { expiresIn: '5m' });
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Login successful' }));
+                    res.end(JSON.stringify({ token }));
                 } else {
                     res.writeHead(401, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Invalid credentials' }));
@@ -49,7 +55,7 @@ const loginUser = async (req, res) => {
                 res.end(JSON.stringify({ error: 'Invalid credentials' }));
             }
         } catch (err) {
-            console.error(err);
+            console.error('Database error:', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Database error' }));
         }

@@ -1,13 +1,33 @@
-function showSidebar()
-{
+function showSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.style.display = 'flex';
 }
 
-function hideSidebar()
-{
+function hideSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.style.display = 'none';
+}
+
+// Schimbarea slide-urilor
+let currentSlide = 0;
+function changeSlide(direction) {
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    currentSlide += direction;
+    if (currentSlide === totalSlides) 
+        currentSlide = 0;
+    else if (currentSlide < 0)  
+        currentSlide = totalSlides - 1;
+
+    const slider = document.querySelector('.slider');
+    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+// Funcția de delogare
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
 }
 
 // Grocery list
@@ -31,24 +51,21 @@ let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
 
 listsContainer.addEventListener('click', e => {
-    if(e.target.tagName.toLowerCase() === 'li')
-    {
+    if(e.target.tagName.toLowerCase() === 'li') {
         selectedListId = e.target.dataset.listId;
         saveAndRender();
     }
 });
 
-tasksContainer.addEventListener('click', e=>{
-    if(e.target.tagName.toLowerCase() === 'input')
-    {
-        const selectedList = lists.find(list => list.id ===selectedListId)
-        const selectedTask = selectedList.tasks.find(task => task.id === e.target.id)
-        selectedTask.complete = e.target.checked
-        save()
-        renderTasksCount(selectedList)
+tasksContainer.addEventListener('click', e => {
+    if(e.target.tagName.toLowerCase() === 'input') {
+        const selectedList = lists.find(list => list.id === selectedListId);
+        const selectedTask = selectedList.tasks.find(task => task.id === e.target.id);
+        selectedTask.complete = e.target.checked;
+        save();
+        renderTasksCount(selectedList);
     }
-}
-)
+});
 
 clearTasksButton.addEventListener('click', e => {
     const selectedList = lists.find(list => list.id === selectedListId);
@@ -62,7 +79,7 @@ newListForm.addEventListener('submit', e => {
     if (listName === null || listName === '') return;
     const list = createList(listName);
     newListInput.value = null;
-    lists.push(list)
+    lists.push(list);
     saveAndRender();
 });
 
@@ -77,9 +94,8 @@ newTaskForm.addEventListener('submit', e => {
     saveAndRender();
 });
 
-function createTask(name)
-{
-    return {id: Date.now().toString(), name: name, complete: false};
+function createTask(name) {
+    return { id: Date.now().toString(), name: name, complete: false };
 }
 
 deleteListButton.addEventListener('click', e => {
@@ -88,36 +104,29 @@ deleteListButton.addEventListener('click', e => {
     saveAndRender();
 });
 
-function createList(name)
-{
-    return {id: Date.now().toString(), name: name, tasks: []};
+function createList(name) {
+    return { id: Date.now().toString(), name: name, tasks: [] };
 }
 
-function saveAndRender()
-{
+function saveAndRender() {
     save();
     render();
 }
 
-function save()
-{
+function save() {
     localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));
-    localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId);
 }
 
-function render()
-{
+function render() {
     clearElement(listsContainer);
     renderLists();
 
-    const selectedList = lists.find(list => list.id === selectedListId)
+    const selectedList = lists.find(list => list.id === selectedListId);
 
-    if(selectedListId === null)
-    {
+    if (selectedListId === null) {
         listDisplayContainer.style.display = 'none';
-    }
-    else
-    {
+    } else {
         listDisplayContainer.style.display = '';
         listTitleElement.innerText = selectedList.name;
         renderTasksCount(selectedList);
@@ -126,8 +135,7 @@ function render()
     }
 }
 
-function renderTasks(selectedList)
-{
+function renderTasks(selectedList) {
     selectedList.tasks.forEach(task => {
         const taskElement = document.importNode(taskTemplate.content, true);
         const checkbox = taskElement.querySelector('input');
@@ -140,33 +148,27 @@ function renderTasks(selectedList)
     });
 }
 
-function renderTasksCount(selectedList)
-{
+function renderTasksCount(selectedList) {
     const incompleteTasks = selectedList.tasks.filter(task => !task.complete).length;
     const taskString = incompleteTasks === 1 ? 'task' : 'tasks';
     listCountElement.innerText = `${incompleteTasks} ${taskString} remaining`;
 }
 
-function renderLists()
-{
+function renderLists() {
     lists.forEach(list => {
         const listElement = document.createElement('li');
         listElement.dataset.listId = list.id;
         listElement.classList.add('list-name');
         listElement.innerText = list.name;
-        if(list.id === selectedListId) listElement.classList.add('isactive-list');
+        if (list.id === selectedListId) listElement.classList.add('isactive-list');
         listsContainer.appendChild(listElement);
     });
 }
 
-function clearElement(element)
-{
-    while (element.firstChild)
-    {
+function clearElement(element) {
+    while (element.firstChild) {
         element.removeChild(element.firstChild);
     }
 }
 
 render();
-
-

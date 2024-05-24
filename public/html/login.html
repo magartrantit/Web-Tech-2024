@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +7,9 @@
     <link rel="stylesheet" href="../css/login.css">
     <script src="../js/script.js"></script>
 </head>
-
 <body>
-
     <header>
         <a href="#" class="logo">CuPo</a>
-
         <nav>
             <ul class="sidebar">
                 <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -23,7 +19,6 @@
                 <li><a href="#home" onclick="hideSidebar()">Home</a></li>
                 <li><a href="#about" onclick="hideSidebar()">About</a></li>
                 <li><a href="#login" onclick="hideSidebar()">Log in</a></li>
-
             </ul>
             <a href="#home" class="hideOnMobile">Home</a>
             <a href="#about" class="hideOnMobile">About</a>
@@ -122,13 +117,31 @@
             });
     
             const data = await response.json();
-            if (data.message) {
+            if (data.token) {
+                localStorage.setItem('token', data.token);
                 window.location.href = "/html/page1.html";
             } else {
                 alert('Invalid credentials');
             }
         });
+
+        // Verificarea autentificării la încărcarea paginii
+        window.onload = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const response = await fetch('/api/protected', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    window.location.href = "/html/page1.html";
+                }
+            }
+        };
     </script>
 </body>
-
 </html>
