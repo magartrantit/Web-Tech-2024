@@ -7,22 +7,6 @@
   <title>CuPo</title>
   <link rel="stylesheet" href="../css/style1.css">
   <script src="../js/script.js"></script>
-  <script>
-    let currentSlide = 0;
-    function changeSlide(direction) {
-      const slides = document.querySelectorAll('.slide');
-      const totalSlides = slides.length;
-
-      currentSlide += direction;
-      if (currentSlide === totalSlides) 
-        currentSlide = 0;
-     else if (currentSlide < 0)  
-        currentSlide = totalSlides - 1;
-
-      const slider = document.querySelector('.slider');
-      slider.style.transform = `translateX(-${currentSlide * 100}px)`;
-    }
-  </script>
 </head>
 
 <body>
@@ -31,8 +15,7 @@
       <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></li>
       <li><a href="/page1">Home</a></li>
       <li><a href="/profil">Profile</a></li>
-      <li><a href="/list">Grocery</a></li>
-      <li><a href="/login">Sign out</a></li>
+      <li><a href="#" id="signout">Sign out</a></li>
   </ul>
   </nav>
   <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></div>
@@ -129,6 +112,34 @@
       
     </div>
    </div>
+
+   <script>
+       // Verificarea autentificării la încărcarea paginii
+       window.onload = async () => {
+           const token = localStorage.getItem('token');
+           if (!token) {
+               window.location.href = '/login';
+           }
+
+           const response = await fetch('/api/protected', {
+               method: 'GET',
+               headers: {
+                   'Content-Type': 'application/json',
+                   'Authorization': `Bearer ${token}`
+               }
+           });
+
+           if (!response.ok) {
+               window.location.href = '/login';
+           }
+       };
+
+       // Eveniment pentru delogare
+       document.getElementById('signout').addEventListener('click', () => {
+           localStorage.removeItem('token');
+           window.location.href = '/login';
+       });
+   </script>
 </body>
 
 </html>
