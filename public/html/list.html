@@ -15,7 +15,7 @@
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
             <li><a href="/list">Grocery</a></li>
-            <li><a href="/login">Sign out</a></li>
+            <li><a href="#" id="signout">Sign out</a></li>
         </ul>
     </nav>
 
@@ -65,5 +65,34 @@
             </label>
         </div>
     </template>
+
+    <script>
+        // Verificarea autentificării la încărcarea paginii
+        window.onload = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+ 
+            const response = await fetch('/api/protected', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+ 
+            if (!response.ok) {
+                window.location.href = '/login';
+            }
+        };
+ 
+        // Eveniment pentru delogare
+        document.getElementById('signout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+    </script>
+
 </body>
 </html>
