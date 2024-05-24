@@ -1,11 +1,16 @@
+// Importăm modulele necesare
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+// Importăm funcția pentru gestionarea rutelor de utilizatori
 const userRoutes = require('./routes/userRoutes');
 
+// Creăm serverul
 const server = http.createServer((req, res) => {
+    // Definim calea către directorul public
     const publicPath = path.join(__dirname, '../public');
 
+    // Funcție pentru determinarea tipului de conținut în funcție de extensia fișierului
     const getContentType = (extname) => {
         switch (extname) {
             case '.html': return 'text/html';
@@ -18,6 +23,7 @@ const server = http.createServer((req, res) => {
         }
     };
 
+    // Funcție pentru servirea fișierelor
     const serveFile = (filePath, contentType) => {
         fs.readFile(filePath, (err, content) => {
             if (err) {
@@ -35,9 +41,11 @@ const server = http.createServer((req, res) => {
         });
     };
 
+    // Dacă URL-ul cererii începe cu '/api', apelăm funcția pentru gestionarea rutelor de utilizatori
     if (req.url.startsWith('/api')) {
         userRoutes(req, res);
     } else {
+        // Altfel, determinăm calea către fișierul care trebuie servit
         let filePath;
         if (req.url === '/') {
             filePath = path.join(publicPath, 'html', 'login.html');
@@ -55,13 +63,16 @@ const server = http.createServer((req, res) => {
             filePath = path.join(publicPath, req.url);
         }
 
+        // Determinăm tipul de conținut și servim fișierul
         const extname = path.extname(filePath);
         const contentType = getContentType(extname);
         serveFile(filePath, contentType);
     }
 });
 
+// Definim portul pe care va asculta serverul
 const PORT = 3000;
+// Pornim serverul
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

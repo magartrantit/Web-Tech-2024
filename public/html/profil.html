@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,63 +8,74 @@
     <link rel="stylesheet" type="text/css" href="../css/style2.css">
     <script src="../js/script.js"></script>
 </head>
+
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></li>
+            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -960 960 960" width="24">
+                    <path fill="white"
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
             <li><a href="/list">Grocery</a></li>
             <li><a href="#" id="signout">Sign out</a></li>
         </ul>
-      </nav>
-      <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></div>
+    </nav>
+    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+            viewBox="0 -960 960 960" width="24">
+            <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg></div>
 
     <div class="main">
-         <div class="circle"></div>
-         <p class="textprofil">Profile</p>
-         <div class="preferinte">
+        <div class="circle"></div>
+        <p class="textprofil">Profile</p>
+        <div class="preferinte">
             <div class="mancare">
 
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
             <div class="mancare">
-              
+
             </div>
-         </div>
+        </div>
     </div>
-    
+
     <script>
         // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
+            // Se obține tokenul de autentificare din stocarea locală
             const token = localStorage.getItem('token');
+            // Dacă nu există niciun token, utilizatorul este redirecționat către pagina de autentificare
             if (!token) {
                 window.location.href = '/login';
             }
- 
+
+            // Se trimite o cerere GET către endpoint-ul '/api/protected', cu tokenul în header
             const response = await fetch('/api/protected', {
                 method: 'GET',
                 headers: {
@@ -71,18 +83,22 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
- 
+
+            // Dacă răspunsul nu este OK (tokenul nu este valid), utilizatorul este redirecționat către pagina de autentificare
             if (!response.ok) {
                 window.location.href = '/login';
             }
         };
- 
+
         // Eveniment pentru delogare
         document.getElementById('signout').addEventListener('click', () => {
+            // La click pe butonul de delogare, se elimină tokenul din stocarea locală
             localStorage.removeItem('token');
+            // Și se redirecționează utilizatorul către pagina de autentificare
             window.location.href = '/login';
         });
     </script>
 
 </body>
+
 </html>
