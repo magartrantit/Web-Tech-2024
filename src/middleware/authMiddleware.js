@@ -1,32 +1,42 @@
-// Importăm modulul 'jsonwebtoken' pentru a verifica token-urile JWT
+// Importăm modulul 'jsonwebtoken' pentru a lucra cu JWT (JSON Web Tokens)
 const jwt = require('jsonwebtoken');
-// Cheia secretă folosită pentru semnarea și verificarea token-urilor JWT
+// Importăm configurarea bazei de date
+const pool = require('../config/dbConfig');
+
+// Definim cheia secretă folosită pentru semnarea și verificarea token-urilor JWT
 const secretKey = 'mySecretKey';
 
-// Funcția middleware pentru autentificarea token-urilor
-const authenticateToken = (req, res, next) => {
-    // Extragem token-ul din header-ul 'Authorization' al cererii
-    const token = req.headers['authorization']?.split(' ')[1];
-    // Dacă token-ul nu există, trimitem un răspuns cu statusul 401 (Unauthorized)
-    if (token == null) {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Unauthorized' }));
-        return;
+// Definim un middleware pentru autentificarea token-urilor JWT
+const authenticateToken = async (req, res, next) => {
+    // Extragem header-ul 'Authorization' din cererea primită
+    const authHeader = req.headers['authorization'];
+    // Extragem token-ul din header. Acesta ar trebui să fie în formatul 'Bearer token'
+    const token = authHeader && authHeader.split(' ')[1];
+
+    // Dacă nu a fost furnizat niciun token, trimitem un răspuns cu codul de stare 401 (Neautorizat)
+    if (!token) {
+        return res.writeHead(401, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: 'Token not provided' }));
     }
 
-    // Verificăm token-ul
-    jwt.verify(token, secretKey, (err, user) => {
-        // Dacă token-ul nu este invalid, trimitem un răspuns cu statusul 403 (Forbidden)
-        if (err) {
-            res.writeHead(403, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Forbidden' }));
-            return;
+    try {
+        // Verificăm token-ul folosind cheia secretă
+        const decoded = jwt.verify(token, secretKey);
+        // Căutăm utilizatorul în baza de date folosind id-ul extras din token
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+        // Dacă utilizatorul nu există, trimitem un răspuns cu codul de stare 401 (Neautorizat)
+        if (user.rows.length === 0) {
+            return res.writeHead(401, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: 'User not found' }));
         }
-        // Dacă token-ul este valid, adăugăm datele utilizatorului în obiectul cererii și apelăm următorul middleware
-        req.user = user;
+        // Adăugăm utilizatorul în obiectul cererii pentru a putea fi folosit în middleware-urile următoare
+        req.user = user.rows[0];
+        // Apelăm următorul middleware din lanț
         next();
-    });
+    } catch (err) {
+        // Dacă verificarea token-ului eșuează, înregistrăm eroarea și trimitem un răspuns cu codul de stare 401 (Neautorizat)
+        console.error('JWT verification error:', err);
+        return res.writeHead(401, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: 'Invalid token' }));
+    }
 };
 
-// Exportăm funcția middleware pentru a putea fi folosită în alte module
+// Exportăm middleware-ul pentru a putea fi folosit în alte module
 module.exports = authenticateToken;

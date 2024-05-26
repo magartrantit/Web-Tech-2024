@@ -1,7 +1,10 @@
-// Importăm modulele necesare: pool pentru conexiunea la baza de date, bcrypt pentru hash-uirarea parolelor și jwt pentru generarea token-urilor JWT
+// Importăm modulele necesare: pool pentru conexiunea la baza de date, bcrypt pentru hash-uirarea parolelor, jwt pentru generarea token-urilor JWT
 const pool = require('../config/dbConfig');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const formidable = require('formidable');
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -80,5 +83,48 @@ const loginUser = async (req, res) => {
     });
 };
 
+// Funcția pentru încărcarea imaginii de profil
+const uploadProfileImage = (req, res) => {
+    // Creăm un nou formular pentru a procesa cererea de încărcare a fișierului
+    const form = new formidable.IncomingForm();
+    // Setăm directorul în care vor fi încărcate fișierele
+    form.uploadDir = path.join(__dirname, '../uploads');
+    // Păstrăm extensiile originale ale fișierelor încărcate
+    form.keepExtensions = true;
+
+    // Începem procesarea formularului
+    form.parse(req, async (err, fields, files) => {
+        // Dacă a apărut o eroare în timpul procesării, o înregistrăm și trimitem un răspuns cu eroarea
+        if (err) {
+            console.error('Error parsing the files', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error parsing the files' }));
+            return;
+        }
+
+        console.log('Fields:', fields);
+        console.log('Files:', files);
+
+        // Extragem id-ul utilizatorului și calea către imaginea de profil din datele formularului
+        const { userId } = fields;
+        const profileImagePath = files.profileImage.path;
+
+        try {
+            // Obținem numele fișierului imaginii de profil
+            const profileImageUrl = path.basename(profileImagePath);
+            // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
+            await pool.query('UPDATE users SET profile_image = $1 WHERE id = $2', [profileImageUrl, userId]);
+            // Trimitem un răspuns cu mesajul de succes și URL-ul imaginii de profil
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Profile image uploaded successfully', profileImage: profileImageUrl }));
+        } catch (err) {
+            // Dacă a apărut o eroare în timpul interogării bazei de date, o înregistrăm și trimitem un răspuns cu eroarea
+            console.error('Database error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
+};
+
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser };
+module.exports = { createUser, loginUser, uploadProfileImage };

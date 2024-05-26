@@ -1,5 +1,5 @@
 // Importăm funcțiile pentru crearea și autentificarea utilizatorilor din controller-ul de utilizatori
-const { createUser, loginUser } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage } = require('../controllers/userController');
 // Importăm funcția middleware pentru autentificarea token-urilor
 const authenticateToken = require('../middleware/authMiddleware');
 
@@ -13,6 +13,10 @@ const userRoutes = (req, res) => {
     else if (req.method === 'POST' && req.url === '/api/login') {
         loginUser(req, res);
     } 
+    // Dacă metoda cererii este POST și URL-ul este '/api/uploadProfileImage', apelăm funcția pentru încărcarea imaginii de profil
+    else if (req.method === 'POST' && req.url === '/api/uploadProfileImage') {
+        uploadProfileImage(req, res);
+    }
     // Dacă metoda cererii este GET și URL-ul este '/api/protected', apelăm funcția middleware pentru autentificarea token-ului
     // și apoi trimitem un răspuns cu un mesaj și datele utilizatorului
     else if (req.method === 'GET' && req.url === '/api/protected') {

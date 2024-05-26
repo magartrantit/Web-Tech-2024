@@ -5,6 +5,12 @@ const fs = require('fs');
 // Importăm funcția pentru gestionarea rutelor de utilizatori
 const userRoutes = require('./routes/userRoutes');
 
+// Asigură-te că directorul 'uploads' există
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
 // Creăm serverul
 const server = http.createServer((req, res) => {
     // Definim calea către directorul public

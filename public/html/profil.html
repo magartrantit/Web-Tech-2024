@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CuPo</title>
     <link rel="stylesheet" type="text/css" href="../css/style2.css">
     <script src="../js/script.js"></script>
 </head>
@@ -29,53 +29,68 @@
         </svg></div>
 
     <div class="main">
-        <div class="circle"></div>
-        <p class="textprofil">Profile</p>
+        <div class="profile-container">
+            <h1>Profile Page</h1>
+            <form id="profileImageForm" enctype="multipart/form-data">
+                <input type="hidden" id="userId" name="userId" value="">
+                <label for="profileImage">Upload Profile Image:</label>
+                <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+                <button type="submit">Upload</button>
+            </form>
+            <div id="profileImageContainer">
+                <img id="profileImageDisplay" src="" alt="Profile Image" style="display: none;">
+            </div>
+        </div>
+        
         <div class="preferinte">
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
             <div class="mancare">
-
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
             </div>
+            <div class="mancare">
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
+            </div>
+            <div class="mancare">
+                <!-- Aici vor fi afișate preferințele utilizatorului -->
+            </div>
+            
         </div>
     </div>
 
     <script>
         // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
-            // Se obține tokenul de autentificare din stocarea locală
             const token = localStorage.getItem('token');
-            // Dacă nu există niciun token, utilizatorul este redirecționat către pagina de autentificare
             if (!token) {
                 window.location.href = '/login';
             }
 
-            // Se trimite o cerere GET către endpoint-ul '/api/protected', cu tokenul în header
             const response = await fetch('/api/protected', {
                 method: 'GET',
                 headers: {
@@ -84,17 +99,46 @@
                 }
             });
 
-            // Dacă răspunsul nu este OK (tokenul nu este valid), utilizatorul este redirecționat către pagina de autentificare
             if (!response.ok) {
                 window.location.href = '/login';
+            } else {
+                const data = await response.json();
+                const userId = data.user.id;
+                localStorage.setItem('userId', userId);
+
+                const profileImageUrl = data.user.profile_image;
+                if (profileImageUrl) {
+                    document.getElementById('profileImageDisplay').src = `/uploads/${profileImageUrl}`;
+                    document.getElementById('profileImageDisplay').style.display = 'block';
+                }
             }
         };
 
-        // Eveniment pentru delogare
+        document.getElementById('profileImageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const userId = localStorage.getItem('userId');
+            formData.append('userId', userId);
+            formData.append('profileImage', document.getElementById('profileImage').files[0]);
+
+            const response = await fetch('/api/uploadProfileImage', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Profile image uploaded successfully');
+                document.getElementById('profileImageDisplay').src = `/uploads/${data.profileImage}`;
+                document.getElementById('profileImageDisplay').style.display = 'block';
+            } else {
+                alert('Error uploading profile image');
+            }
+        });
+
         document.getElementById('signout').addEventListener('click', () => {
-            // La click pe butonul de delogare, se elimină tokenul din stocarea locală
             localStorage.removeItem('token');
-            // Și se redirecționează utilizatorul către pagina de autentificare
+            localStorage.removeItem('userId');
             window.location.href = '/login';
         });
     </script>
