@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
                 const validPassword = await bcrypt.compare(password, user.rows[0].password);
                 if (validPassword) {
                     // Dacă parola este corectă, generăm un token JWT și îl trimitem în răspuns
-                    const token = jwt.sign({ id: user.rows[0].id, username: user.rows[0].username }, secretKey, { expiresIn: '5m' });
+                    const token = jwt.sign({ id: user.rows[0].id, username: user.rows[0].username }, secretKey, { expiresIn: '1h' });
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ token }));
                 } else {
@@ -85,16 +85,17 @@ const loginUser = async (req, res) => {
 
 // Funcția pentru încărcarea imaginii de profil
 const uploadProfileImage = (req, res) => {
-    // Creăm un nou formular pentru a procesa cererea de încărcare a fișierului
     const form = new formidable.IncomingForm();
-    // Setăm directorul în care vor fi încărcate fișierele
     form.uploadDir = path.join(__dirname, '../uploads');
-    // Păstrăm extensiile originale ale fișierelor încărcate
     form.keepExtensions = true;
 
-    // Începem procesarea formularului
+    console.log('Upload directory:', form.uploadDir); // Log the upload directory
+
     form.parse(req, async (err, fields, files) => {
-        // Dacă a apărut o eroare în timpul procesării, o înregistrăm și trimitem un răspuns cu eroarea
+        console.log('Error:', err); // Log the error
+        console.log('Fields:', fields); // Log the fields
+        console.log('Files:', files); // Log the files
+
         if (err) {
             console.error('Error parsing the files', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -102,17 +103,18 @@ const uploadProfileImage = (req, res) => {
             return;
         }
 
-        console.log('Fields:', fields);
-        console.log('Files:', files);
+        if (!files.profileImage) {
+            console.log('No profile image received'); // Log if no profile image was received
+        }
 
-        // Extragem id-ul utilizatorului și calea către imaginea de profil din datele formularului
-        const { userId } = fields;
-        const profileImagePath = files.profileImage.path;
+
+        let userId = fields.userId[0];
+        let profileImagePath = files.profileImage[0].filepath;
 
         try {
             // Obținem numele fișierului imaginii de profil
             const profileImageUrl = path.basename(profileImagePath);
-            // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
+   // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
             await pool.query('UPDATE users SET profile_image = $1 WHERE id = $2', [profileImageUrl, userId]);
             // Trimitem un răspuns cu mesajul de succes și URL-ul imaginii de profil
             res.writeHead(200, { 'Content-Type': 'application/json' });
