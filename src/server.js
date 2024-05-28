@@ -65,6 +65,12 @@ const server = http.createServer((req, res) => {
             filePath = path.join(publicPath, 'html', 'list.html');
         } else if (req.url === '/page1') {
             filePath = path.join(publicPath, 'html', 'page1.html');
+        }else if (req.url.startsWith('/uploads')) {
+            filePath = path.join(uploadDir, req.url.replace('/uploads', ''));
+            const extname = path.extname(filePath);
+            const contentType = getContentType(extname);
+            serveFile(filePath, contentType);
+            return; // Stop the execution of the function
         } else {
             filePath = path.join(publicPath, req.url);
         }
