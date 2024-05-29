@@ -89,12 +89,12 @@ const uploadProfileImage = (req, res) => {
     form.uploadDir = path.join(__dirname, '../uploads');
     form.keepExtensions = true;
 
-    console.log('Upload directory:', form.uploadDir); // Log the upload directory
+    console.log('Upload directory:', form.uploadDir); 
 
     form.parse(req, async (err, fields, files) => {
-        console.log('Error:', err); // Log the error
-        console.log('Fields:', fields); // Log the fields
-        console.log('Files:', files); // Log the files
+        console.log('Error:', err); 
+        console.log('Fields:', fields); 
+        console.log('Files:', files); 
 
         if (err) {
             console.error('Error parsing the files', err);
@@ -104,17 +104,23 @@ const uploadProfileImage = (req, res) => {
         }
 
         if (!files.profileImage) {
-            console.log('No profile image received'); // Log if no profile image was received
+            console.log('No profile image received'); 
         }
 
-
         let userId = fields.userId[0];
-        let profileImagePath = files.profileImage[0].filepath;
+        let profileImage = files.profileImage[0];
+        let profileImagePath = profileImage.filepath;
+        let profileImageExt = path.extname(profileImage.originalFilename); 
 
         try {
-            // Obținem numele fișierului imaginii de profil
-            const profileImageUrl = path.basename(profileImagePath);
-   // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
+            // Obținem numele fișierului imaginii de profil și adăugăm extensia corectă
+            let profileImageUrl = path.basename(profileImagePath) + profileImageExt;
+            let newProfileImagePath = profileImagePath + profileImageExt;
+
+            // Renamim fișierul pentru a include extensia corectă
+            fs.renameSync(profileImagePath, newProfileImagePath);
+
+            // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
             await pool.query('UPDATE users SET profile_image = $1 WHERE id = $2', [profileImageUrl, userId]);
             // Trimitem un răspuns cu mesajul de succes și URL-ul imaginii de profil
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -127,6 +133,8 @@ const uploadProfileImage = (req, res) => {
         }
     });
 };
+
+
 
 // Exportăm funcțiile pentru a putea fi folosite în alte module
 module.exports = { createUser, loginUser, uploadProfileImage };
