@@ -6,7 +6,7 @@ const fs = require('fs');
 const userRoutes = require('./routes/userRoutes');
 
 // Asigură-te că directorul 'uploads' există
-const uploadDir = path.join(__dirname, '../uploads');
+const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
