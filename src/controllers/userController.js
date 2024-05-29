@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
-const formidable = require('formidable');
+const multiparty = require('multiparty');
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -85,17 +85,9 @@ const loginUser = async (req, res) => {
 
 // Funcția pentru încărcarea imaginii de profil
 const uploadProfileImage = (req, res) => {
-    const form = new formidable.IncomingForm();
-    form.uploadDir = path.join(__dirname, '../uploads');
-    form.keepExtensions = true;
-
-    console.log('Upload directory:', form.uploadDir); 
+    const form = new multiparty.Form({ uploadDir: path.join(__dirname, '../uploads') });
 
     form.parse(req, async (err, fields, files) => {
-        console.log('Error:', err); 
-        console.log('Fields:', fields); 
-        console.log('Files:', files); 
-
         if (err) {
             console.error('Error parsing the files', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -104,37 +96,27 @@ const uploadProfileImage = (req, res) => {
         }
 
         if (!files.profileImage) {
-            console.log('No profile image received'); 
+            console.log('No profile image received');
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No profile image received' }));
+            return;
         }
 
-        let userId = fields.userId[0];
-        let profileImage = files.profileImage[0];
-        let profileImagePath = profileImage.filepath;
-        let profileImageExt = path.extname(profileImage.originalFilename); 
+        const userId = fields.userId[0];
+        const profileImagePath = files.profileImage[0].path;
+        const profileImageUrl = path.basename(profileImagePath);
 
         try {
-            // Obținem numele fișierului imaginii de profil și adăugăm extensia corectă
-            let profileImageUrl = path.basename(profileImagePath) + profileImageExt;
-            let newProfileImagePath = profileImagePath + profileImageExt;
-
-            // Renamim fișierul pentru a include extensia corectă
-            fs.renameSync(profileImagePath, newProfileImagePath);
-
-            // Actualizăm înregistrarea utilizatorului în baza de date cu noua imagine de profil
             await pool.query('UPDATE users SET profile_image = $1 WHERE id = $2', [profileImageUrl, userId]);
-            // Trimitem un răspuns cu mesajul de succes și URL-ul imaginii de profil
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Profile image uploaded successfully', profileImage: profileImageUrl }));
         } catch (err) {
-            // Dacă a apărut o eroare în timpul interogării bazei de date, o înregistrăm și trimitem un răspuns cu eroarea
             console.error('Database error:', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Database error' }));
         }
     });
 };
-
-
 
 // Exportăm funcțiile pentru a putea fi folosite în alte module
 module.exports = { createUser, loginUser, uploadProfileImage };
