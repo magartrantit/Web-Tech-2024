@@ -12,79 +12,55 @@
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                    viewBox="0 -960 960 960" width="24">
+            <li onclick="hideSidebar()" class="ics">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                     <path fill="white"
                         d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                </svg></li>
+                </svg>
+            </li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
             <li><a href="/list">Grocery</a></li>
             <li><a href="#" id="signout">Sign out</a></li>
         </ul>
     </nav>
-    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-            viewBox="0 -960 960 960" width="24">
+    <div onclick="showSidebar()" class="burger">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-        </svg></div>
+        </svg>
+    </div>
 
     <div class="main">
+        <h1 id="username" class="username-display">Hello, Nume utilizator</h1>
         <div class="profile-container">
-            <h1>Profile Page</h1>
-            <form id="profileImageForm" enctype="multipart/form-data">
-                <input type="hidden" id="userId" name="userId" value="">
-                <label for="profileImage">Upload Profile Image:</label>
-                <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
-                <button type="submit">Upload</button>
-            </form>
             <div id="profileImageContainer">
-                <img id="profileImageDisplay" src="" alt="Profile Image" style="display: none;">
+                <img id="profileImageDisplay" src="" alt="Profile Image" style="display: none;" class="profile-image">
+                <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display: none;">
+                <button id="changePictureButton">Change Picture</button>
+            </div>
+            <div class="user-collections">
+                <p>Number of Collections: <span id="collectionCount">0</span></p>
             </div>
         </div>
-        
+
         <div class="preferinte">
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            <div class="mancare">
-                <!-- Aici vor fi afișate preferințele utilizatorului -->
-            </div>
-            
+            <!-- Repeatable elements for user preferences -->
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
+            <div class="mancare"></div>
         </div>
     </div>
 
     <script>
-        // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -106,14 +82,20 @@
                 const userId = data.user.id;
                 localStorage.setItem('userId', userId);
 
+                const username = data.user.username;
+                document.getElementById('username').innerText = `Hello, ${username}`;
+
                 const profileImageUrl = data.user.profile_image;
                 if (profileImageUrl) {
                     document.getElementById('profileImageDisplay').src = `/uploads/${profileImageUrl}`;
                     document.getElementById('profileImageDisplay').style.display = 'block';
                 }
+
+                document.getElementById('collectionCount').innerText = data.user.collectionCount || 0;
             }
         };
 
+<<<<<<< HEAD
         document.getElementById('profileImageForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData();
@@ -133,6 +115,32 @@
                 document.getElementById('profileImageDisplay').style.display = 'block';
             } else {
                 alert('Error uploading profile image');
+=======
+        document.getElementById('changePictureButton').addEventListener('click', () => {
+            document.getElementById('profileImage').click();
+        });
+
+        document.getElementById('profileImage').addEventListener('change', async (e) => {
+            if (e.target.files.length > 0) {
+                const formData = new FormData();
+                const userId = localStorage.getItem('userId');
+                formData.append('userId', userId);
+                formData.append('profileImage', e.target.files[0]);
+
+                const response = await fetch('/api/uploadProfileImage', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Profile image uploaded successfully');
+                    document.getElementById('profileImageDisplay').src = `/uploads/${data.profileImage}`;
+                    document.getElementById('profileImageDisplay').style.display = 'block';
+                } else {
+                    alert('Error uploading profile image');
+                }
+>>>>>>> ecdf61cda74c681d2408630d8a67e0b77a437980
             }
         });
 
@@ -141,6 +149,7 @@
             localStorage.removeItem('userId');
             window.location.href = '/login';
         });
+
     </script>
 
 </body>
