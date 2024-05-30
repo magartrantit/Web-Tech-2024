@@ -95,27 +95,6 @@
             }
         };
 
-<<<<<<< HEAD
-        document.getElementById('profileImageForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData();
-            const userId = localStorage.getItem('userId');
-            formData.append('userId', userId);
-            formData.append('profileImage', document.getElementById('profileImage').files[0]);
-
-            const response = await fetch('/api/uploadProfileImage', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert('Profile image uploaded successfully');
-                document.getElementById('profileImageDisplay').src = `/uploads/${data.profileImage}`;
-                document.getElementById('profileImageDisplay').style.display = 'block';
-            } else {
-                alert('Error uploading profile image');
-=======
         document.getElementById('changePictureButton').addEventListener('click', () => {
             document.getElementById('profileImage').click();
         });
@@ -140,7 +119,6 @@
                 } else {
                     alert('Error uploading profile image');
                 }
->>>>>>> ecdf61cda74c681d2408630d8a67e0b77a437980
             }
         });
 
