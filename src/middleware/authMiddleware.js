@@ -22,13 +22,13 @@ const authenticateToken = async (req, res, next) => {
         // Verificăm token-ul folosind cheia secretă
         const decoded = jwt.verify(token, secretKey);
         // Căutăm utilizatorul în baza de date folosind id-ul extras din token
-        const user = await pool.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+        const [users] = await pool.query('SELECT * FROM users WHERE id = ?', [decoded.id]);
         // Dacă utilizatorul nu există, trimitem un răspuns cu codul de stare 401 (Neautorizat)
-        if (user.rows.length === 0) {
+        if (users.length === 0) {
             return res.writeHead(401, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: 'User not found' }));
         }
         // Adăugăm utilizatorul în obiectul cererii pentru a putea fi folosit în middleware-urile următoare
-        req.user = user.rows[0];
+        req.user = users[0];
         // Apelăm următorul middleware din lanț
         next();
     } catch (err) {
