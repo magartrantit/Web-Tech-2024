@@ -10,7 +10,7 @@ const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
-
+// test
 // Creăm serverul
 const server = http.createServer((req, res) => {
     // Definim calea către directorul public
