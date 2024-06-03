@@ -51,6 +51,12 @@ const server = http.createServer((req, res) => {
     // Dacă URL-ul cererii începe cu '/api', apelăm funcția pentru gestionarea rutelor de utilizatori
     if (req.url.startsWith('/api')) {
         userRoutes(req, res);
+    } else if (req.url.startsWith('/uploads')) {
+        // Servim fișierele din directorul 'uploads'
+        const filePath = path.join(uploadDir, path.basename(req.url));
+        const extname = path.extname(filePath);
+        const contentType = getContentType(extname);
+        serveFile(filePath, contentType);
     } else {
         // Altfel, determinăm calea către fișierul care trebuie servit
         let filePath;
@@ -66,12 +72,6 @@ const server = http.createServer((req, res) => {
             filePath = path.join(publicPath, 'html', 'list.html');
         } else if (req.url === '/page1') {
             filePath = path.join(publicPath, 'html', 'page1.html');
-        } else if (req.url.startsWith('/uploads')) {
-            filePath = path.join(uploadDir, req.url.replace('/uploads', ''));
-            const extname = path.extname(filePath);
-            const contentType = getContentType(extname);
-            serveFile(filePath, contentType);
-            return; 
         } else {
             filePath = path.join(publicPath, req.url);
         }
