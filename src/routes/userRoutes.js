@@ -1,5 +1,5 @@
 // Importăm funcțiile pentru crearea și autentificarea utilizatorilor din controller-ul de utilizatori
-const { createUser, loginUser, uploadProfileImage, getAllFoods } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails } = require('../controllers/userController');
 // Importăm funcția middleware pentru autentificarea token-urilor
 const authenticateToken = require('../middleware/authMiddleware');
 
@@ -28,6 +28,12 @@ const userRoutes = (req, res) => {
     // Dacă metoda cererii este GET și URL-ul este '/api/foods', apelăm funcția pentru obținerea tuturor alimentelor din baza de date
     else if (req.method === 'GET' && req.url === '/api/foods') {
         getAllFoods(req, res);
+    }
+    // Dacă metoda cererii este GET și URL-ul începe cu '/api/foods/', apelăm funcția pentru obținerea detaliilor unui produs
+    else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
+        const productId = req.url.split('/').pop();
+        req.params = { id: productId }; // Adăugăm parametrii în obiectul req
+        getProductDetails(req, res);
     }
     // Dacă niciuna dintre condițiile de mai sus nu este îndeplinită, trimitem un răspuns cu statusul 404 (Not Found)
     else {

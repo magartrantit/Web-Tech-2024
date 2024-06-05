@@ -126,8 +126,23 @@ const getAllFoods = async (req, res) => {
     }
 };
 
-
+const getProductDetails = async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const [result] = await pool.query('SELECT * FROM foods WHERE code = ?', [productId]);
+        if (result.length > 0) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result[0]));
+        } else {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Product not found' }));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
 
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods};
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails };
