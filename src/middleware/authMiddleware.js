@@ -40,3 +40,5 @@ const authenticateToken = async (req, res, next) => {
 
 // Exportăm middleware-ul pentru a putea fi folosit în alte module
 module.exports = authenticateToken;
+
+
