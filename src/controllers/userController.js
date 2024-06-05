@@ -113,8 +113,21 @@ const uploadProfileImage = (req, res) => {
     });
 };
 
+// Funcția pentru obținerea tuturor alimentelor din baza de date
+const getAllFoods = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM foods');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result[0])); // mysql2 returns result set as an array
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
 
 
 // Exportăm funcțiile pentru a putea fi folosite în alte module
 
-module.exports = { createUser, loginUser, uploadProfileImage };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods};
