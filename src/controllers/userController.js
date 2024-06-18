@@ -144,5 +144,22 @@ const getProductDetails = async (req, res) => {
     }
 };
 
+const refreshToken = (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.status(401).json({ error: 'Token missing' });
+    }
+
+    jwt.verify(token, 'your_refresh_secret_key', (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid token' });
+        }
+
+        const newToken = jwt.sign({ id: user.id }, 'your_access_secret_key', { expiresIn: '15m' });
+        res.json({ token: newToken });
+    });
+};
+
+
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, refreshToken };

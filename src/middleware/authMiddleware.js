@@ -12,7 +12,7 @@ const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     // Extragem token-ul din header. Acesta ar trebui să fie în formatul 'Bearer token'
     const token = authHeader && authHeader.split(' ')[1];
-
+    
     // Dacă nu a fost furnizat niciun token, trimitem un răspuns cu codul de stare 401 (Neautorizat)
     if (!token) {
         return res.writeHead(401, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: 'Token not provided' }));

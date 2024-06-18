@@ -2,7 +2,7 @@
 const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails } = require('../controllers/userController');
 // Importăm funcția middleware pentru autentificarea token-urilor
 const authenticateToken = require('../middleware/authMiddleware');
-
+const { refreshToken } = require('../controllers/userController');
 // Funcția pentru gestionarea rutelor de utilizatori
 const userRoutes = (req, res) => {
     // Dacă metoda cererii este POST și URL-ul este '/api/users', apelăm funcția pentru crearea unui utilizator
@@ -34,6 +34,39 @@ const userRoutes = (req, res) => {
         const productId = req.url.split('/').pop();
         req.params = { id: productId }; // Adăugăm parametrii în obiectul req
         getProductDetails(req, res);
+    }
+    else if (req.method === 'POST' && req.url === '/api/refreshToken') {
+        refreshToken(req, res);
+    }
+    else if (req.method === 'POST' && req.url === '/api/products') {
+        authenticateToken(req, res, () => {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields) => {
+                if (err) {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Error parsing form data' }));
+                    return;
+                }
+
+                const productData = {
+                    url: fields.image_url,
+                    product_name: fields.product_name,
+                    // alte câmpuri...
+                };
+
+                const query = 'INSERT INTO products SET ?';
+                db.query(query, productData, (err) => {
+                    if (err) {
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Error inserting product into database' }));
+                        return;
+                    }
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Product added successfully' }));
+                });
+            });
+        });
     }
     // Dacă niciuna dintre condițiile de mai sus nu este îndeplinită, trimitem un răspuns cu statusul 404 (Not Found)
     else {
