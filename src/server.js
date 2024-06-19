@@ -5,7 +5,6 @@ const fs = require('fs');
 const formidable = require('formidable');
 const mysql = require('mysql');
 const db = require('./config/dbConfig');
-// Importăm funcția pentru gestionarea rutelor de utilizatori
 const userRoutes = require('./routes/userRoutes');
 
 // Asigură-te că directorul 'uploads' există
@@ -13,7 +12,7 @@ const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
-// test
+
 // Creăm serverul
 const server = http.createServer((req, res) => {
     // Definim calea către directorul public
@@ -51,69 +50,58 @@ const server = http.createServer((req, res) => {
         });
     };
 
-    
-
     // Dacă URL-ul cererii începe cu '/api', apelăm funcția pentru gestionarea rutelor de utilizatori
     if (req.url.startsWith('/api')) {
         if (req.method === 'POST' && req.url === '/api/products') {
             const form = new formidable.IncomingForm();
-            form.uploadDir = uploadDir;
-            form.keepExtensions = true;
-            form.parse(req, (err, fields, files) => {
+            form.parse(req, (err, fields) => {
                 if (err) {
-                    console.error('Error parsing form data:', err);
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Error parsing form data' }));
+                    res.writeHead(500);
+                    res.end('Error parsing form');
                     return;
                 }
 
-                const imageFile = files.image;
-                if (!imageFile) {
-                    console.error('No image file uploaded');
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'No image file uploaded' }));
-                    return;
-                }
-                const imageUrl = `/uploads/${path.basename(imageFile.path)}`;
+                const query = `
+    INSERT INTO foods (
+         code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, \`energy-kcal_100g\`, fat_100g, \`saturated-fat_100g\`, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
 
-                const productData = {
-                    
-                    product_name: fields.product_name,
-                    brands: fields.brands,
-                    categories_en: fields.categories_en,
-                    countries_en: fields.countries_en,
-                    ingredients_text: fields.ingredients_text,
-                    allergens: fields.allergens,
-                    additives_en: fields.additives_en,
-                    food_groups_en: fields.food_groups_en,
-                    main_category_en: fields.main_category_en,
-                    image_url: fields.image_url,
-                    image_ingredients_url: fields.image_ingredients_url,
-                    image_nutrition_url: fields.image_nutrition_url,
-                    energy_kcal_100g: fields['energy-kcal_100g'],
-                    fat_100g: fields.fat_100g,
-                    saturated_fat_100g: fields['saturated-fat_100g'],
-                    carbohydrates_100g: fields.carbohydrates_100g,
-                    sugars_100g: fields.sugars_100g,
-                    fiber_100g: fields.fiber_100g,
-                    proteins_100g: fields.proteins_100g,
-                    salt_100g: fields.salt_100g,
-                    sodium_100g: fields.sodium_100g
-                };
 
-                console.log('Product data:', productData);
+                const values = [
+                    fields.code,
+                    fields.url,
+                    fields.product_name,
+                    fields.brands,
+                    fields.categories_en,
+                    fields.countries_en,
+                    fields.ingredients_text,
+                    fields.allergens,
+                    fields.additives_en,
+                    fields.food_groups_en,
+                    fields.main_category_en,
+                    fields.image_url,
+                    fields.image_ingredients_url,
+                    fields.image_nutrition_url,
+                    fields['energy-kcal_100g'],
+                    fields.fat_100g,
+                    fields['saturated-fat_100g'],
+                    fields.carbohydrates_100g,
+                    fields.sugars_100g,
+                    fields.fiber_100g,
+                    fields.proteins_100g,
+                    fields.salt_100g,
+                    fields.sodium_100g
+                ];
 
-                const query = 'INSERT INTO products SET ?';
-                db.query(query, productData, (err, result) => {
+                db.query(query, values, (err) => {
                     if (err) {
-                        console.error('Error inserting product into database:', err);
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Error inserting product into database' }));
+                        res.writeHead(500);
+                        res.end('Error inserting into database');
                         return;
                     }
-
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Product added successfully' }));
+                    res.writeHead(200);
+                    res.end('Product added successfully');
                 });
             });
         } else {

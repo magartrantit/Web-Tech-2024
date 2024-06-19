@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,9 @@
     <link rel="stylesheet" href="../css/admin.css">
     <script src="../js/script.js"></script>
 </head>
-
 <body>
     <header>
         <a href="#" class="logo">ADMIN</a>
-
         <nav>
             <ul class="sidebar">
                 <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24"
@@ -47,7 +44,6 @@
             <h2>Messages from Users</h2>
             <p id="messageContent">Message content goes here</p>
             <button onclick="respondToMessage()">Respond</button>
-
             <button onclick="deleteMessage()">Delete</button>
         </div>
 
@@ -61,7 +57,8 @@
                 <span class="close" onclick="closePopup()">&times;</span>
                 <h2>Add New Product</h2>
                 <form id="addProductForm" action="/api/products" method="post" enctype="multipart/form-data">
-                    
+                    <input type="text" id="code" name="code" placeholder="Code">
+                    <input type="text" id="url" name="url" placeholder="Url">
                     <input type="text" id="product_name" name="product_name" placeholder="Product Name">
                     <input type="text" id="brands" name="brands" placeholder="Brands">
                     <input type="text" id="categories_en" name="categories_en" placeholder="Categories">
@@ -71,9 +68,9 @@
                     <input type="text" id="additives_en" name="additives_en" placeholder="Additives">
                     <input type="text" id="food_groups_en" name="food_groups_en" placeholder="Food Groups">
                     <input type="text" id="main_category_en" name="main_category_en" placeholder="Main Category">
-                    <input type="file" id="image_url" name="image_url" placeholder="Image URL" accept=".jpg, .jpeg, .png" required>
-                    <input type="file" id="image_ingredients_url" name="image_ingredients_url" placeholder="Image Ingredients URL" accept=".jpg, .jpeg, .png" required>
-                    <input type="file" id="image_nutrition_url" name="image_nutrition_url" placeholder="Image Nutrition URL" accept=".jpg, .jpeg, .png" required>
+                    <input type="text" id="image_url" name="image_url" placeholder="Image URL" required>
+                    <input type="text" id="image_ingredients_url" name="image_ingredients_url" placeholder="Image Ingredients URL" required>
+                    <input type="text" id="image_nutrition_url" name="image_nutrition_url" placeholder="Image Nutrition URL" required>
                     <input type="text" id="energy-kcal_100g" name="energy-kcal_100g" placeholder="Energy kcal/100g">
                     <input type="text" id="fat_100g" name="fat_100g" placeholder="Fat/100g">
                     <input type="text" id="saturated-fat_100g" name="saturated-fat_100g" placeholder="Saturated Fat/100g">
@@ -92,50 +89,50 @@
             <div class="popup-content">
                 <span class="close" onclick="closeErrorPopup()">&times;</span>
                 <h2>Error</h2>
-                <p>All fields must be filled and an image must be selected.</p>
+                <p>All fields must be filled and an image URL must be provided.</p>
             </div>
         </div>
     </div>
-</body>
 
-<script>
-    function addProduct() {
-        document.getElementById("addProductPopup").style.display = "block";
-    }
-
-    function closePopup() {
-        document.getElementById("addProductPopup").style.display = "none";
-    }
-
-    function closeErrorPopup() {
-        document.getElementById("errorPopup").style.display = "none";
-    }
-
-    function submitProduct() {
-    var form = document.getElementById("addProductForm");
-    var fields = form.querySelectorAll('input[type="text"]');
-    var allFieldsFilled = Array.from(fields).every(field => field.value.trim() !== "");
-
-    if (!allFieldsFilled) {
-        document.getElementById("errorPopup").style.display = "block";
-        return;
-    }
-
-    var formData = new FormData(form);
-    fetch('/api/products', {
-        method: 'POST',
-        body: formData
-    }).then(response => {
-        if (response.ok) {
-            closePopup();
-            form.reset();
-        } else {
-            alert('Error submitting the product');
+    <script>
+        function addProduct() {
+            document.getElementById("addProductPopup").style.display = "block";
         }
-    }).catch(error => {
-        console.error('Error:', error);
-    });
-}
-</script>
 
+        function closePopup() {
+            document.getElementById("addProductPopup").style.display = "none";
+        }
+
+        function closeErrorPopup() {
+            document.getElementById("errorPopup").style.display = "none";
+        }
+
+        function submitProduct() {
+            var form = document.getElementById("addProductForm");
+            var fields = form.querySelectorAll('input[type="text"]');
+            var allFieldsFilled = Array.from(fields).every(field => field.value.trim() !== "");
+
+            if (!allFieldsFilled) {
+                document.getElementById("errorPopup").style.display = "block";
+                return;
+            }
+
+            var formData = new FormData(form);
+            fetch('/api/products', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    closePopup();
+                    form.reset();
+                } else {
+                    alert('Error submitting the product');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+</body>
 </html>
