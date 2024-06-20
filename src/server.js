@@ -2,7 +2,9 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-// Importăm funcția pentru gestionarea rutelor de utilizatori
+const formidable = require('formidable');
+//const mysql = require('mysql');
+const db = require('./config/dbConfig');
 const userRoutes = require('./routes/userRoutes');
 
 // Asigură-te că directorul 'uploads' există
@@ -50,7 +52,61 @@ const server = http.createServer((req, res) => {
 
     // Dacă URL-ul cererii începe cu '/api', apelăm funcția pentru gestionarea rutelor de utilizatori
     if (req.url.startsWith('/api')) {
-        userRoutes(req, res);
+        if (req.method === 'POST' && req.url === '/api/products') {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end('Error parsing form');
+                    return;
+                }
+
+                const query = `
+    INSERT INTO foods (
+         code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, \`energy-kcal_100g\`, fat_100g, \`saturated-fat_100g\`, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+
+
+                const values = [
+                    fields.code,
+                    fields.url,
+                    fields.product_name,
+                    fields.brands,
+                    fields.categories_en,
+                    fields.countries_en,
+                    fields.ingredients_text,
+                    fields.allergens,
+                    fields.additives_en,
+                    fields.food_groups_en,
+                    fields.main_category_en,
+                    fields.image_url,
+                    fields.image_ingredients_url,
+                    fields.image_nutrition_url,
+                    fields['energy-kcal_100g'],
+                    fields.fat_100g,
+                    fields['saturated-fat_100g'],
+                    fields.carbohydrates_100g,
+                    fields.sugars_100g,
+                    fields.fiber_100g,
+                    fields.proteins_100g,
+                    fields.salt_100g,
+                    fields.sodium_100g
+                ];
+
+                db.query(query, values, (err) => {
+                    if (err) {
+                        res.writeHead(500);
+                        res.end('Error inserting into database');
+                        return;
+                    }
+                    res.writeHead(200);
+                    res.end('Product added successfully');
+                });
+            });
+        } else {
+            userRoutes(req, res);
+        }
     } else if (req.url.startsWith('/uploads')) {
         // Servim fișierele din directorul 'uploads'
         const filePath = path.join(uploadDir, path.basename(req.url));

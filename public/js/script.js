@@ -36,6 +36,8 @@ function changeSlide(direction) {
     slider.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
 }
 
+
+
 // Funcție pentru delogare
 function logout() {
     localStorage.removeItem('token'); // Elimină token-ul din localStorage

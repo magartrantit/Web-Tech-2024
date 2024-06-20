@@ -208,3 +208,13 @@ delete from foods where product_name = 'Test';
 delete from foods where product_name = 'free';
 delete from foods where code = '0000000467476';
 select * from foods;
+
+
+ALTER TABLE foods MODIFY COLUMN code VARCHAR(255);
+CREATE TABLE user_foods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    food_code VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (food_code) REFERENCES foods(code)
+);

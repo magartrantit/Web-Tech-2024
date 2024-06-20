@@ -143,7 +143,21 @@ const getProductDetails = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
+const refreshToken = (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.status(401).json({ error: 'Token missing' });
+    }
 
+    jwt.verify(token, 'your_refresh_secret_key', (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid token' });
+        }
+
+        const newToken = jwt.sign({ id: user.id }, 'your_access_secret_key', { expiresIn: '15m' });
+        res.json({ token: newToken });
+    });
+};
 // Funcția pentru adăugarea unui aliment în preferințele utilizatorului
 const addUserFoodPreference = async (req, res) => {
     let body = '';
@@ -200,4 +214,4 @@ const getUserFoodPreferences = async (req, res) => {
 };
 
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences };
