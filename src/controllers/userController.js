@@ -155,6 +155,19 @@ const addUserFoodPreference = async (req, res) => {
             const { userId, foodCode } = JSON.parse(body);
             console.log(`Adding food preference for user: ${userId}, food: ${foodCode}`);
 
+            // Check if the preference already exists
+            const [existingPreference] = await pool.query(
+                'SELECT * FROM user_foods WHERE user_id = ? AND food_code = ?',
+                [userId, foodCode]
+            );
+
+            if (existingPreference.length > 0) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Food preference already exists' }));
+                return;
+            }
+
+            // Add the new preference
             await pool.query('INSERT INTO user_foods (user_id, food_code) VALUES (?, ?)', [userId, foodCode]);
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Food preference added successfully' }));
