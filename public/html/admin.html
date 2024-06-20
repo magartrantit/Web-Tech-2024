@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <link rel="stylesheet" href="../css/admin.css">
-    <script src="../js/script.js"></script>
 </head>
+
 <body>
     <header>
         <a href="#" class="logo">ADMIN</a>
@@ -34,7 +35,7 @@
     <div class="main">
         <div id="adminAccount">
             <h2>Administrate Account of User</h2>
-            <input type="text" id="searchUser" placeholder="Search User">
+            <select id="userSelect"></select>
             <button onclick="deleteUser()">Delete User</button>
             <button onclick="blockUser()">Block User</button>
             <button onclick="modifyDates()">Modify Dates</button>
@@ -69,12 +70,16 @@
                     <input type="text" id="food_groups_en" name="food_groups_en" placeholder="Food Groups">
                     <input type="text" id="main_category_en" name="main_category_en" placeholder="Main Category">
                     <input type="text" id="image_url" name="image_url" placeholder="Image URL" required>
-                    <input type="text" id="image_ingredients_url" name="image_ingredients_url" placeholder="Image Ingredients URL" required>
-                    <input type="text" id="image_nutrition_url" name="image_nutrition_url" placeholder="Image Nutrition URL" required>
+                    <input type="text" id="image_ingredients_url" name="image_ingredients_url"
+                        placeholder="Image Ingredients URL" required>
+                    <input type="text" id="image_nutrition_url" name="image_nutrition_url"
+                        placeholder="Image Nutrition URL" required>
                     <input type="text" id="energy-kcal_100g" name="energy-kcal_100g" placeholder="Energy kcal/100g">
                     <input type="text" id="fat_100g" name="fat_100g" placeholder="Fat/100g">
-                    <input type="text" id="saturated-fat_100g" name="saturated-fat_100g" placeholder="Saturated Fat/100g">
-                    <input type="text" id="carbohydrates_100g" name="carbohydrates_100g" placeholder="Carbohydrates/100g">
+                    <input type="text" id="saturated-fat_100g" name="saturated-fat_100g"
+                        placeholder="Saturated Fat/100g">
+                    <input type="text" id="carbohydrates_100g" name="carbohydrates_100g"
+                        placeholder="Carbohydrates/100g">
                     <input type="text" id="sugars_100g" name="sugars_100g" placeholder="Sugars/100g">
                     <input type="text" id="fiber_100g" name="fiber_100g" placeholder="Fiber/100g">
                     <input type="text" id="proteins_100g" name="proteins_100g" placeholder="Proteins/100g">
@@ -92,6 +97,8 @@
                 <p>All fields must be filled and an image URL must be provided.</p>
             </div>
         </div>
+
+        
     </div>
 
     <script>
@@ -132,7 +139,48 @@
                 console.error('Error:', error);
             });
         }
-    </script>
 
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded and parsed');
+            fetchUsers();
+        });
+
+        function fetchUsers() {
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched users:', data);
+                    const userSelect = document.getElementById('userSelect');
+                    data.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.textContent = user.username;
+                        userSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching users:', error));
+        }
+
+        function deleteUser() {
+            const userId = document.getElementById('userSelect').value;
+            console.log('Deleting user with ID:', userId);
+            fetch(`/api/users/${userId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('User deleted successfully');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        alert('Error deleting user');
+                    }
+                })
+                .catch(error => console.error('Error deleting user:', error));
+        }
+
+    </script>
 </body>
+
 </html>
