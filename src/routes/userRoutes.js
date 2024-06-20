@@ -1,5 +1,5 @@
 // Importăm funcțiile pentru crearea și autentificarea utilizatorilor din controller-ul de utilizatori
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences } = require('../controllers/userController');
 // Importăm funcția middleware pentru autentificarea token-urilor
 const authenticateToken = require('../middleware/authMiddleware');
 
@@ -34,6 +34,20 @@ const userRoutes = (req, res) => {
         const productId = req.url.split('/').pop();
         req.params = { id: productId }; // Adăugăm parametrii în obiectul req
         getProductDetails(req, res);
+    }
+    // Dacă metoda cererii este POST și URL-ul este '/api/user/food-preferences', apelăm funcția pentru adăugarea unui aliment în preferințele utilizatorului
+    else if (req.method === 'POST' && req.url === '/api/user/food-preferences') {
+        authenticateToken(req, res, () => {
+            addUserFoodPreference(req, res);
+        });
+    }
+    // Dacă metoda cererii este GET și URL-ul începe cu '/api/user/food-preferences/', apelăm funcția pentru obținerea preferințelor culinare ale utilizatorului
+    else if (req.method === 'GET' && req.url.startsWith('/api/user/food-preferences/')) {
+        const userId = req.url.split('/').pop();
+        req.params = { userId }; // Adăugăm parametrii în obiectul req
+        authenticateToken(req, res, () => {
+            getUserFoodPreferences(req, res);
+        });
     }
     // Dacă niciuna dintre condițiile de mai sus nu este îndeplinită, trimitem un răspuns cu statusul 404 (Not Found)
     else {

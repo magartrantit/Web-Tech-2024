@@ -43,12 +43,12 @@
                 <div class="slide">
                     <span class="label">ENGLISH</span>
                 </div>
-                <!-- More slides as needed -->
+              
             </div>
         </div>
     </div>
     <div class="produse" id="produseContainer">
-        <!-- Dynamic food items will be appended here -->
+       
     </div>
 
     <script>
@@ -136,7 +136,7 @@
                             <li><strong>Salt:</strong> ${product.salt_100g} g</li>
                             <li><strong>Sodium:</strong> ${product.sodium_100g} g</li>
                         </ul>
-                        <button onclick="addToCart(${product.code})">Add</button>
+                        <button onclick="addToCart('${product.code}')">Add</button>
                     </div>
                 `;
                 overlay.appendChild(popup);
@@ -155,9 +155,25 @@
             }
         }
     
-        function addToCart(productId) {
-            console.log(`Product ${productId} added to cart`);
-            closePopup();
+        async function addToCart(productCode) {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            console.log('Adding to cart', { userId, productCode }); 
+            const response = await fetch('/api/user/food-preferences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId, foodCode: productCode })
+            });
+    
+            if (response.ok) {
+                alert('Food added to preferences');
+                closePopup();
+            } else {
+                alert('Failed to add food to preferences');
+            }
         }
     
         document.getElementById('signout').addEventListener('click', () => {
@@ -165,7 +181,6 @@
             window.location.href = '/login';
         });
     </script>
-   
 </body>
 
 </html>

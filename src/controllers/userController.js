@@ -118,7 +118,7 @@ const getAllFoods = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM foods');
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(result[0])); // mysql2 returns result set as an array
+        res.end(JSON.stringify(result[0])); 
     } catch (err) {
         console.error('Database error:', err);
         res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -144,5 +144,47 @@ const getProductDetails = async (req, res) => {
     }
 };
 
+// Funcția pentru adăugarea unui aliment în preferințele utilizatorului
+const addUserFoodPreference = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', async () => {
+        try {
+            const { userId, foodCode } = JSON.parse(body);
+            console.log(`Adding food preference for user: ${userId}, food: ${foodCode}`);
+
+            await pool.query('INSERT INTO user_foods (user_id, food_code) VALUES (?, ?)', [userId, foodCode]);
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Food preference added successfully' }));
+        } catch (err) {
+            console.error('Database error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
+};
+
+// Funcția pentru obținerea preferințelor culinare ale utilizatorului
+const getUserFoodPreferences = async (req, res) => {
+    const userId = req.params.userId;
+    console.log(`Fetching food preferences for user: ${userId}`);
+
+    try {
+        const [result] = await pool.query(
+            'SELECT foods.* FROM foods JOIN user_foods ON foods.code = user_foods.food_code WHERE user_foods.user_id = ?',
+            [userId]
+        );
+        console.log(`Found ${result.length} food preferences for user: ${userId}`);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences };
