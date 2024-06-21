@@ -14,8 +14,7 @@
         <ul class="sidebar">
             <li onclick="hideSidebar()" class="ics">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path fill="white"
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                    <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                 </svg>
             </li>
             <li><a href="/page1">Home</a></li>
@@ -38,13 +37,12 @@
                 <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display: none;">
                 <button id="changePictureButton">Change Picture</button>
             </div>
-            <div class="user-collections">
-                <p>Number of Collections: <span id="collectionCount">0</span></p>
+            <div class="user-preferences">
+                <p>My Culinary Preferences: <span id="collectionCount"></span></p>
             </div>
         </div>
 
         <div class="preferinte" id="preferinteContainer">
-            
         </div>
     </div>
 
@@ -81,7 +79,6 @@
     
                 document.getElementById('collectionCount').innerText = data.user.collectionCount || 0;
     
-            
                 const preferencesResponse = await fetch(`/api/user/food-preferences/${userId}`, {
                     method: 'GET',
                     headers: {
@@ -97,6 +94,8 @@
                         const foodDiv = document.createElement('div');
                         foodDiv.className = 'mancare';
                         foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                        foodDiv.dataset.id = food.code;
+                        foodDiv.addEventListener('click', () => showProductDetails(food.code));
                         preferinteContainer.appendChild(foodDiv);
                     });
                 }
@@ -135,10 +134,91 @@
             localStorage.removeItem('userId');
             window.location.href = '/login';
         });
-    
-    </script>
-    
 
-</body>
+        async function showProductDetails(productId) {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/foods/${productId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-</html>
+            if (response.ok) {
+                const product = await response.json();
+                const overlay = document.createElement('div');
+                overlay.className = 'overlay';
+                const popup = document.createElement('div');
+                popup.className = 'popup';
+                popup.innerHTML = `
+                    <div class="popup-content">
+                        <span class="close-btn" onclick="closePopup()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <h2>${product.product_name}</h2>
+                        <img src="${product.image_url}" alt="${product.product_name}" style="width:100%;height:auto;">
+                        <p><strong>Brands:</strong> ${product.brands}</p>
+                        <p><strong>Categories:</strong> ${product.categories_en}</p>
+                        <p><strong>Ingredients:</strong> ${product.ingredients_text}</p>
+                        <p><strong>Allergens:</strong> ${product.allergens}</p>
+                        <p><strong>Additives:</strong> ${product.additives_en}</p>
+                        <p><strong>Nutrition:</strong></p>
+                        <ul>
+                            <li><strong>Energy:</strong> ${product['energy-kcal_100g']} kcal</li>
+                            <li><strong>Fat:</strong> ${product.fat_100g} g</li>
+                            <li><strong>Saturated Fat:</strong> ${product['saturated-fat_100g']} g</li>
+                            <li><strong>Carbohydrates:</strong> ${product.carbohydrates_100g} g</li>
+                            <li><strong>Sugars:</strong> ${product.sugars_100g} g</li>
+                            <li><strong>Fiber:</strong> ${product.fiber_100g} g</li>
+                            <li><strong>Proteins:</strong> ${product.proteins_100g} g</li>
+                            <li><strong>Salt:</strong> ${product.salt_100g} g</li>
+                            <li><strong>Sodium:</strong> ${product.sodium_100g} g</li>
+                        </ul>
+                        <button onclick="addToCart('${product.code}')">Add</button>
+                    </div>
+                `;
+                overlay.appendChild(popup);
+                document.body.appendChild(overlay);
+            }
+        }
+
+        function closePopup() {
+            const overlay = document.querySelector('.overlay');
+            const popup = document.querySelector('.popup');
+            if (overlay && popup) {
+                popup.classList.add('popup-hide');
+                popup.addEventListener('animationend', () => {
+                    document.body.removeChild(overlay);
+                }, { once: true });
+            }
+        }
+
+        async function addToCart(productCode) {
+                const token = localStorage.getItem('token');
+                const userId = localStorage.getItem('userId');
+                console.log('Adding to cart', { userId, productCode });
+                const response = await fetch('/api/user/food-preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ userId, foodCode: productCode })
+                });
+
+                if (response.ok) {
+                    alert('Food added to preferences');
+                    closePopup();
+                } else {
+                    alert('Failed to add food to preferences');
+                }
+            }
+
+        </script>
+
+    </body>
+
+    </html>
