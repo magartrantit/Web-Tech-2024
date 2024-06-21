@@ -210,7 +210,9 @@ delete from foods where code = '0000000467476';
 select * from foods;
 
 
-ALTER TABLE foods MODIFY COLUMN code VARCHAR(255);
+ALTER TABLE foods
+MODIFY code VARCHAR(255),
+ADD UNIQUE (code);
 CREATE TABLE user_foods (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -218,3 +220,88 @@ CREATE TABLE user_foods (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (food_code) REFERENCES foods(code)
 );
+
+CREATE TABLE food (
+    code VARCHAR(255),
+    url TEXT,
+    product_name TEXT,
+    brands TEXT,
+    categories_en TEXT,
+    countries_en TEXT,
+    ingredients_text TEXT,
+    allergens TEXT,
+    additives_en TEXT,
+    food_groups_en TEXT,
+    main_category_en TEXT,
+    image_url TEXT,
+    image_ingredients_url TEXT,
+    image_nutrition_url TEXT,
+    energy_kcal_100g TEXT,
+    fat_100g TEXT,
+    saturated_fat_100g TEXT,
+    carbohydrates_100g TEXT,
+    sugars_100g TEXT,
+    fiber_100g TEXT,
+    proteins_100g TEXT,
+    salt_100g TEXT,
+    sodium_100g TEXT,
+    UNIQUE (code)
+);
+
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT001', 'http://example.com/apple', 'Apple', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of apple', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/027/296/702/original/red-apple-fruits-transparent-background-ai-generative-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 52, 0.2, 0.1, 14, 10, 2.4, 0.3, 0, 0);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT002', 'http://example.com/pear', 'Pear', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of pear', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/022/825/561/original/pear-fruit-pear-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 57, 0.1, 0.02, 15, 10, 3.1, 0.4, 0.01, 0.002);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT003', 'http://example.com/watermelon', 'Watermelon', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of watermelon', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/022/825/607/original/watermelon-fruit-watermelon-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 30, 0.2, 0.02, 8, 6, 0.4, 0.6, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT004', 'http://example.com/fig', 'Fig', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of fig', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/029/859/561/original/fig-fruit-fig-fruit-fig-fig-fruit-with-transparent-background-ai-generative-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 74, 0.3, 0.06, 19, 16, 2.9, 0.8, 0.03, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT005', 'http://example.com/cherry', 'Cherry', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of cherry', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/034/883/718/original/ai-generated-cherry-fruit-clip-art-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 50, 0.3, 0.1, 12, 8, 1.6, 1, 0.01, 0.002);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT006', 'http://example.com/banana', 'Banana', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of banana', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/030/809/715/original/banana-fruit-no-background-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 89, 0.3, 0.11, 23, 12, 2.6, 1.1, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT007', 'http://example.com/strawberry', 'Strawberry', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of strawberry', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/025/064/124/non_2x/strawberry-with-ai-generated-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 32, 0.3, 0.02, 8, 4.9, 2, 0.7, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT008', 'http://example.com/raspberry', 'Raspberry', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of raspberry', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/022/825/589/non_2x/raspberry-fruit-raspberries-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 52, 0.7, 0.02, 12, 4.4, 6.5, 1.2, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT009', 'http://example.com/pineapple', 'Pineapple', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of pineapple', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/035/877/862/non_2x/ai-generated-fresh-pineapple-isolated-on-transparent-background-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 50, 0.1, 0.01, 13, 10, 1.4, 0.5, 0.01, 0.002);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT010', 'http://example.com/mango', 'Mango', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of mango', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/022/825/518/original/mango-fruit-mango-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 60, 0.4, 0.09, 15, 13.7, 1.6, 0.8, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT011', 'http://example.com/lemon', 'Lemon', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of lemon', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/028/063/790/original/lemon-fruit-isolated-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 29, 0.3, 0.04, 9, 2.5, 2.8, 1.1, 0.02, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT012', 'http://example.com/orange', 'Orange', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of orange', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/previews/035/676/102/original/ai-generated-orange-fruit-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 47, 0.1, 0.02, 12, 9, 2.4, 0.9, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('FRUIT013', 'http://example.com/grapefruit', 'Grapefruit', 'Generic Brand', 'Fruits', 'Country', 'Ingredients of grapefruit', 'None', 'None', 'Fruits', 'Category', 'https://static.vecteezy.com/system/resources/thumbnails/027/141/384/small_2x/delicious-grapefruit-with-leaves-slice-created-with-generative-ai-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 42, 0.1, 0.02, 11, 7, 1.6, 0.8, 0.01, 0.001);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('VEG001', 'http://example.com/tomato', 'Tomato', 'Generic Brand', 'Vegetables', 'Country', 'Ingredients of tomato', 'None', 'None', 'Vegetables', 'Category', 'https://static.vecteezy.com/system/resources/previews/027/216/342/non_2x/red-tomato-red-tomato-transparent-background-ai-generated-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 18, 0.2, 0.03, 3.9, 2.6, 1.2, 0.9, 0.01, 0.005);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('VEG002', 'http://example.com/potato', 'Potato', 'Generic Brand', 'Vegetables', 'Country', 'Ingredients of potato', 'None', 'None', 'Vegetables', 'Category', 'https://static.vecteezy.com/system/resources/previews/035/642/278/non_2x/ai-generated-potato-food-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 77, 0.1, 0.02, 17, 0.8, 2.2, 2, 0.01, 0.002);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('VEG003', 'http://example.com/onion', 'Onion', 'Generic Brand', 'Vegetables', 'Country', 'Ingredients of onion', 'None', 'None', 'Vegetables', 'Category', 'https://static.vecteezy.com/system/resources/previews/027/216/344/original/onion-onion-transparent-background-ai-generated-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 40, 0.1, 0.04, 9.3, 4.2, 1.7, 1.1, 0.01, 0.002);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('MEAT001', 'http://example.com/chicken', 'Chicken', 'Generic Brand', 'Meat', 'Country', 'Ingredients of chicken', 'None', 'None', 'Meat', 'Category', 'https://static.vecteezy.com/system/resources/previews/034/763/882/original/ai-generated-raw-chicken-meat-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 165, 3.6, 1.0, 0, 0, 0, 31, 0.1, 0.07);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('MEAT002', 'http://example.com/pork', 'Pork', 'Generic Brand', 'Meat', 'Country', 'Ingredients of pork', 'None', 'None', 'Meat', 'Category', 'https://static.vecteezy.com/system/resources/previews/028/597/628/non_2x/fresh-pork-meat-free-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 242, 14, 5.4, 0, 0, 0, 27, 0.1, 0.06);
+
+INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
+VALUES ('MEAT003', 'http://example.com/beef', 'Beef', 'Generic Brand', 'Meat', 'Country', 'Ingredients of beef', 'None', 'None', 'Meat', 'Category', 'https://static.vecteezy.com/system/resources/previews/026/860/310/original/fresh-raw-tasty-meat-steak-cow-fly-vegetables-health-food-isolated-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 250, 15, 6.0, 0, 0, 0, 26, 0.1, 0.05);
