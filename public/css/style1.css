@@ -55,7 +55,7 @@ body{
 .search-bar {
   position: fixed;
   left: 20%; 
-  top: 5%; 
+  top: 2%; 
   border: none;
   outline: none;
   border-bottom: 2px solid var(--alb);
@@ -67,71 +67,12 @@ body{
   font-size: 1.5em;
 }
 
-.slider-container {
-  width:100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  max-width: 100%; 
-  margin: auto;
-  overflow: hidden;
-}
 
-.slider {
-  white-space: nowrap;
-  transition: transform 0.5s ease-in-out;
-}
 
-.slide:nth-child(odd) {
-  display: inline-block;
-  width: 100px; 
-  height: 100px; 
-  border-radius: 50%;
-  background-size: cover;
-  background-image: url('../html/paste.jpg');
-  position: relative;
-  margin-right:10px;
-}
 
-.slide:nth-child(even) {
-  display: inline-block;
-  width: 100px; 
-  height: 100px; 
-  border-radius: 50%;
-  background-size: cover;
-  background-image: url('../html/mancare.jpg');
-  position: relative;
-  margin-right:10px;
-}
 
-.label {
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 0.75em;
-}
 
-.slider-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 24px;
-  color: white;
-  z-index: 2;
-}
 
-.left-arrow {
-  left: 10px;
-}
-
-.right-arrow {
-  right: 10px;
-}
 
 .overlay {
   position: fixed;
@@ -139,11 +80,10 @@ body{
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .popup {
@@ -233,45 +173,17 @@ body{
   fill: #000;
 }
 
-@media screen and (max-width: 600px) {
-  .slide {
-    width: 75px;
-    height: 75px;
-  }
 
-  .slider-arrow {
-    font-size: 18px;
-  }
-}
 
-@media screen and (max-width: 400px) {
-  .slide {
-    width: 50px;
-    height: 50px;
-  }
 
-  .slider-arrow {
-    font-size: 12px;
-  }
-}
 
-.categorii {
-  position: fixed;
-  top: 35%; 
-  left: 20%; 
-  width: 80%; 
-  height: 8.0em;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-}
 
 .indicatie {
   position: fixed;
-  top: 10%; 
+ 
   left: 20%; 
   width: 80%; 
-  height: 8.0em;
+  height: 7.0em;
   display: flex; 
   justify-content: center; 
   align-items: center; 
@@ -279,21 +191,91 @@ body{
   color: var(--alb);
 }
 
+.categorii {
+  position: fixed;
+  top: 23%; 
+  left: 20%; 
+  width: 80%; 
+  height: 8.0em;
+  display: flex; 
+  justify-content: space-around; 
+  align-items: center; 
+  padding: 10px;
+}
+
+.categorii button {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: var(--rosuInchis);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  
+}
+
+.categorii button:hover {
+  background-color: #0056b3;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--rosuInchis);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  opacity: 0; /* Initially hidden */
+  transform: translateY(-10px); /* Initially translated up */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--alb);
+  border-radius: 5px;
+}
+
+.dropdown-content.show {
+  display: block;
+  opacity: 1; /* Fully visible */
+  transform: translateY(0); /* Reset translation */
+}
+
+
+.show {
+  display: block;
+}
+
 .produse {
   position: fixed;
-  bottom:0;
-  right:1.5%;
+  top: 45%;
+  right: 1.5%;
   width: 77%;
-  height: 45%;
+  height: 55%;
   background-color: var(--rosuInchis);
-  box-shadow: 0px 0px 15px rgba(0,0,0,0.2); 
-  display:flex;
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+  display: flex;
   flex-direction: row;
-  flex-wrap:wrap;
-  overflow:auto;
+  flex-wrap: wrap;
+  overflow: auto;
   justify-content: center;
   align-items: center;
-  border-radius:15px;
+  border-radius: 15px;
+  transition: top 0.3s ease, height 0.3s ease, margin-top 0.3s ease; /* Smooth transitions */
 }
 
 .mancare {
@@ -314,6 +296,8 @@ body{
   transform: scale(1.05);
   filter: brightness(0.7);
 }
+
+
 
 @media(min-width: 650px){
   .burger{
@@ -359,6 +343,7 @@ body{
       position: fixed;
       left: 5%;
       width: 90%;
+      
   }
 }
 

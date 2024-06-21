@@ -29,36 +29,125 @@
         </svg></div>
     <input type="text" class="search-bar" placeholder="Search...">
     <div class="indicatie">
-        <p>Alege o categorie</p>
+        <p>Choose a category</p>
     </div>
     <div class="categorii">
-        <div class="slider-container">
-            <div class="slider-arrow left-arrow" onclick="changeSlide(-1)">❮</div>
-            <div class="slider-arrow right-arrow" onclick="changeSlide(1)">❯</div>
-
-            <div class="slider">
-                <div class="slide">
-                    <span class="label">GREEK</span>
-                </div>
-                <div class="slide">
-                    <span class="label">ENGLISH</span>
-                </div>
-              
+        <div class="dropdown">
+            <button type="button">Categories</button>
+            <div class="dropdown-content">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button">Countries</button>
+            <div class="dropdown-content">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button">Brands</button>
+            <div class="dropdown-content">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button">Calories</button>
+            <div class="dropdown-content">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button">Doesn't Contain</button>
+            <div class="dropdown-content">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
             </div>
         </div>
     </div>
     <div class="produse" id="produseContainer">
-       
+
     </div>
 
     <script>
+
+        document.querySelectorAll('.categorii .dropdown button').forEach(button => {
+            button.addEventListener('click', function () {
+                var dropdownContent = this.nextElementSibling;
+
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-content').forEach(content => {
+                    if (content !== dropdownContent) {
+                        content.classList.remove('show');
+                    }
+                });
+
+                // Toggle the current dropdown
+                dropdownContent.classList.toggle('show');
+
+                // Adjust the produse container height and position
+                adjustProduseContainer();
+            });
+        });
+
+        function adjustProduseContainer() {
+            var produseContainer = document.getElementById('produseContainer');
+            var dropdowns = document.querySelectorAll('.dropdown-content');
+            var totalHeight = 0;
+
+            dropdowns.forEach(dropdown => {
+                if (dropdown.classList.contains('show')) {
+                    totalHeight += dropdown.scrollHeight;
+                }
+            });
+
+            // Adjust the top margin and height of the produse container
+            var originalHeight = window.innerHeight * 0.55; // Original height is 55% of the viewport height
+            var originalTop = window.innerHeight * 0.45;    // Original top is 45% of the viewport height
+            produseContainer.style.marginTop = totalHeight + 'px';
+            produseContainer.style.height = `calc(${originalHeight}px - ${totalHeight}px)`;
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.categorii .dropdown button')) {
+                var dropdowns = document.querySelectorAll('.dropdown-content');
+                var isAdjusted = false;
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                        isAdjusted = true;
+                    }
+                });
+                if (isAdjusted) {
+                    adjustProduseContainer();
+                }
+            }
+        };
+
+
+
+
         window.onload = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = '/login';
                 return;
             }
-    
+
             const authResponse = await fetch('/api/protected', {
                 method: 'GET',
                 headers: {
@@ -66,12 +155,12 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             if (!authResponse.ok) {
                 window.location.href = '/login';
                 return;
             }
-    
+
             const foodResponse = await fetch('/api/foods', {
                 method: 'GET',
                 headers: {
@@ -79,7 +168,7 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             if (foodResponse.ok) {
                 const foods = await foodResponse.json();
                 const produseContainer = document.getElementById('produseContainer');
@@ -93,7 +182,7 @@
                 });
             }
         };
-    
+
         async function showProductDetails(productId) {
             const token = localStorage.getItem('token');
             const response = await fetch(`/api/foods/${productId}`, {
@@ -103,7 +192,7 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             if (response.ok) {
                 const product = await response.json();
                 const overlay = document.createElement('div');
@@ -143,7 +232,7 @@
                 document.body.appendChild(overlay);
             }
         }
-    
+
         function closePopup() {
             const overlay = document.querySelector('.overlay');
             const popup = document.querySelector('.popup');
@@ -154,11 +243,11 @@
                 }, { once: true });
             }
         }
-    
+
         async function addToCart(productCode) {
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('userId');
-            console.log('Adding to cart', { userId, productCode }); 
+            console.log('Adding to cart', { userId, productCode });
             const response = await fetch('/api/user/food-preferences', {
                 method: 'POST',
                 headers: {
@@ -167,7 +256,7 @@
                 },
                 body: JSON.stringify({ userId, foodCode: productCode })
             });
-    
+
             if (response.ok) {
                 alert('Food added to preferences');
                 closePopup();
@@ -175,7 +264,7 @@
                 alert('Failed to add food to preferences');
             }
         }
-    
+
         document.getElementById('signout').addEventListener('click', () => {
             localStorage.removeItem('token');
             window.location.href = '/login';
