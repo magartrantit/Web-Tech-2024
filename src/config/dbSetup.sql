@@ -218,7 +218,7 @@ CREATE TABLE user_foods (
     user_id INT NOT NULL,
     food_code VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (food_code) REFERENCES foods(code)
+    FOREIGN KEY (food_code) REFERENCES food(code)
 );
 
 CREATE TABLE food (

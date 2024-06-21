@@ -116,7 +116,7 @@ const uploadProfileImage = (req, res) => {
 // Funcția pentru obținerea tuturor alimentelor din baza de date
 const getAllFoods = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM foods');
+        const result = await pool.query('SELECT * FROM food');
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(result[0])); 
     } catch (err) {
@@ -129,7 +129,7 @@ const getAllFoods = async (req, res) => {
 const getProductDetails = async (req, res) => {
     const productId = req.params.id;
     try {
-        const [result] = await pool.query('SELECT * FROM foods WHERE code = ?', [productId]);
+        const [result] = await pool.query('SELECT * FROM food WHERE code = ?', [productId]);
         if (result.length > 0) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result[0]));
@@ -200,7 +200,7 @@ const getUserFoodPreferences = async (req, res) => {
 
     try {
         const [result] = await pool.query(
-            'SELECT foods.* FROM foods JOIN user_foods ON foods.code = user_foods.food_code WHERE user_foods.user_id = ?',
+            'SELECT food.* FROM food JOIN user_foods ON food.code = user_foods.food_code WHERE user_foods.user_id = ?',
             [userId]
         );
         console.log(`Found ${result.length} food preferences for user: ${userId}`);
