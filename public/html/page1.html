@@ -51,20 +51,22 @@
         </div>
         <div class="dropdown">
             <button type="button">Price</button>
-            <div class="dropdown-content">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-                <a href="#">Option 4</a>
+            <div class="dropdown-content stop-propagation" onclick="event.stopPropagation();">
+                <input type="number" placeholder="Min" style="display: flex;">
+                <input type="number" placeholder="Max" style="display: flex;">
+                <div style="display: flex; justify-content: center; width: 100%;">
+                    <button type="button" style="width: 100%;">Apply</button>
+                </div>
             </div>
         </div>
         <div class="dropdown">
             <button type="button">Calories</button>
-            <div class="dropdown-content">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-                <a href="#">Option 4</a>
+            <div class="dropdown-content stop-propagation" onclick="event.stopPropagation();">
+                <input type="number" placeholder="Min" style="display: flex;">
+                <input type="number" placeholder="Max" style="display: flex;">
+                <div style="display: flex; justify-content: center; width: 100%;">
+                    <button type="button" style="width: 100%;">Apply</button>
+                </div>
             </div>
         </div>
         <div class="dropdown">
@@ -82,6 +84,16 @@
     </div>
 
     <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
+    dropdowns.forEach(function(dropdown) {
+        dropdown.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    });
+});
+
         document.addEventListener('DOMContentLoaded', function () {
             // Ascultător pentru butonul "All"
             document.getElementById('selectAllButton').addEventListener('click', function () {
