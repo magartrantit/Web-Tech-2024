@@ -308,4 +308,49 @@ const getFoodsByCountry = async (req, res) => {
     }
 };
 
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken };
+const getRestaurants = async (req, res) => {
+    try {
+        const [results] = await pool.query('SELECT DISTINCT restaurants FROM food');
+        const restaurantsSet = new Set();
+
+        results.forEach(row => {
+            if (row.restaurants) {
+                row.restaurants.split(/[\s,]+/).forEach(restaurant => {
+                    restaurantsSet.add(restaurant.trim());
+                });
+            }
+        });
+
+        const restaurants = Array.from(restaurantsSet).sort();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(restaurants));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+const getFoodsByRestaurant = async (req, res) => {
+    const restaurant = req.params.restaurant;
+    console.log(`Received request for restaurant: ${restaurant}`); // Debug
+
+    try {
+        const [result] = await pool.query('SELECT * FROM food WHERE restaurants LIKE ?', [`%${restaurant}%`]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Product not found' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant };

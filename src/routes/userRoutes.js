@@ -1,4 +1,4 @@
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
@@ -24,6 +24,10 @@ const userRoutes = async (req, res) => {
         const country = decodeURIComponent(req.url.split('/').pop());
         req.params = { country };
         getFoodsByCountry(req, res);
+    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/restaurants/')) {
+        const restaurant = decodeURIComponent(req.url.split('/').pop());
+        req.params = { restaurant };
+        getFoodsByRestaurant(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
@@ -125,7 +129,7 @@ const userRoutes = async (req, res) => {
         getCountries(req, res);
     }
     else if (req.method === 'GET' && req.url === '/api/restaurants') {
-        getRestaurant(req, res);
+        getRestaurants(req, res);
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
