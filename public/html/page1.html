@@ -11,8 +11,10 @@
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -960 960 960" width="24">
+                    <path fill="white"
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                 </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
@@ -20,7 +22,8 @@
             <li><a href="#" id="signout">Sign out</a></li>
         </ul>
     </nav>
-    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+            viewBox="0 -960 960 960" width="24">
             <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
         </svg></div>
     <input type="text" class="search-bar" placeholder="Search...">
@@ -28,13 +31,13 @@
         <p>Choose a category</p>
     </div>
     <div class="categorii">
-        <div class="dropdown">
+        <div class="butonAll">
             <button type="button" id="selectAllButton">All</button>
         </div>
         <div class="dropdown">
             <button type="button">Categories</button>
             <div class="dropdown-content" id="categories-dropdown">
-              
+
             </div>
         </div>
         <div class="dropdown">
@@ -79,7 +82,43 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ascultător pentru butonul "All"
+            document.getElementById('selectAllButton').addEventListener('click', function () {
+                showAllProducts();
+            });
+
+            // Restul codului existent pentru încărcarea categoriilor...
+        });
+
+        function showAllProducts() {
+            console.log('Showing all products'); // Debug
+            fetch('/api/foods')
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('All foods:', data); // Debug
+                    const produseContainer = document.getElementById('produseContainer');
+                    produseContainer.innerHTML = ''; // Golește containerul existent
+                    data.forEach(food => {
+                        const foodDiv = document.createElement('div');
+                        foodDiv.className = 'mancare';
+                        foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                        foodDiv.dataset.id = food.code;
+                        foodDiv.addEventListener('click', () => showProductDetails(food.code));
+                        produseContainer.appendChild(foodDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching all foods:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
             fetch('/api/categories')
                 .then(response => response.json())
                 .then(data => {
@@ -90,7 +129,7 @@
                         const a = document.createElement('a');
                         a.href = "#";
                         a.textContent = category.categories_en;
-                        a.addEventListener('click', function(event) {
+                        a.addEventListener('click', function (event) {
                             event.preventDefault();
                             filterProductsByCategory(category.categories_en);
                         });
@@ -100,7 +139,7 @@
                 .catch(error => console.error('Error fetching categories:', error));
         });
 
-        
+
 
         function filterProductsByCategory(category) {
             console.log('Selected category:', category); // Debug
@@ -139,10 +178,13 @@
                     }
                 });
 
-                
-                dropdownContent.classList.toggle('show');
+                // Check if dropdownContent is not null before toggling class
+                if (dropdownContent) {
+                    dropdownContent.classList.toggle('show');
+                } else {
+                    console.error('Dropdown content not found for button', this);
+                }
 
-                
                 adjustProduseContainer();
             });
         });
@@ -158,14 +200,14 @@
                 }
             });
 
-            
-            var originalHeight = window.innerHeight * 0.55; 
-            var originalTop = window.innerHeight * 0.45;    
+
+            var originalHeight = window.innerHeight * 0.55;
+            var originalTop = window.innerHeight * 0.45;
             produseContainer.style.marginTop = totalHeight + 'px';
             produseContainer.style.height = `calc(${originalHeight}px - ${totalHeight}px)`;
         }
 
-        
+
         window.onclick = function (event) {
             if (!event.target.matches('.categorii .dropdown button')) {
                 var dropdowns = document.querySelectorAll('.dropdown-content');

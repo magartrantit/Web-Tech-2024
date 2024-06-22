@@ -115,7 +115,8 @@ const userRoutes = async (req, res) => {
         }
     } else if (req.method === 'GET' && req.url === '/api/categories') {
         getCategories(req, res);
-    } else {
+    }
+    else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }

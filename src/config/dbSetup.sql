@@ -305,3 +305,6 @@ VALUES ('MEAT002', 'http://example.com/pork', 'Pork', 'Generic Brand', 'Meat', '
 
 INSERT INTO food (code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g) 
 VALUES ('MEAT003', 'http://example.com/beef', 'Beef', 'Generic Brand', 'Meat', 'Country', 'Ingredients of beef', 'None', 'None', 'Meat', 'Category', 'https://static.vecteezy.com/system/resources/previews/026/860/310/original/fresh-raw-tasty-meat-steak-cow-fly-vegetables-health-food-isolated-on-transparent-background-png.png', 'https://example.com/images/ingredients.png', 'https://example.com/images/nutrition.png', 250, 15, 6.0, 0, 0, 0, 26, 0.1, 0.05);
+
+
+ALTER TABLE users ADD COLUMN admin TINYINT(1) DEFAULT 0;
