@@ -24,7 +24,7 @@ const userRoutes = async (req, res) => {
         const country = decodeURIComponent(req.url.split('/').pop());
         req.params = { country };
         getFoodsByCountry(req, res);
-    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/restaurants/')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/restaurant/')) {
         const restaurant = decodeURIComponent(req.url.split('/').pop());
         req.params = { restaurant };
         getFoodsByRestaurant(req, res);
@@ -32,20 +32,17 @@ const userRoutes = async (req, res) => {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
         getProductDetails(req, res);
-    } 
-    else if (req.method === 'POST' && req.url === '/api/user/food-preferences') {
+    } else if (req.method === 'POST' && req.url === '/api/user/food-preferences') {
         authenticateToken(req, res, () => {
             addUserFoodPreference(req, res);
         });
-    } 
-    else if (req.method === 'GET' && req.url.startsWith('/api/user/food-preferences/')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/user/food-preferences/')) {
         const userId = req.url.split('/').pop();
         req.params = { userId };
         authenticateToken(req, res, () => {
             getUserFoodPreferences(req, res);
         });
-    }
-    else if (req.method === 'POST' && req.url === '/api/refreshToken') {
+    } else if (req.method === 'POST' && req.url === '/api/refreshToken') {
         refreshToken(req, res);
     } else if (req.method === 'POST' && req.url === '/api/products') {
         authenticateToken(req, res, async () => {
@@ -127,11 +124,9 @@ const userRoutes = async (req, res) => {
         getCategories(req, res);
     } else if (req.method === 'GET' && req.url === '/api/countries') {
         getCountries(req, res);
-    }
-    else if (req.method === 'GET' && req.url === '/api/restaurants') {
+    } else if (req.method === 'GET' && req.url === '/api/restaurants') {
         getRestaurants(req, res);
-    }
-    else {
+    } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
