@@ -30,53 +30,12 @@
                 viewBox="0 -960 960 960" width="24">
                 <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
             </svg></div>
-        <div class="all-tasks">
-            <h2 class="task-list-title">My lists</h2>
-            <ul class="task-list" data-lists>
-            </ul>
-
-            <form data-new-list-form>
-                <input type="text" class="new list" data-new-list-input placeholder="new list name"
-                    aria-label="new list name">
-                <button class="btn list" aria-label="create-new-list">+</button>
-            </form>
-        </div>
-
-        <div class="todo-list" data-list-display-container>
-            <div class="to-do-header">
-                <h2 class="to-do-title" data-list-title>Ustensile</h2>
-                <p class="task-count" data-list-count>3 tsks remaining</p>
-            </div>
-
-            <div class="to-do-body">
-                <div class="tasks" data-tasks>
-                </div>
-
-                <div class="new-task-creator">
-                    <form data-new-task-form>
-                        <input type="text" data-new-task-input class="new task" placeholder="new task name"
-                            aria-label="new task name">
-                        <button class="btn task" aria-label="create new task">+</button>
-                    </form>
-                </div>
-
-                <div class="delete">
-                    <button class="btn delete" data-clear-tasks-button>Clear list</button>
-                    <button class="btn delete" data-delete-list-button>Delete list</button>
-                </div>
-            </div>
-        </div>
+       
+       
+           
     </div>
 
-    <template id="task-template">
-        <div class="task">
-            <input type="checkbox">
-            <label>
-                <span class="custom-checkbox"></span>
-            </label>
-        </div>
-    </template>
-
+    
     <script>
         // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
