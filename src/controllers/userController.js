@@ -213,5 +213,18 @@ const getUserFoodPreferences = async (req, res) => {
     }
 };
 
+const getCategories = async (req, res) => {
+    try {
+        const [result] = await pool.query('SELECT DISTINCT categories_en FROM food');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+
 // Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences,getCategories };

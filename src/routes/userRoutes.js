@@ -1,5 +1,5 @@
 // Importăm funcțiile pentru crearea și autentificarea utilizatorilor din controller-ul de utilizatori
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences,getCategories } = require('../controllers/userController');
 // Importăm funcția middleware pentru autentificarea token-urilor
 const authenticateToken = require('../middleware/authMiddleware');
 const { refreshToken } = require('../controllers/userController');
@@ -116,7 +116,10 @@ const userRoutes = async (req, res) => {
             res.writeHead(500);
             res.end(JSON.stringify({ error: 'Error fetching users' }));
         }
-    } else {
+    }else if (req.method === 'GET' && req.url === '/api/categories') {
+        getCategories(req, res);
+    } 
+     else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
