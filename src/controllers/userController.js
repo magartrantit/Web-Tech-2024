@@ -20,7 +20,7 @@ const createUser = async (req, res) => {
 
         try {
             const [result] = await pool.query(
-                'INSERT INTO users (email, username, password) VALUES (?, ?, ?)', 
+                'INSERT INTO users (email, username, password) VALUES (?, ?, ?)',
                 [email, username, hashedPassword]
             );
             res.writeHead(201, { 'Content-Type': 'application/json' });
@@ -48,9 +48,19 @@ const loginUser = async (req, res) => {
                 const user = users[0];
                 const validPassword = await bcrypt.compare(password, user.password);
                 if (validPassword) {
-                    const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '1h' });
+                    let isAdmin = user.admin === 1; // Verificăm dacă utilizatorul este admin
+
+                    const tokenPayload = {
+                        id: user.id,
+                        username: user.username,
+                        isAdmin: isAdmin // Adăugăm isAdmin în payload-ul token-ului JWT
+                    };
+
+                    const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '1h' });
+
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ token }));
+                    res.end(JSON.stringify({ token, isAdmin: isAdmin }));
+                    // Trimitem token-ul și statutul de isAdmin către client
                 } else {
                     res.writeHead(401, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Invalid credentials' }));
@@ -67,6 +77,7 @@ const loginUser = async (req, res) => {
     });
 };
 
+
 // Funcția pentru încărcarea imaginii de profil
 const uploadProfileImage = (req, res) => {
     const form = new formidable.IncomingForm();
@@ -82,7 +93,7 @@ const uploadProfileImage = (req, res) => {
         }
 
         if (!files.profileImage || !files.profileImage[0]) {
-            console.log('No profile image received'); 
+            console.log('No profile image received');
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'No profile image received' }));
             return;
@@ -118,7 +129,7 @@ const getAllFoods = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM food');
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(result[0])); 
+        res.end(JSON.stringify(result[0]));
     } catch (err) {
         console.error('Database error:', err);
         res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -225,7 +236,6 @@ const getCategories = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
-
 // Funcția pentru obținerea alimentelor după categorie
 
 
@@ -252,4 +262,6 @@ const getFoodsByCategory = async (req, res) => {
 };
 
 
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, refreshToken };
+
+// Exportăm funcțiile pentru a putea fi folosite în alte module
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences,getCategories  ,getFoodsByCategory, refreshToken};

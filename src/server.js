@@ -63,7 +63,7 @@ const server = http.createServer((req, res) => {
 
                 const query = `
     INSERT INTO food (
-         code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, \`energy-kcal_100g\`, fat_100g, \`saturated-fat_100g\`, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g
+         code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 

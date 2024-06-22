@@ -79,7 +79,7 @@
                         <input type="text" id="loginUsername" name="txt" placeholder="User name" required="">
                         <input type="password" id="loginPassword" name="pswd" placeholder="Password" required="">
                         <button id="loginButton">Login</button>
-                        <button onclick="adminGo()">Admin</button>
+                        
                     </div>
                 </div>
             </div>
@@ -88,9 +88,9 @@
 
     <script>
         // Functie care redirectioneaza utilizatorul catre pagina de admin
-        function adminGo() {
-            window.location.href = "/html/admin.html";
-        }
+        //function adminGo() {
+            //window.location.href = "/html/admin.html";
+        //}
 
         // Adauga un event listener pentru formularul de inregistrare
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -133,7 +133,12 @@
             const data = await response.json();
             if (data.token) {
                 localStorage.setItem('token', data.token); // Salveaza tokenul in local storage
-                window.location.href = "/html/page1.html"; // Redirectioneaza utilizatorul catre pagina principala
+                //verificam daca e admin sau user
+                if (data.isAdmin == 1) {
+                    window.location.href = "/html/admin.html"; // Redirectioneaza utilizatorul catre pagina de admin
+                } else {
+                    window.location.href = "/html/page1.html"; // Redirectioneaza utilizatorul catre pagina principala
+                }
             } else {
                 alert('Invalid credentials'); // Credentialele sunt invalide
             }
@@ -152,9 +157,15 @@
                     }
                 });
 
-                // Daca raspunsul este OK, redirectioneaza utilizatorul catre pagina principala
+                // Daca raspunsul este OK, redirectioneaza utilizatorul catre pagina principala sau de admin in functie de rol
+
                 if (response.ok) {
-                    window.location.href = "/html/page1.html";
+                    const data = await response.json();
+                    if (data.isAdmin == 1) {
+                        window.location.href = "/html/admin.html";
+                    } else {
+                        window.location.href = "/html/page1.html";
+                    }
                 }
             }
         };
