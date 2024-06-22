@@ -121,7 +121,8 @@ const userRoutes = async (req, res) => {
         getCategories(req, res);
     } else if (req.method === 'GET' && req.url === '/api/countries') {
         getCountries(req, res);
-    } else {
+    }
+    else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
