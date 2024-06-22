@@ -18,13 +18,11 @@
                             <path fill="white"
                                 d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                         </svg></a></li>
-                <li><a href="#home" onclick="hideSidebar()">Home</a></li>
-                <li><a href="#about" onclick="hideSidebar()">About</a></li>
-                <li><a href="/login" onclick="hideSidebar()">Log out</a></li>
+                        <a href="#" id="signout1">Sign out</a>
+                
             </ul>
-            <a href="#home" class="hideOnMobile">Home</a>
-            <a href="#about" class="hideOnMobile">About</a>
-            <a href="/login" class="hideOnMobile">Log out</a>
+            <a href="#" id="signout">Sign out</a>
+
             <a href="#" class="menu-button" onclick=showSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="24"
                     viewBox="0 -1200 960 960" width="24">
                     <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
@@ -98,10 +96,12 @@
             </div>
         </div>
 
-        
+
     </div>
 
     <script>
+
+
         function addProduct() {
             document.getElementById("addProductPopup").style.display = "block";
         }
@@ -140,7 +140,7 @@
             });
         }
 
-        
+
 
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM fully loaded and parsed');
@@ -179,6 +179,21 @@
                 })
                 .catch(error => console.error('Error deleting user:', error));
         }
+
+        document.getElementById('signout').addEventListener('click', () => {
+            // La click pe butonul de delogare, se elimină tokenul din stocarea locală
+            localStorage.removeItem('token');
+            // Și se redirecționează utilizatorul către pagina de autentificare
+            window.location.href = '/login';
+        });
+
+
+        document.getElementById('signout1').addEventListener('click', () => {
+            // La click pe butonul de delogare, se elimină tokenul din stocarea locală
+            localStorage.removeItem('token');
+            // Și se redirecționează utilizatorul către pagina de autentificare
+            window.location.href = '/login';
+        });
 
     </script>
 </body>
