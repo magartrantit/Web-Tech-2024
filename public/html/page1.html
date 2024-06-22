@@ -47,7 +47,16 @@
             </div>
         </div>
         <div class="dropdown">
-            <button type="button">Brands</button>
+            <button type="button">Restaurants</button>
+            <div class="dropdown-content" id="restaurants-dropdown">
+                <a href="#">Option 1</a>
+                <a href="#">Option 2</a>
+                <a href="#">Option 3</a>
+                <a href="#">Option 4</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button">Price</button>
             <div class="dropdown-content">
                 <a href="#">Option 1</a>
                 <a href="#">Option 2</a>
@@ -337,6 +346,7 @@
                         <img src="${product.image_url}" alt="${product.product_name}" style="width:100%;height:auto;">
                         <p><strong>Brands:</strong> ${product.brands}</p>
                         <p><strong>Categories:</strong> ${product.categories_en}</p>
+                        <p><strong>Countries:</strong> ${product.countries_en}</p>
                         <p><strong>Ingredients:</strong> ${product.ingredients_text}</p>
                         <p><strong>Allergens:</strong> ${product.allergens}</p>
                         <p><strong>Additives:</strong> ${product.additives_en}</p>
@@ -351,6 +361,8 @@
                             <li><strong>Salt:</strong> ${product.salt_100g} g</li>
                             <li><strong>Sodium:</strong> ${product.sodium_100g} g</li>
                         </ul>
+                        <p><strong>Restaurants:</strong> ${product.restaurants}</p>
+                        <p><strong>Price:</strong> ${product.price}</p>
                         <button onclick="addToCart('${product.code}')">Add</button>
                     </div>
                 `;

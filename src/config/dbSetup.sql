@@ -308,3 +308,118 @@ VALUES ('MEAT003', 'http://example.com/beef', 'Beef', 'Generic Brand', 'Meat', '
 
 
 ALTER TABLE users ADD COLUMN admin TINYINT(1) DEFAULT 0;
+ALTER TABLE food 
+ADD COLUMN restaurants VARCHAR(255),
+ADD COLUMN price DECIMAL(10, 2);
+
+UPDATE food 
+SET restaurants = 'Grill House', price = 12.99 
+WHERE code = 'MEAT001';
+
+UPDATE food 
+SET restaurants = 'Grill House', price = 15.99 
+WHERE code = 'MEAT002';
+
+UPDATE food 
+SET restaurants = 'Grill House', price = 19.99 
+WHERE code = 'MEAT003';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 1.99 
+WHERE code = 'VEG001';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 1.99 
+WHERE code = 'VEG002';
+
+UPDATE food 
+SET restaurants = 'Apple Orchard Cafe', price = 1.99 
+WHERE code = 'VEG003';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 1.99 
+WHERE code = 'FRUIT001';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 1.99 
+WHERE code = 'FRUIT002';
+
+UPDATE food 
+SET restaurants = 'Apple Orchard Cafe', price = 1.99 
+WHERE code = 'FRUIT003';
+
+UPDATE food 
+SET restaurants = 'Apple Orchard Cafe', price = 1.99 
+WHERE code = 'FRUIT004';
+
+UPDATE food 
+SET restaurants = 'Apple Orchard Cafe', price = 3.99 
+WHERE code = 'FRUIT005';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 4.99 
+WHERE code = 'FRUIT006';
+
+UPDATE food 
+SET restaurants = 'Apple Orchard Cafe', price = 1.99 
+WHERE code = 'FRUIT007';
+
+UPDATE food 
+SET restaurants = 'Vegan Delights', price = 2.99 
+WHERE code = 'FRUIT008';
+
+UPDATE food 
+SET countries_en = 'Belgium, France, UK'
+WHERE code = 'VEG001';
+
+UPDATE food 
+SET countries_en = 'USA, France, UK'
+WHERE code = 'VEG002';
+
+UPDATE food 
+SET countries_en = 'Romania, Russia, UK'
+WHERE code = 'VEG003';
+
+UPDATE food 
+SET countries_en = 'Romania, France, UK'
+WHERE code = 'MEAT001';
+
+UPDATE food 
+SET countries_en = 'China, France, UK'
+WHERE code = 'MEAT002';
+
+UPDATE food 
+SET countries_en = 'Romania, Belgium, USA'
+WHERE code = 'MEAT003';
+
+UPDATE food 
+SET countries_en = 'Romania, France, UK'
+WHERE code = 'FRUIT001';
+
+UPDATE food 
+SET countries_en = 'Romania, France, UK'
+WHERE code = 'FRUIT002';
+
+UPDATE food 
+SET countries_en = 'Romania, France, UK'
+WHERE code = 'FRUIT003';
+
+UPDATE food 
+SET countries_en = 'Russia, France, USA'
+WHERE code = 'FRUIT004';
+
+UPDATE food 
+SET countries_en = 'Russia, Belgium, UK'
+WHERE code = 'FRUIT005';
+
+UPDATE food 
+SET countries_en = 'Belgium, Russia, UK'
+WHERE code = 'FRUIT006';
+
+UPDATE food 
+SET countries_en = 'Romania, USA, UK'
+WHERE code = 'FRUIT007';
+
+UPDATE food 
+SET countries_en = 'Romania, France, UK, USA'
+WHERE code = 'FRUIT008';

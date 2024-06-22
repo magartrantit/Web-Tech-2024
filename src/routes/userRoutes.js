@@ -77,6 +77,8 @@ const userRoutes = async (req, res) => {
                     proteins_100g: fields.proteins_100g,
                     salt_100g: fields.salt_100g,
                     sodium_100g: fields.sodium_100g,
+                    restaurants: fields.restaurants,
+                    price: fields.price,
                 };
 
                 const query = 'INSERT INTO products SET ?';
@@ -121,6 +123,9 @@ const userRoutes = async (req, res) => {
         getCategories(req, res);
     } else if (req.method === 'GET' && req.url === '/api/countries') {
         getCountries(req, res);
+    }
+    else if (req.method === 'GET' && req.url === '/api/restaurants') {
+        getRestaurant(req, res);
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
