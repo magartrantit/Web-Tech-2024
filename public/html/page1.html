@@ -34,16 +34,13 @@
         <div class="dropdown">
             <button type="button">Categories</button>
             <div class="dropdown-content" id="categories-dropdown">
-              
+                <!-- Categoriile vor fi populate aici -->
             </div>
         </div>
         <div class="dropdown">
             <button type="button">Countries</button>
-            <div class="dropdown-content">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-                <a href="#">Option 4</a>
+            <div class="dropdown-content" id="countries-dropdown">
+                <!-- Țările vor fi populate aici -->
             </div>
         </div>
         <div class="dropdown">
@@ -98,9 +95,26 @@
                     });
                 })
                 .catch(error => console.error('Error fetching categories:', error));
-        });
 
-        
+            fetch('/api/countries')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Countries:', data); // Debug
+                    const dropdownContent = document.getElementById('countries-dropdown');
+                    dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+                    data.forEach(country => {
+                        const a = document.createElement('a');
+                        a.href = "#";
+                        a.textContent = country;
+                        a.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            filterProductsByCountry(country);
+                        });
+                        dropdownContent.appendChild(a);
+                    });
+                })
+                .catch(error => console.error('Error fetching countries:', error));
+        });
 
         function filterProductsByCategory(category) {
             console.log('Selected category:', category); // Debug
@@ -128,21 +142,47 @@
                 .catch(error => console.error('Error fetching foods:', error));
         }
 
+        function filterProductsByCountry(country) {
+            console.log('Selected country:', country); // Debug
+            fetch(`/api/foods/country/${encodeURIComponent(country)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Filtered foods:', data); // Debug
+                    const produseContainer = document.getElementById('produseContainer');
+                    produseContainer.innerHTML = ''; // Golește containerul existent
+                    data.forEach(food => {
+                        const foodDiv = document.createElement('div');
+                        foodDiv.className = 'mancare';
+                        foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                        foodDiv.dataset.id = food.code;
+                        foodDiv.addEventListener('click', () => showProductDetails(food.code));
+                        produseContainer.appendChild(foodDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching foods:', error));
+        }
+
         document.querySelectorAll('.categorii .dropdown button').forEach(button => {
             button.addEventListener('click', function () {
                 var dropdownContent = this.nextElementSibling;
 
-                // Close all other dropdowns
+               
                 document.querySelectorAll('.dropdown-content').forEach(content => {
                     if (content !== dropdownContent) {
                         content.classList.remove('show');
                     }
                 });
 
-                
+         
                 dropdownContent.classList.toggle('show');
 
-                
+               
                 adjustProduseContainer();
             });
         });
@@ -160,12 +200,12 @@
 
             
             var originalHeight = window.innerHeight * 0.55; 
-            var originalTop = window.innerHeight * 0.45;    
+            var originalTop = window.innerHeight * 0.45;   
             produseContainer.style.marginTop = totalHeight + 'px';
             produseContainer.style.height = `calc(${originalHeight}px - ${totalHeight}px)`;
         }
 
-        
+       
         window.onclick = function (event) {
             if (!event.target.matches('.categorii .dropdown button')) {
                 var dropdowns = document.querySelectorAll('.dropdown-content');

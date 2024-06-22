@@ -263,5 +263,49 @@ const getFoodsByCategory = async (req, res) => {
 
 
 
-// Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences,getCategories  ,getFoodsByCategory, refreshToken};
+const getCountries = async (req, res) => {
+    try {
+        const [results] = await pool.query('SELECT DISTINCT countries_en FROM food');
+        const countriesSet = new Set();
+
+        results.forEach(row => {
+            if (row.countries_en) {
+                row.countries_en.split(/[\s,]+/).forEach(country => {
+                    countriesSet.add(country.trim());
+                });
+            }
+        });
+
+        const countries = Array.from(countriesSet).sort();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(countries));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+const getFoodsByCountry = async (req, res) => {
+    const country = req.params.country;
+    console.log(`Received request for country: ${country}`); // Debug
+
+    try {
+        const [result] = await pool.query('SELECT * FROM food WHERE countries_en LIKE ?', [`%${country}%`]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Product not found' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken };

@@ -1,4 +1,4 @@
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, refreshToken } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
@@ -20,6 +20,10 @@ const userRoutes = async (req, res) => {
         const category = decodeURIComponent(req.url.split('/').pop());
         req.params = { category };
         getFoodsByCategory(req, res);
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/country/')) {
+        const country = decodeURIComponent(req.url.split('/').pop());
+        req.params = { country };
+        getFoodsByCountry(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
@@ -64,9 +68,9 @@ const userRoutes = async (req, res) => {
                     image_url: fields.image_url,
                     image_ingredients_url: fields.image_ingredients_url,
                     image_nutrition_url: fields.image_nutrition_url,
-                    "energy-kcal_100g": fields.energy_kcal_100g,
+                    "energy-kcal_100g": fields["energy-kcal_100g"],
                     fat_100g: fields.fat_100g,
-                    "saturated-fat_100g": fields.saturated_fat_100g,
+                    "saturated-fat_100g": fields["saturated-fat_100g"],
                     carbohydrates_100g: fields.carbohydrates_100g,
                     sugars_100g: fields.sugars_100g,
                     fiber_100g: fields.fiber_100g,
@@ -115,6 +119,8 @@ const userRoutes = async (req, res) => {
         }
     } else if (req.method === 'GET' && req.url === '/api/categories') {
         getCategories(req, res);
+    } else if (req.method === 'GET' && req.url === '/api/countries') {
+        getCountries(req, res);
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');

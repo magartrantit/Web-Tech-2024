@@ -5,7 +5,7 @@ const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root', // numele de utilizator pentru baza de date
-    password: '500delei', // parola pentru utilizatorul bazei de date
+    password: 'webdb', // parola pentru utilizatorul bazei de date
     database: 'cupo', // numele bazei de date la care se face conexiunea
 });
 
