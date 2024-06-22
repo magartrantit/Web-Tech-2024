@@ -34,11 +34,8 @@
     <div class="categorii">
         <div class="dropdown">
             <button type="button">Categories</button>
-            <div class="dropdown-content">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-                <a href="#">Option 4</a>
+            <div class="dropdown-content" id="categories-dropdown">
+                <!-- Categoriile vor fi populate aici -->
             </div>
         </div>
         <div class="dropdown">
@@ -83,6 +80,21 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/categories')
+                .then(response => response.json())
+                .then(data => {
+                    const dropdownContent = document.getElementById('categories-dropdown');
+                    dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+                    data.forEach(category => {
+                        const a = document.createElement('a');
+                        a.href = "#";
+                        a.textContent = category.categories_en;
+                        dropdownContent.appendChild(a);
+                    });
+                })
+                .catch(error => console.error('Error fetching categories:', error));
+        });
 
         document.querySelectorAll('.categorii .dropdown button').forEach(button => {
             button.addEventListener('click', function () {
@@ -137,9 +149,6 @@
                 }
             }
         };
-
-
-
 
         window.onload = async () => {
             const token = localStorage.getItem('token');
