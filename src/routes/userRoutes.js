@@ -1,8 +1,5 @@
-// Importăm funcțiile pentru crearea și autentificarea utilizatorilor din controller-ul de utilizatori
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences,getCategories } = require('../controllers/userController');
-// Importăm funcția middleware pentru autentificarea token-urilor
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, refreshToken } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
-const { refreshToken } = require('../controllers/userController');
 const db = require('../config/dbConfig');
 
 const userRoutes = async (req, res) => {
@@ -19,27 +16,28 @@ const userRoutes = async (req, res) => {
         });
     } else if (req.method === 'GET' && req.url === '/api/foods') {
         getAllFoods(req, res);
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/category/')) {
+        const category = decodeURIComponent(req.url.split('/').pop());
+        req.params = { category };
+        getFoodsByCategory(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
         getProductDetails(req, res);
-    }
-    // Dacă metoda cererii este POST și URL-ul este '/api/user/food-preferences', apelăm funcția pentru adăugarea unui aliment în preferințele utilizatorului
+    } 
     else if (req.method === 'POST' && req.url === '/api/user/food-preferences') {
         authenticateToken(req, res, () => {
             addUserFoodPreference(req, res);
         });
-    }
-    // Dacă metoda cererii este GET și URL-ul începe cu '/api/user/food-preferences/', apelăm funcția pentru obținerea preferințelor culinare ale utilizatorului
+    } 
     else if (req.method === 'GET' && req.url.startsWith('/api/user/food-preferences/')) {
         const userId = req.url.split('/').pop();
-        req.params = { userId }; // Adăugăm parametrii în obiectul req
+        req.params = { userId };
         authenticateToken(req, res, () => {
             getUserFoodPreferences(req, res);
         });
     }
-    // Dacă niciuna dintre condițiile de mai sus nu este îndeplinită, trimitem un răspuns cu statusul 404 (Not Found)
-     else if (req.method === 'POST' && req.url === '/api/refreshToken') {
+    else if (req.method === 'POST' && req.url === '/api/refreshToken') {
         refreshToken(req, res);
     } else if (req.method === 'POST' && req.url === '/api/products') {
         authenticateToken(req, res, async () => {
@@ -88,7 +86,7 @@ const userRoutes = async (req, res) => {
                 }
             });
         });
-    }else if (req.method === 'DELETE' && req.url.startsWith('/api/users/')) {
+    } else if (req.method === 'DELETE' && req.url.startsWith('/api/users/')) {
         const userId = req.url.split('/').pop();
         const query = 'DELETE FROM users WHERE id = ?';
         db.query(query, [userId], (err, results) => {
@@ -105,8 +103,7 @@ const userRoutes = async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'User deleted successfully' }));
         });
-    } 
-     else if (req.method === 'GET' && req.url === '/api/users') {
+    } else if (req.method === 'GET' && req.url === '/api/users') {
         const query = 'SELECT id, username FROM users';
         try {
             const [results] = await db.query(query);
@@ -116,10 +113,9 @@ const userRoutes = async (req, res) => {
             res.writeHead(500);
             res.end(JSON.stringify({ error: 'Error fetching users' }));
         }
-    }else if (req.method === 'GET' && req.url === '/api/categories') {
+    } else if (req.method === 'GET' && req.url === '/api/categories') {
         getCategories(req, res);
-    } 
-     else {
+    } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }

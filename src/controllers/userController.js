@@ -213,6 +213,7 @@ const getUserFoodPreferences = async (req, res) => {
     }
 };
 
+// Funcția pentru obținerea categoriilor distincte
 const getCategories = async (req, res) => {
     try {
         const [result] = await pool.query('SELECT DISTINCT categories_en FROM food');
@@ -225,6 +226,30 @@ const getCategories = async (req, res) => {
     }
 };
 
+// Funcția pentru obținerea alimentelor după categorie
 
-// Exportăm funcțiile pentru a putea fi folosite în alte module
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails,refreshToken,addUserFoodPreference, getUserFoodPreferences,getCategories };
+
+const getFoodsByCategory = async (req, res) => {
+    const category = req.params.category;
+    console.log(`Received request for category: ${category}`); // Debug
+
+    try {
+        const [result] = await pool.query('SELECT * FROM food WHERE categories_en LIKE ?', [`%${category}%`]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Product not found' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, refreshToken };
