@@ -1,4 +1,20 @@
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant } = require('../controllers/userController');
+const {
+    createUser,
+    loginUser,
+    uploadProfileImage,
+    getAllFoods,
+    getProductDetails,
+    addUserFoodPreference,
+    getUserFoodPreferences,
+    getCategories,
+    getFoodsByCategory,
+    getCountries,
+    getFoodsByCountry,
+    refreshToken,
+    getRestaurants,
+    getFoodsByRestaurant,
+    getFoodsByPrice // Adăugăm funcția pentru filtrarea după preț
+} = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
@@ -28,6 +44,12 @@ const userRoutes = async (req, res) => {
         const restaurant = decodeURIComponent(req.url.split('/').pop());
         req.params = { restaurant };
         getFoodsByRestaurant(req, res);
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/price')) {
+        const urlParams = new URLSearchParams(req.url.split('?')[1]);
+        const minPrice = parseFloat(urlParams.get('min'));
+        const maxPrice = parseFloat(urlParams.get('max'));
+        req.params = { minPrice, maxPrice };
+        getFoodsByPrice(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
@@ -82,7 +104,7 @@ const userRoutes = async (req, res) => {
                     price: fields.price,
                 };
 
-                const query = 'INSERT INTO products SET ?';
+                const query = 'INSERT INTO food SET ?';
                 try {
                     await db.query(query, productData);
                     res.writeHead(200, { 'Content-Type': 'application/json' });

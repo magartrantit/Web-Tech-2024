@@ -353,4 +353,44 @@ const getFoodsByRestaurant = async (req, res) => {
     }
 };
 
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant };
+
+const getFoodsByPrice = async (req, res) => {
+    const { minPrice, maxPrice } = req.params;
+    console.log(`Received request for price range: ${minPrice} - ${maxPrice}`); // Debug
+
+    try {
+        const query = 'SELECT * FROM food WHERE price BETWEEN ? AND ?';
+        const [result] = await pool.query(query, [minPrice, maxPrice]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No products found in this price range' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+module.exports = {
+    createUser,
+    loginUser,
+    uploadProfileImage,
+    getAllFoods,
+    getProductDetails,
+    addUserFoodPreference,
+    getUserFoodPreferences,
+    getCategories,
+    getFoodsByCategory,
+    getCountries,
+    getFoodsByCountry,
+    refreshToken,
+    getRestaurants,
+    getFoodsByRestaurant,
+    getFoodsByPrice // Exportăm funcția pentru filtrarea după preț
+};
