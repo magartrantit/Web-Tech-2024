@@ -65,20 +65,28 @@
         <div class="dropdown">
             <button type="button">Calories</button>
             <div class="dropdown-content stop-propagation" onclick="event.stopPropagation();">
-                <input type="number" placeholder="Min" style="display: flex;">
-                <input type="number" placeholder="Max" style="display: flex;">
+                <input type="number" id="calMin" placeholder="Min" style="display: flex;">
+                <input type="number" id="calMax" placeholder="Max" style="display: flex;">
                 <div style="display: flex; justify-content: center; width: 100%;">
-                    <button type="button" style="width: 100%;">Apply</button>
+                    <button type="button" id="applyCalButton" style="width: 100%;">Apply</button>
                 </div>
             </div>
         </div>
         <div class="dropdown">
             <button type="button">Doesn't Contain</button>
-            <div class="dropdown-content">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-                <a href="#">Option 4</a>
+            <div class="dropdown-content stop-propagation" onclick="event.stopPropagation();">
+                <div>
+                    <input type="checkbox" id="additives" name="additives">
+                    <label for="additives">Additives</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="allergens" name="allergens">
+                    <label for="allergens">Allergens</label>
+                </div>
+
+                <div style="display: flex; justify-content: center; width: 100%;">
+                    <button type="button" id="applyFiltersButton" style="width: 100%;">Apply</button>
+                </div>
             </div>
         </div>
     </div>
@@ -87,10 +95,18 @@
     </div>
 
     <script>
-                document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const searchInput = document.getElementById("searchInput");
+            const applyFiltersButton = document.getElementById("applyFiltersButton");
 
+            applyFiltersButton.addEventListener("click", () => {
+                const filters = [];
+                if (document.getElementById("additives").checked) filters.push("additives");
+                if (document.getElementById("allergens").checked) filters.push("allergens");
 
+                console.log('Filters applied:', filters);
+                filterProducts(filters);
+            });
 
             async function searchProducts() {
                 const query = searchInput.value;
@@ -123,6 +139,8 @@
                 }
             }
 
+
+
             if (searchInput) {
                 searchInput.addEventListener("keydown", (event) => {
                     if (event.key === "Enter") {
@@ -135,13 +153,17 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function  () {
-                    var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
-                    dropdowns.forEach(function  (dropdown) {
-                        dropdown.addEventListener('click', function  (event) {
-                            event.stopPropagation();
-                                });
-                    });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            });
+
+
 
             // Ascultător pentru butonul "All"
             document.getElementById('selectAllButton').addEventListener('click', function () {
@@ -177,7 +199,7 @@
                         const a = document.createElement('a');
                         a.href = "#";
                         a.textContent = country;
-                        a.addEventListener('click', function  (event) {
+                        a.addEventListener('click', function (event) {
                             event.preventDefault();
                             filterProductsByCountry(country);
                         });
@@ -196,7 +218,7 @@
                         const a = document.createElement('a');
                         a.href = "#";
                         a.textContent = restaurant;
-                        a.addEventListener('click', function  (event) {
+                        a.addEventListener('click', function (event) {
                             event.preventDefault();
                             filterProductsByRestaurant(restaurant);
                         });
@@ -216,6 +238,19 @@
                     console.error('Invalid price range');
                 }
             });
+
+            document.getElementById('applyCalButton').addEventListener('click', function () {
+                var minCal = parseFloat(document.querySelector('#calMin').value);
+                var maxCal = parseFloat(document.querySelector('#calMax').value);
+
+                if (!isNaN(minCal) && !isNaN(maxCal) && minCal <= maxCal) {
+                    console.log(`Selected price range: ${minCal} - ${maxCal}`);
+                    filterProductsByCalRange(minCal, maxCal);
+                } else {
+                    console.error('Invalid price range');
+                }
+            });
+
 
         });
 
@@ -349,6 +384,33 @@
                 .catch(error => console.error('Error fetching foods:', error));
         }
 
+
+        function filterProductsByCalRange(min, max) {
+            console.log(`Fetching products with cal range: ${min} - ${max}`);
+            fetch(`/api/foods/calories?min=${min}&max=${max}`)
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Filtered foods:', data);
+                    const produseContainer = document.getElementById('produseContainer');
+                    produseContainer.innerHTML = '';
+                    data.forEach(food => {
+                        const foodDiv = document.createElement('div');
+                        foodDiv.className = 'mancare';
+                        foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                        foodDiv.dataset.id = food.code;
+                        foodDiv.addEventListener('click', () => showProductDetails(food.code));
+                        produseContainer.appendChild(foodDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching foods:', error));
+        }
+
         document.querySelectorAll('.categorii .dropdown button').forEach(button => {
             button.addEventListener('click', function () {
                 var dropdownContent = this.nextElementSibling;
@@ -364,7 +426,7 @@
                 if (dropdownContent) {
                     dropdownContent.classList.toggle('show');
                 } else {
-                   // console.error('Dropdown content not found for button', this);
+                    // console.error('Dropdown content not found for button', this);
                 }
 
                 adjustProduseContainer();
@@ -531,6 +593,69 @@
                 alert('Failed to add food to preferences');
             }
         }
+
+        document.getElementById('applyFiltersButton').addEventListener('click', () => {
+            const filters = [];
+            if (document.getElementById('additives').checked) filters.push('additives');
+            if (document.getElementById('allergens').checked) filters.push('allergens');
+
+            filterProducts(filters);
+        });
+
+        async function filterProducts(filters) {
+            const url = `/api/foods/filter`;
+            console.log(`Filter URL: ${url}`);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filters })  // Verificați dacă filters este un array de string-uri
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const results = await response.json();
+                console.log('Filter results:', results);
+
+                const produseContainer = document.getElementById('produseContainer');
+                produseContainer.innerHTML = ''; // Golește containerul existent
+
+                results.forEach(food => {
+                    const foodDiv = document.createElement('div');
+                    foodDiv.className = 'mancare';
+                    foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                    foodDiv.dataset.id = food.code;
+                    foodDiv.addEventListener('click', () => showProductDetails(food.code));
+                    produseContainer.appendChild(foodDiv);
+                });
+            } catch (error) {
+                console.error(`Error fetching filter results: ${error}`);
+            }
+        }
+
+        const filterFoods = async () => {
+            const filters = {
+                additives_en: true,
+                allergens: true
+            };
+
+            const response = await fetch('/api/foods/filter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filters })
+            });
+
+            const filteredFoods = await response.json();
+            console.log(filteredFoods);
+            // Afișează produsele filtrate în interfața de utilizator
+        };
 
         document.getElementById('signout').addEventListener('click', () => {
             localStorage.removeItem('token');

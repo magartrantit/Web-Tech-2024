@@ -13,7 +13,7 @@ const {
     refreshToken,
     getRestaurants,
     getFoodsByRestaurant, searchFoods,
-    getFoodsByPrice // Adăugăm funcția pentru filtrarea după preț
+    getFoodsByPrice, getFoodsByCalories, filterFoods
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -35,6 +35,9 @@ const userRoutes = async (req, res) => {
         req.params = { searchQuery };
         searchFoods(req, res);
     } 
+    else if (req.method === 'POST' && req.url === '/api/foods/filter') {
+        filterFoods(req, res);
+    }
     else if (req.method === 'GET' && req.url === '/api/foods') {
         getAllFoods(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/category/')) {
@@ -55,7 +58,14 @@ const userRoutes = async (req, res) => {
         const maxPrice = parseFloat(urlParams.get('max'));
         req.params = { minPrice, maxPrice };
         getFoodsByPrice(req, res);
-    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
+    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/calories')) {
+        const urlParams = new URLSearchParams(req.url.split('?')[1]);
+        const minCal = parseFloat(urlParams.get('min'));
+        const maxCal = parseFloat(urlParams.get('max'));
+        req.params = { minCal, maxCal };
+        getFoodsByCalories(req, res);
+    }
+     else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
         getProductDetails(req, res);
@@ -153,7 +163,8 @@ const userRoutes = async (req, res) => {
         getCountries(req, res);
     } else if (req.method === 'GET' && req.url === '/api/restaurants') {
         getRestaurants(req, res);
-    }  else {
+    }
+    else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }

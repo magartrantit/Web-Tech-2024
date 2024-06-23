@@ -4,6 +4,7 @@ const fs = require('fs');
 const formidable = require('formidable');
 const db = require('./config/dbConfig');
 const userRoutes = require('./routes/userRoutes');
+const querystring = require('querystring');
 
 // Asigură-te că directorul 'uploads' există
 const uploadDir = path.join(__dirname, 'uploads');

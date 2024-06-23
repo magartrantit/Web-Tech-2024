@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
 const db = require('../config/dbConfig');
+const { get } = require('http');
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -401,6 +402,70 @@ const getFoodsByPrice = async (req, res) => {
     }
 };
 
+
+
+const getFoodsByCalories = async (req, res) => {
+    const { minCal, maxCal } = req.params;
+    console.log(`Received request for calory range: ${minCal} - ${maxCal}`); // Debug
+
+    try {
+        const query = 'SELECT * FROM food WHERE energy_kcal_100g BETWEEN ? AND ?';
+        const [result] = await pool.query(query, [minCal, maxCal]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No products found in this price range' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+const filterFoods = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+
+    req.on('end', async () => {
+        const parsedBody = JSON.parse(body);
+        const filters = parsedBody.filters;
+
+        console.log('Filters received on server:', filters);  // Adăugați acest log pentru a vedea filtrele primite
+
+        let query = 'SELECT * FROM food WHERE 1=1';
+
+        if (filters.includes('additives')) {
+            query += ' AND additives_en = "None"';
+        }
+        if (filters.includes('allergens')) {
+            query += ' AND allergens = "None"';
+        }
+
+        console.log('SQL Query:', query);  // Adăugați acest log pentru a vedea interogarea SQL
+
+        try {
+            const [results] = await db.query(query);
+            console.log('SQL Results:', results);  // Adăugați acest log pentru a vedea rezultatele interogării
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(results));
+        } catch (err) {
+            console.error(err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error filtering products' }));
+        }
+    });
+};
+
+
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -416,5 +481,8 @@ module.exports = {
     refreshToken,
     getRestaurants,
     getFoodsByRestaurant,
-    getFoodsByPrice // Exportăm funcția pentru filtrarea după preț
+    getFoodsByPrice,
+    searchFoods,
+    getFoodsByCalories,
+    filterFoods
 };
