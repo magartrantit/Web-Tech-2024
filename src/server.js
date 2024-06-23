@@ -1,9 +1,7 @@
-// Importăm modulele necesare
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
-//const mysql = require('mysql');
 const db = require('./config/dbConfig');
 const userRoutes = require('./routes/userRoutes');
 
@@ -13,42 +11,42 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
+// Funcție pentru determinarea tipului de conținut în funcție de extensia fișierului
+const getContentType = (extname) => {
+    switch (extname) {
+        case '.html': return 'text/html';
+        case '.css': return 'text/css';
+        case '.js': return 'application/javascript';
+        case '.jpg': return 'image/jpeg';
+        case '.jpeg': return 'image/jpeg';
+        case '.png': return 'image/png';
+        case '.svg': return 'image/svg+xml';
+        default: return 'text/plain';
+    }
+};
+
+// Funcție pentru servirea fișierelor
+const serveFile = (filePath, contentType, res) => {
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('404 Not Found');
+            } else {
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('500 Internal Server Error');
+            }
+        } else {
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(content);
+        }
+    });
+};
+
 // Creăm serverul
 const server = http.createServer((req, res) => {
     // Definim calea către directorul public
     const publicPath = path.join(__dirname, '../public');
-
-    // Funcție pentru determinarea tipului de conținut în funcție de extensia fișierului
-    const getContentType = (extname) => {
-        switch (extname) {
-            case '.html': return 'text/html';
-            case '.css': return 'text/css';
-            case '.js': return 'application/javascript';
-            case '.jpg': return 'image/jpeg';
-            case '.jpeg': return 'image/jpeg';
-            case '.png': return 'image/png';
-            case '.svg': return 'image/svg+xml';
-            default: return 'text/plain';
-        }
-    };
-
-    // Funcție pentru servirea fișierelor
-    const serveFile = (filePath, contentType) => {
-        fs.readFile(filePath, (err, content) => {
-            if (err) {
-                if (err.code === 'ENOENT') {
-                    res.writeHead(404, { 'Content-Type': 'text/plain' });
-                    res.end('404 Not Found');
-                } else {
-                    res.writeHead(500, { 'Content-Type': 'text/plain' });
-                    res.end('500 Internal Server Error');
-                }
-            } else {
-                res.writeHead(200, { 'Content-Type': contentType });
-                res.end(content);
-            }
-        });
-    };
 
     // Dacă URL-ul cererii începe cu '/api', apelăm funcția pentru gestionarea rutelor de utilizatori
     if (req.url.startsWith('/api')) {
@@ -62,11 +60,10 @@ const server = http.createServer((req, res) => {
                 }
 
                 const query = `
-    INSERT INTO food (
-         code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g, restaurants, price
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`;
-
+                    INSERT INTO food (
+                        code, url, product_name, brands, categories_en, countries_en, ingredients_text, allergens, additives_en, food_groups_en, main_category_en, image_url, image_ingredients_url, image_nutrition_url, energy_kcal_100g, fat_100g, saturated_fat_100g, carbohydrates_100g, sugars_100g, fiber_100g, proteins_100g, salt_100g, sodium_100g, restaurants, price
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `;
 
                 const values = [
                     fields.code,
@@ -114,7 +111,7 @@ const server = http.createServer((req, res) => {
         const filePath = path.join(uploadDir, path.basename(req.url));
         const extname = path.extname(filePath);
         const contentType = getContentType(extname);
-        serveFile(filePath, contentType);
+        serveFile(filePath, contentType, res);
     } else {
         // Altfel, determinăm calea către fișierul care trebuie servit
         let filePath;
@@ -137,7 +134,7 @@ const server = http.createServer((req, res) => {
         // Determinăm tipul de conținut și servim fișierul
         const extname = path.extname(filePath);
         const contentType = getContentType(extname);
-        serveFile(filePath, contentType);
+        serveFile(filePath, contentType, res);
     }
 });
 

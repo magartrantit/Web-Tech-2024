@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
+const db = require('../config/dbConfig');
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -331,6 +332,29 @@ const getRestaurants = async (req, res) => {
     }
 };
 
+const searchFoods = async (req, res) => {
+    const searchQuery = req.params.searchQuery;
+    console.log(`Received search query: ${searchQuery}`); // Debug
+
+    try {
+        const [result] = await pool.query('SELECT * FROM food WHERE product_name LIKE ?', [`%${searchQuery}%`]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Product not found' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
+
 const getFoodsByRestaurant = async (req, res) => {
     const restaurant = req.params.restaurant;
     console.log(`Received request for restaurant: ${restaurant}`); // Debug
@@ -353,4 +377,4 @@ const getFoodsByRestaurant = async (req, res) => {
     }
 };
 
-module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant };
+module.exports = { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant, searchFoods };

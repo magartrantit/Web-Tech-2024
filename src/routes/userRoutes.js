@@ -1,4 +1,4 @@
-const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant } = require('../controllers/userController');
+const { createUser, loginUser, uploadProfileImage, getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences, getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, refreshToken, getRestaurants, getFoodsByRestaurant, searchFoods } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
@@ -14,7 +14,12 @@ const userRoutes = async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Protected route accessed', user: req.user }));
         });
-    } else if (req.method === 'GET' && req.url === '/api/foods') {
+    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) { 
+        const searchQuery = decodeURIComponent(req.url.split('/api/foods/search/')[1]);
+        req.params = { searchQuery };
+        searchFoods(req, res);
+    } 
+    else if (req.method === 'GET' && req.url === '/api/foods') {
         getAllFoods(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/category/')) {
         const category = decodeURIComponent(req.url.split('/').pop());
@@ -126,7 +131,7 @@ const userRoutes = async (req, res) => {
         getCountries(req, res);
     } else if (req.method === 'GET' && req.url === '/api/restaurants') {
         getRestaurants(req, res);
-    } else {
+    }  else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
