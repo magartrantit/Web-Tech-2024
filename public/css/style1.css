@@ -279,6 +279,51 @@ body{
   transition-delay: 0s; 
 }
 
+.dropdown-content div {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  padding: 10px;
+}
+
+input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+label {
+  position: relative;
+  cursor: pointer;
+  padding-left: 25px; 
+  display: inline-block;
+}
+
+label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid #555;
+  border-radius: 20%;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+label:hover::before {
+  transform: translateY(-50%) scale(0.8); 
+}
+
+input[type="checkbox"]:checked + label::before {
+  background-color: #e70e0e; 
+}
+
+input[type="checkbox"]:hover + label::before {
+  transform: translateY(-50%) scale(0.8);
+}
 
 .show {
   display: block;

@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
 const db = require('../config/dbConfig');
+const { get } = require('http');
+const saltRounds = 10;
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -397,48 +399,96 @@ const getFoodsByPrice = async (req, res) => {
     }
 };
 
-const createList = async (req, res) => {
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk.toString();
-    });
-    req.on('end', async () => {
-        try {
-            const { userId, listName } = JSON.parse(body);
-            console.log(`Creating list for user: ${userId}, list name: ${listName}`);
-
-            // Verifică dacă există deja o listă cu același nume pentru acest utilizator
-            const [existingList] = await pool.query('SELECT * FROM user_lists WHERE user_id = ? AND list_name = ?', [userId, listName]);
-            if (existingList.length > 0) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'List with this name already exists' }));
-                return;
-            }
-
-            // Adaugă lista nouă
-            await pool.query('INSERT INTO user_lists (user_id, list_name) VALUES (?, ?)', [userId, listName]);
-            res.writeHead(201, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'List created successfully' }));
-        } catch (err) {
-            console.error('Database error:', err);
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Database error' }));
-        }
-    });
-};
 
 
-const getLists = async (req, res) => {
+const getFoodsByCalories = async (req, res) => {
+    const { minCal, maxCal } = req.params;
+    console.log(`Received request for calory range: ${minCal} - ${maxCal}`); // Debug
+
     try {
-        const userId = req.user.id;
-        const [lists] = await pool.query('SELECT * FROM user_lists WHERE user_id = ?', [userId]);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(lists));
+        const query = 'SELECT * FROM food WHERE energy_kcal_100g BETWEEN ? AND ?';
+        const [result] = await pool.query(query, [minCal, maxCal]);
+        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+
+        if (result.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No products found in this price range' }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
     } catch (err) {
         console.error('Database error:', err);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Database error' }));
     }
+};
+
+const filterFoods = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+
+    req.on('end', async () => {
+        const parsedBody = JSON.parse(body);
+        const filters = parsedBody.filters;
+
+        console.log('Filters received on server:', filters);  // Adăugați acest log pentru a vedea filtrele primite
+
+        let query = 'SELECT * FROM food WHERE 1=1';
+
+        if (filters.includes('additives')) {
+            query += ' AND additives_en = "None"';
+        }
+        if (filters.includes('allergens')) {
+            query += ' AND allergens = "None"';
+        }
+
+        console.log('SQL Query:', query);  // Adăugați acest log pentru a vedea interogarea SQL
+
+        try {
+            const [results] = await db.query(query);
+            console.log('SQL Results:', results);  // Adăugați acest log pentru a vedea rezultatele interogării
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(results));
+        } catch (err) {
+            console.error(err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error filtering products' }));
+        }
+    });
+};
+
+const bodyParser = (req, callback) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString(); // convert to string and append
+    });
+    req.on('end', () => {
+        try {
+            req.body = JSON.parse(body); // parse the string to JSON
+            callback();
+        } catch (e) {
+            callback(e);
+        }
+    });
+};
+
+const updateUser = (userId, username, password, callback) => {
+    // Generați un hash pentru parola furnizată
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+            return callback(err);
+        }
+        // Aici ar urma logica pentru actualizarea utilizatorului în baza de date
+        // În loc să folosiți parola direct, folosiți hash-ul generat
+        const query = 'UPDATE users SET username = ?, password = ? WHERE id = ?';
+        db.query(query, [username, hash, userId], (err, result) => {
+            if (err) return callback(err);
+            callback(null, result); // Nu a fost întâmpinată nicio eroare, continuați cu callback-ul
+        });
+    });
 };
 
 module.exports = {
@@ -458,6 +508,8 @@ module.exports = {
     getFoodsByRestaurant,
     getFoodsByPrice,
     searchFoods,
-    createList,
-    getLists
+    getFoodsByCalories,
+    filterFoods,
+    bodyParser,
+    updateUser
 };

@@ -18,8 +18,8 @@
                             <path fill="white"
                                 d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                         </svg></a></li>
-                        <a href="#" id="signout1">Sign out</a>
-                
+                <a href="#" id="signout1">Sign out</a>
+
             </ul>
             <a href="#" id="signout">Sign out</a>
 
@@ -35,7 +35,6 @@
             <h2>Administrate Account of User</h2>
             <select id="userSelect"></select>
             <button onclick="deleteUser()">Delete User</button>
-            <button onclick="blockUser()">Block User</button>
             <button onclick="modifyDates()">Modify Dates</button>
         </div>
 
@@ -50,6 +49,19 @@
             <h2>Add Product</h2>
             <button onclick="addProduct()">Add Product</button>
         </div>
+
+        <div id="modifyUserPopup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closeModifyUserPopup()">&times;</span>
+                <h2>Modify User</h2>
+                <form id="modifyUserForm">
+                    <input type="text" id="newUsername" name="newUsername" placeholder="New Username">
+                    <input type="password" id="newPassword" name="newPassword" placeholder="New Password">
+                    <button type="button" onclick="submitModifyUser()">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
 
         <div id="addProductPopup" class="popup">
             <div class="popup-content">
@@ -103,6 +115,51 @@
 
     <script>
 
+        function modifyDates() {
+            document.getElementById("modifyUserPopup").style.display = "block";
+        }
+
+        function closeModifyUserPopup() {
+            document.getElementById("modifyUserPopup").style.display = "none";
+        }
+
+        function submitModifyUser() {
+            const userId = document.getElementById('userSelect').value;
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            // Verifică dacă s-au introdus date valide
+            if (!userId || (!newUsername && !newPassword)) {
+                alert('Please select a user and provide at least new username or password.');
+                return;
+            }
+
+            const requestData = {};
+            if (newUsername) requestData.username = newUsername;
+            if (newPassword) requestData.password = newPassword;
+
+            // Asigurați-vă că utilizați JSON.stringify pentru a converti obiectul requestData într-un șir JSON
+            fetch(`/api/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData), // Converteste obiectul requestData într-un șir JSON
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => Promise.reject(err));
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    closeModifyUserPopup();
+                })
+                .catch(error => {
+                    console.error('Error updating user:', error);
+                });
+        }
 
         function addProduct() {
             document.getElementById("addProductPopup").style.display = "block";
