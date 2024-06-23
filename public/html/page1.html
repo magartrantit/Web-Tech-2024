@@ -11,8 +11,10 @@
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -960 960 960" width="24">
+                    <path fill="white"
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                 </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
@@ -20,10 +22,11 @@
             <li><a href="#" id="signout">Sign out</a></li>
         </ul>
     </nav>
-    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+            viewBox="0 -960 960 960" width="24">
             <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
         </svg></div>
-    <input type="text" class="search-bar" placeholder="Search...">
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
     <div class="indicatie">
         <p>Choose a category</p>
     </div>
@@ -84,13 +87,61 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
-            dropdowns.forEach(function (dropdown) {
-                dropdown.addEventListener('click', function (event) {
-                    event.stopPropagation();
+                document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById("searchInput");
+
+
+
+            async function searchProducts() {
+                const query = searchInput.value;
+                if (!query) return;
+
+                const url = `/api/foods/search/${encodeURIComponent(query)}`;
+                console.log(`Search URL: ${url}`);
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    const results = await response.json();
+                    console.log('Search results:', results);
+
+                    const produseContainer = document.getElementById('produseContainer');
+                    produseContainer.innerHTML = ''; // Golește containerul existent
+
+                    results.forEach(food => {
+                        const foodDiv = document.createElement('div');
+                        foodDiv.className = 'mancare';
+                        foodDiv.style.backgroundImage = `url(${food.image_url})`;
+                        foodDiv.dataset.id = food.code;
+                        foodDiv.addEventListener('click', () => showProductDetails(food.code));
+                        produseContainer.appendChild(foodDiv);
+                    });
+                } catch (error) {
+                    console.error(`Error fetching search results: ${error}`);
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        searchProducts();
+                    }
                 });
-            });
+            } else {
+                console.error("Element with id 'searchInput' not found.");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function  () {
+                    var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
+                    dropdowns.forEach(function  (dropdown) {
+                        dropdown.addEventListener('click', function  (event) {
+                            event.stopPropagation();
+                                });
+                    });
 
             // Ascultător pentru butonul "All"
             document.getElementById('selectAllButton').addEventListener('click', function () {
@@ -126,7 +177,7 @@
                         const a = document.createElement('a');
                         a.href = "#";
                         a.textContent = country;
-                        a.addEventListener('click', function (event) {
+                        a.addEventListener('click', function  (event) {
                             event.preventDefault();
                             filterProductsByCountry(country);
                         });
@@ -145,7 +196,7 @@
                         const a = document.createElement('a');
                         a.href = "#";
                         a.textContent = restaurant;
-                        a.addEventListener('click', function (event) {
+                        a.addEventListener('click', function  (event) {
                             event.preventDefault();
                             filterProductsByRestaurant(restaurant);
                         });
