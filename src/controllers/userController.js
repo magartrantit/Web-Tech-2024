@@ -78,7 +78,6 @@ const loginUser = async (req, res) => {
     });
 };
 
-
 // Funcția pentru încărcarea imaginii de profil
 const uploadProfileImage = (req, res) => {
     const form = new formidable.IncomingForm();
@@ -155,6 +154,7 @@ const getProductDetails = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
+
 const refreshToken = (req, res) => {
     const { token } = req.body;
     if (!token) {
@@ -170,6 +170,7 @@ const refreshToken = (req, res) => {
         res.json({ token: newToken });
     });
 };
+
 // Funcția pentru adăugarea unui aliment în preferințele utilizatorului
 const addUserFoodPreference = async (req, res) => {
     let body = '';
@@ -237,9 +238,8 @@ const getCategories = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
+
 // Funcția pentru obținerea alimentelor după categorie
-
-
 const getFoodsByCategory = async (req, res) => {
     const category = req.params.category;
     console.log(`Received request for category: ${category}`); // Debug
@@ -261,8 +261,6 @@ const getFoodsByCategory = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
-
-
 
 const getCountries = async (req, res) => {
     try {
@@ -354,7 +352,6 @@ const searchFoods = async (req, res) => {
     }
 };
 
-
 const getFoodsByRestaurant = async (req, res) => {
     const restaurant = req.params.restaurant;
     console.log(`Received request for restaurant: ${restaurant}`); // Debug
@@ -376,7 +373,6 @@ const getFoodsByRestaurant = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
-
 
 const getFoodsByPrice = async (req, res) => {
     const { minPrice, maxPrice } = req.params;
@@ -401,6 +397,50 @@ const getFoodsByPrice = async (req, res) => {
     }
 };
 
+const createList = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', async () => {
+        try {
+            const { userId, listName } = JSON.parse(body);
+            console.log(`Creating list for user: ${userId}, list name: ${listName}`);
+
+            // Verifică dacă există deja o listă cu același nume pentru acest utilizator
+            const [existingList] = await pool.query('SELECT * FROM user_lists WHERE user_id = ? AND list_name = ?', [userId, listName]);
+            if (existingList.length > 0) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'List with this name already exists' }));
+                return;
+            }
+
+            // Adaugă lista nouă
+            await pool.query('INSERT INTO user_lists (user_id, list_name) VALUES (?, ?)', [userId, listName]);
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'List created successfully' }));
+        } catch (err) {
+            console.error('Database error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
+};
+
+
+const getLists = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const [lists] = await pool.query('SELECT * FROM user_lists WHERE user_id = ?', [userId]);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(lists));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -416,5 +456,8 @@ module.exports = {
     refreshToken,
     getRestaurants,
     getFoodsByRestaurant,
-    getFoodsByPrice // Exportăm funcția pentru filtrarea după preț
+    getFoodsByPrice,
+    searchFoods,
+    createList,
+    getLists
 };

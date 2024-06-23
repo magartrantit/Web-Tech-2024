@@ -423,3 +423,20 @@ WHERE code = 'FRUIT007';
 UPDATE food 
 SET countries_en = 'Romania, France, UK, USA'
 WHERE code = 'FRUIT008';
+
+CREATE TABLE user_lists (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    list_name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+CREATE TABLE list_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    list_id INT NOT NULL,
+    food_code VARCHAR(255) NOT NULL,
+    FOREIGN KEY (list_id) REFERENCES user_lists(id),
+    FOREIGN KEY (food_code) REFERENCES food(code)
+);
+

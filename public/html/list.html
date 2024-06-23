@@ -11,12 +11,9 @@
 
 <body>
     <nav>
-
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                    viewBox="0 -960 960 960" width="24">
-                    <path fill="white"
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                 </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
@@ -26,16 +23,26 @@
     </nav>
 
     <div class="main">
-        <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                viewBox="0 -960 960 960" width="24">
+        <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                 <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
             </svg></div>
-       
-       
-           
+
+        <button class="add-list-btn" onclick="openPopup()">Add List</button>
+
+        <div class="lists-container" id="listsContainer">
+            <!-- Listele de cumpărături vor fi populate aici -->
+        </div>
     </div>
 
-    
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Create New List</h2>
+            <input type="text" id="listName" placeholder="Enter list name">
+            <button class="create-list-btn" onclick="createList()">Create List</button>
+        </div>
+    </div>
+
     <script>
         // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
@@ -59,15 +66,92 @@
             if (!response.ok) {
                 window.location.href = '/login';
             }
+
+            // Populăm listele existente
+            loadLists();
         };
 
         // Eveniment pentru delogare
         document.getElementById('signout').addEventListener('click', () => {
             // La click pe butonul de delogare, se elimină tokenul din stocarea locală
             localStorage.removeItem('token');
+            localStorage.removeItem('userId'); // Asigură-te că elimini și userId
             // Și se redirecționează utilizatorul către pagina de autentificare
             window.location.href = '/login';
         });
+
+        // Funcții pentru gestionarea pop-up-ului
+        function openPopup() {
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        async function createList() {
+            const listName = document.getElementById('listName').value;
+            if (!listName) {
+                alert('Please enter a list name.');
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            const response = await fetch('/api/lists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId, listName })
+            });
+
+            if (response.ok) {
+                alert('List created successfully');
+                closePopup();
+                loadLists();
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to create list: ${errorData.error}`);
+            }
+        }
+
+        async function loadLists() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/lists', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const lists = await response.json();
+                const listsContainer = document.querySelector('.lists-container');
+                listsContainer.innerHTML = '';
+
+                lists.forEach(list => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    listItem.textContent = list.list_name;
+                    listsContainer.appendChild(listItem);
+                });
+            } else {
+                console.error('Failed to load lists');
+            }
+        }
+
+        // Ascunde sidebar-ul când ecranul este mic și este apăsat pe X
+        function hideSidebar() {
+            document.querySelector('.sidebar').style.display = 'none';
+        }
+
+        // Afișează sidebar-ul când ecranul este mic și este apăsat pe butonul burger
+        function showSidebar() {
+            document.querySelector('.sidebar').style.display = 'flex';
+        }
     </script>
 
 </body>
