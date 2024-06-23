@@ -115,6 +115,25 @@
 
     <script>
 
+        window.onload = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+
+            const response = await fetch('/api/protected', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                window.location.href = '/admin';
+            }
+        }
+
         function modifyDates() {
             document.getElementById("modifyUserPopup").style.display = "block";
         }
