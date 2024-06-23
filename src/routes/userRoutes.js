@@ -13,7 +13,9 @@ const {
     refreshToken,
     getRestaurants,
     getFoodsByRestaurant, searchFoods,
-    getFoodsByPrice, getFoodsByCalories, filterFoods
+    getFoodsByPrice, getFoodsByCalories, filterFoods,
+    bodyParser,
+    updateUser
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -21,7 +23,34 @@ const db = require('../config/dbConfig');
 const userRoutes = async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/users') {
         createUser(req, res);
-    } else if (req.method === 'POST' && req.url === '/api/login') {
+    }else if (req.method === 'PUT' && req.url.startsWith('/api/users/')) {
+        const userId = req.url.split('/').pop();
+    
+        bodyParser(req, (err) => {
+            if (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Bad request, invalid JSON' }));
+                return;
+            }
+    
+            const { username, password } = req.body; // presupunem că acestea sunt datele pe care dorim să le actualizăm
+    
+            // Actualizăm datele utilizatorului în baza de date
+            updateUser(userId, username, password, (err, result) => {
+                if (err) {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Error updating user' }));
+                    return;
+                }
+            });
+    
+            // După actualizare, trimiteți un răspuns corespunzător
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: 'User updated successfully' }));
+        });
+    }
+    
+    else if (req.method === 'POST' && req.url === '/api/login') {
         loginUser(req, res);
     } else if (req.method === 'POST' && req.url === '/api/uploadProfileImage') {
         uploadProfileImage(req, res);
@@ -30,11 +59,11 @@ const userRoutes = async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Protected route accessed', user: req.user }));
         });
-    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) { 
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) {
         const searchQuery = decodeURIComponent(req.url.split('/api/foods/search/')[1]);
         req.params = { searchQuery };
         searchFoods(req, res);
-    } 
+    }
     else if (req.method === 'POST' && req.url === '/api/foods/filter') {
         filterFoods(req, res);
     }
@@ -58,14 +87,14 @@ const userRoutes = async (req, res) => {
         const maxPrice = parseFloat(urlParams.get('max'));
         req.params = { minPrice, maxPrice };
         getFoodsByPrice(req, res);
-    }else if (req.method === 'GET' && req.url.startsWith('/api/foods/calories')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/calories')) {
         const urlParams = new URLSearchParams(req.url.split('?')[1]);
         const minCal = parseFloat(urlParams.get('min'));
         const maxCal = parseFloat(urlParams.get('max'));
         req.params = { minCal, maxCal };
         getFoodsByCalories(req, res);
     }
-     else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
+    else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
         getProductDetails(req, res);
@@ -148,7 +177,7 @@ const userRoutes = async (req, res) => {
             res.end(JSON.stringify({ message: 'User deleted successfully' }));
         });
     } else if (req.method === 'GET' && req.url === '/api/users') {
-        const query = 'SELECT id, username FROM users';
+        const query = 'SELECT id, username FROM users where admin = 0';
         try {
             const [results] = await db.query(query);
             res.writeHead(200, { 'Content-Type': 'application/json' });

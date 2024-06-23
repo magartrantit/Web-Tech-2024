@@ -6,6 +6,7 @@ const path = require('path');
 const formidable = require('formidable');
 const db = require('../config/dbConfig');
 const { get } = require('http');
+const saltRounds = 10;
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
 const secretKey = 'mySecretKey';
@@ -463,8 +464,36 @@ const filterFoods = async (req, res) => {
     });
 };
 
+const bodyParser = (req, callback) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString(); // convert to string and append
+    });
+    req.on('end', () => {
+        try {
+            req.body = JSON.parse(body); // parse the string to JSON
+            callback();
+        } catch (e) {
+            callback(e);
+        }
+    });
+};
 
-
+const updateUser = (userId, username, password, callback) => {
+    // Generați un hash pentru parola furnizată
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+            return callback(err);
+        }
+        // Aici ar urma logica pentru actualizarea utilizatorului în baza de date
+        // În loc să folosiți parola direct, folosiți hash-ul generat
+        const query = 'UPDATE users SET username = ?, password = ? WHERE id = ?';
+        db.query(query, [username, hash, userId], (err, result) => {
+            if (err) return callback(err);
+            callback(null, result); // Nu a fost întâmpinată nicio eroare, continuați cu callback-ul
+        });
+    });
+};
 
 module.exports = {
     createUser,
@@ -484,5 +513,7 @@ module.exports = {
     getFoodsByPrice,
     searchFoods,
     getFoodsByCalories,
-    filterFoods
+    filterFoods,
+    bodyParser,
+    updateUser
 };
