@@ -37,6 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const produseContainer = document.getElementById('produseContainer');
             produseContainer.innerHTML = ''; // Golește containerul existent
 
+            if (results.length === 0) {
+                const noResultsMessage = document.createElement('p');
+                noResultsMessage.textContent = 'No products found';
+                produseContainer.appendChild(noResultsMessage);
+                return;
+            }
+
             results.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -47,6 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         } catch (error) {
             console.error(`Error fetching search results: ${error}`);
+            const produseContainer = document.getElementById('produseContainer');
+            produseContainer.innerHTML = ''; // Golește containerul existent
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = 'An error occurred while fetching search results.';
+            produseContainer.appendChild(errorMessage);
         }
     }
 
@@ -132,16 +144,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Error fetching restaurants:', error));
 
-    document.getElementById('applyPriceButton').addEventListener('click', function () {
-        var minPrice = parseFloat(document.querySelector('#priceMin').value);
-        var maxPrice = parseFloat(document.querySelector('#priceMax').value);
-
-        if (!isNaN(minPrice) && !isNaN(maxPrice) && minPrice <= maxPrice) {
-            console.log(`Selected price range: ${minPrice} - ${maxPrice}`);
-            filterProductsByPriceRange(minPrice, maxPrice);
-        } else {
-            console.error('Invalid price range');
-        }
+   
+        document.getElementById('applyPriceButton').addEventListener('click', function () {
+            var minPrice = parseFloat(document.querySelector('#priceMin').value);
+            var maxPrice = parseFloat(document.querySelector('#priceMax').value);
+    
+            if (!isNaN(minPrice) && !isNaN(maxPrice) && minPrice <= maxPrice) {
+                console.log(`Selected price range: ${minPrice} - ${maxPrice}`);
+                filterProductsByPriceRange(minPrice, maxPrice);
+            } else {
+                console.error('Invalid price range');
+            }
+        });
     });
 
     document.getElementById('applyCalButton').addEventListener('click', function () {
@@ -155,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Invalid price range');
         }
     });
-});
+
 
 function showAllProducts() {
     console.log('Showing all products'); // Debug
@@ -261,32 +275,45 @@ function filterProductsByRestaurant(restaurant) {
         .catch(error => console.error('Error fetching foods:', error));
 }
 
-function filterProductsByPriceRange(min, max) {
-    console.log(`Fetching products with price range: ${min} - ${max}`);
-    fetch(`/api/foods/price?min=${min}&max=${max}`)
-        .then(response => {
-            if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Filtered foods:', data);
-            const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = '';
-            data.forEach(food => {
-                const foodDiv = document.createElement('div');
-                foodDiv.className = 'mancare';
-                foodDiv.style.backgroundImage = `url(${food.image_url})`;
-                foodDiv.dataset.id = food.code;
-                foodDiv.addEventListener('click', () => showProductDetails(food.code));
-                produseContainer.appendChild(foodDiv);
-            });
-        })
-        .catch(error => console.error('Error fetching foods:', error));
-}
+async function filterProductsByPriceRange(minPrice, maxPrice) {
+    console.log(`Fetching products with price range: ${minPrice} - ${maxPrice}`);
+    const url = `/api/foods/price?min=${minPrice}&max=${maxPrice}`;
 
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        const results = await response.json();
+        console.log('Filtered foods:', results);
+
+        const produseContainer = document.getElementById('produseContainer');
+        produseContainer.innerHTML = ''; // Golește containerul existent
+
+        if (results.length === 0) {
+            const noResultsMessage = document.createElement('p');
+            noResultsMessage.textContent = 'No products found in this price range';
+            produseContainer.appendChild(noResultsMessage);
+            return;
+        }
+
+        results.forEach(food => {
+            const foodDiv = document.createElement('div');
+            foodDiv.className = 'mancare';
+            foodDiv.style.backgroundImage = `url(${food.image_url})`;
+            foodDiv.dataset.id = food.code;
+            foodDiv.addEventListener('click', () => showProductDetails(food.code));
+            produseContainer.appendChild(foodDiv);
+        });
+    } catch (error) {
+        console.error(`Error fetching foods: ${error}`);
+        const produseContainer = document.getElementById('produseContainer');
+        produseContainer.innerHTML = ''; // Golește containerul existent
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'An error occurred while fetching foods.';
+        produseContainer.appendChild(errorMessage);
+    }
+}
 function filterProductsByCalRange(min, max) {
     console.log(`Fetching products with cal range: ${min} - ${max}`);
     fetch(`/api/foods/calories?min=${min}&max=${max}`)
@@ -301,6 +328,14 @@ function filterProductsByCalRange(min, max) {
             console.log('Filtered foods:', data);
             const produseContainer = document.getElementById('produseContainer');
             produseContainer.innerHTML = '';
+            
+            if (data.length === 0) {
+                const noResultsMessage = document.createElement('p');
+                noResultsMessage.textContent = 'No products found in this calorie range';
+                produseContainer.appendChild(noResultsMessage);
+                return;
+            }
+            
             data.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -310,8 +345,16 @@ function filterProductsByCalRange(min, max) {
                 produseContainer.appendChild(foodDiv);
             });
         })
-        .catch(error => console.error('Error fetching foods:', error));
+        .catch(error => {
+            console.error('Error fetching foods:', error);
+            const produseContainer = document.getElementById('produseContainer');
+            produseContainer.innerHTML = ''; // Golește containerul existent
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = 'An error occurred while fetching foods.';
+            produseContainer.appendChild(errorMessage);
+        });
 }
+
 
 document.querySelectorAll('.categorii .dropdown button').forEach(button => {
     button.addEventListener('click', function () {
@@ -545,6 +588,7 @@ async function addToCart(productCode) {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     console.log('Adding to cart', { userId, productCode });
+
     const response = await fetch('/api/user/food-preferences', {
         method: 'POST',
         headers: {
@@ -556,11 +600,18 @@ async function addToCart(productCode) {
 
     if (response.ok) {
         alert('Food added to preferences');
-        closePopup();
     } else {
-        alert('Failed to add food to preferences');
+        const errorData = await response.json();
+        if (response.status === 409) {
+            alert('Food preference already exists');
+        } else {
+            alert(`Failed to add food to preferences: ${errorData.error}`);
+        }
     }
+    closePopup();
 }
+
+
 
 document.getElementById('applyFiltersButton').addEventListener('click', () => {
     const filters = [];

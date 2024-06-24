@@ -41,7 +41,7 @@ function submitModifyUser() {
     if (newUsername) requestData.username = newUsername;
     if (newPassword) requestData.password = newPassword;
 
-    // Asigurați-vă că utilizați JSON.stringify pentru a converti obiectul requestData într-un șir JSON
+    
     const token = localStorage.getItem('token');
     fetch(`/api/users/${userId}`, {
         method: 'PUT',
@@ -59,6 +59,7 @@ function submitModifyUser() {
         })
         .then(data => {
             window.alert('User modified successfully'); // Mesajul de succes
+            fetchUsers();
             closeModifyUserPopup();
         })
         .catch(error => {
@@ -111,11 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchUsers() {
+    const userSelect = document.getElementById('userSelect');
+    userSelect.innerHTML = ''; // Curăță opțiunile existente
+
     fetch('/api/users')
         .then(response => response.json())
         .then(data => {
             console.log('Fetched users:', data);
-            const userSelect = document.getElementById('userSelect');
             data.forEach(user => {
                 const option = document.createElement('option');
                 option.value = user.id;
@@ -125,7 +128,6 @@ function fetchUsers() {
         })
         .catch(error => console.error('Error fetching users:', error));
 }
-
 function showMessage(message) {
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = message;

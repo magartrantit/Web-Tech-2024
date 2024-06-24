@@ -29,6 +29,9 @@
             const data = await response.json();
             if (data.id) {
                 alert('Account created successfully'); // Contul a fost creat cu succes
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupUsername').value = '';
+                document.getElementById('signupPassword').value = '';
             } else {
                 alert('Error creating account'); // A aparut o eroare la crearea contului
             }
