@@ -556,7 +556,7 @@
                         <p><strong>Price:</strong> ${product.price}</p>
                         <button onclick="addToCart('${product.code}')">Add</button>
                         <div class="dropdown">
-                            <button type="button" onclick="populateList()">Add to...</button>
+                            <button type="button" onclick="populateList('${product.code}')">Add to...</button>
                             <div class="dropdown-content" id="lists-dropdown">
                                 <!-- Listele vor fi populate aici -->
                             </div>
@@ -567,7 +567,7 @@
                 document.body.appendChild(overlay);
 
                 // Populate the dropdown with user lists
-                populateList();
+                populateList(product.code);
             }
         }
 

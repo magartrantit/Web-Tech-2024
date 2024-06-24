@@ -563,6 +563,28 @@ const getUserLists = async (req, res) => {
 };
 
 
+const getListItems = (req, res) => {
+    const listId = req.params.listId;
+    
+
+        pool.query(
+            'SELECT food.product_name FROM list_items JOIN food ON list_items.food_code = food.code WHERE list_items.list_id = ?',
+            [listId],
+            (error, results) => {
+                if (error) {
+                    console.error('Database error:', error); // Adăugare log
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Database error' }));
+                } else {
+                    console.log('Query results:', results); // Adăugare log
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(results));
+                }
+            }
+        );
+    };
+
+
 
 
 module.exports = {
@@ -588,5 +610,6 @@ module.exports = {
     updateUser,
     createUserList,
     getUserLists,
-    addFoodList
+    addFoodList,
+    getListItems
 };
