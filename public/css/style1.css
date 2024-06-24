@@ -151,6 +151,9 @@ body {
   margin: 5px 0;
 }
 
+
+
+
 .close-btn {
   position: absolute;
   top: 10px;
@@ -464,5 +467,12 @@ input[type="checkbox"]:hover+label::before {
 @media (max-width: 400px) {
   .indicatie {
     font-size: 1.5em;
+  }
+}
+
+@media(max-height: 700px) {
+  .produse {
+    margin-top: 30%;
+    height: 70%;
   }
 }
