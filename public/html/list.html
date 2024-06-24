@@ -12,8 +12,10 @@
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -960 960 960" width="24">
+                    <path fill="white"
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                 </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
@@ -23,7 +25,8 @@
     </nav>
 
     <div class="main">
-        <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                viewBox="0 -960 960 960" width="24">
                 <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
             </svg></div>
 
@@ -40,6 +43,16 @@
             <h2>Create New List</h2>
             <input type="text" id="listName" placeholder="Enter list name">
             <button class="create-list-btn" onclick="createList()">Create List</button>
+        </div>
+    </div>
+
+    <div class="popup" id="list-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>List Products</h2>
+            <!-- Aici puteți afișa elementele listei -->
+            <h2>List Statistics</h2>
+            <!-- Aici puteți afișa statistici despre lista -->
         </div>
     </div>
 
@@ -77,6 +90,7 @@
 
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
+            document.getElementById('list-popup').style.display = 'none';
         }
 
         async function createList() {
@@ -110,7 +124,6 @@
 
         async function loadLists() {
             const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('userId');
             const response = await fetch('/api/lists', {
                 method: 'GET',
                 headers: {
@@ -131,12 +144,60 @@
                     listItem.style.border = '1px solid #000';
                     listItem.style.padding = '10px';
                     listItem.style.margin = '10px 0';
+                    listItem.dataset.listId = list.id; // Adăugăm ID-ul listei ca atribut de date
+                    listItem.addEventListener('click', () => openListPopup(listItem.dataset.listId));
                     listsContainer.appendChild(listItem);
                 });
             } else {
                 console.error('Failed to load lists');
             }
         }
+
+
+        function openListPopup(listId) {
+            const token = localStorage.getItem('token');
+
+            fetch(`/api/list/items/${listId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        alert('Error fetching list items');
+                    } else {
+                        displayListItems(data);
+                        document.getElementById('list-popup').style.display = 'flex';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching list items');
+                });
+        }
+
+        function displayListItems(items) {
+            const popupContent = document.querySelector('#list-popup .popup-content');
+            const listContainer = document.createElement('div');
+            listContainer.innerHTML = '';
+
+            items.forEach(item => {
+                const itemElement = document.createElement('p');
+                itemElement.textContent = item.product_name; 
+                listContainer.appendChild(itemElement);
+            });
+
+            // Eliminați conținutul vechi al listei și adăugați elementele noi
+            popupContent.innerHTML = '<span class="close-btn" onclick="closePopup()">&times;</span><h2>List Products</h2>';
+            popupContent.appendChild(listContainer);
+            popupContent.innerHTML += '<h2>List Statistics</h2>'; // Adăugați secțiunea de statistici aici, dacă este necesar
+        }
+
+
 
         function hideSidebar() {
             document.querySelector('.sidebar').style.display = 'none';
