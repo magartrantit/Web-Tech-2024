@@ -9,10 +9,10 @@ const db = require('../config/dbConfig');
 
 const saltRounds = 10;
 
-// Cheia secretă folosită pentru semnarea token-urilor JWT
+
 const secretKey = 'mySecretKey';
 
-// Funcția pentru crearea unui nou utilizator
+
 const createUser = async (req, res) => {
     let body = '';
     req.on('data', chunk => {
@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
     });
 };
 
-// Funcția pentru autentificarea unui utilizator
+
 const loginUser = async (req, res) => {
     let body = '';
     req.on('data', chunk => {
@@ -52,19 +52,19 @@ const loginUser = async (req, res) => {
                 const user = users[0];
                 const validPassword = await bcrypt.compare(password, user.password);
                 if (validPassword) {
-                    let isAdmin = user.admin === 1; // Verificăm dacă utilizatorul este admin
+                    let isAdmin = user.admin === 1; 
 
                     const tokenPayload = {
                         id: user.id,
                         username: user.username,
-                        isAdmin: isAdmin // Adăugăm isAdmin în payload-ul token-ului JWT
+                        isAdmin: isAdmin 
                     };
 
                     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '1h' });
 
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ token, isAdmin: isAdmin }));
-                    // Trimitem token-ul și statutul de isAdmin către client
+                    
                 } else {
                     res.writeHead(401, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Invalid credentials' }));
@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
     });
 };
 
-// Funcția pentru încărcarea imaginii de profil
+
 const uploadProfileImage = (req, res) => {
     const form = new formidable.IncomingForm();
     form.uploadDir = path.join(__dirname, '../uploads');
@@ -146,11 +146,11 @@ const refreshToken = (req, res) => {
 const bodyParser = (req, callback) => {
     let body = '';
     req.on('data', chunk => {
-        body += chunk.toString(); // convert to string and append
+        body += chunk.toString(); 
     });
     req.on('end', () => {
         try {
-            req.body = JSON.parse(body); // parse the string to JSON
+            req.body = JSON.parse(body); 
             callback();
         } catch (e) {
             callback(e);
@@ -159,17 +159,16 @@ const bodyParser = (req, callback) => {
 };
 
 const updateUser = (userId, username, password, callback) => {
-    // Generați un hash pentru parola furnizată
+   
     bcrypt.hash(password, saltRounds, (err, hash) => {
         if (err) {
             return callback(err);
         }
-        // Aici ar urma logica pentru actualizarea utilizatorului în baza de date
-        // În loc să folosiți parola direct, folosiți hash-ul generat
+        
         const query = 'UPDATE users SET username = ?, password = ? WHERE id = ?';
         db.query(query, [username, hash, userId], (err, result) => {
             if (err) return callback(err);
-            callback(null, result); // Nu a fost întâmpinată nicio eroare, continuați cu callback-ul
+            callback(null, result); 
         });
     });
 };
@@ -180,11 +179,11 @@ const deleteUser = async (req, res, userId) => {
     try {
         await connection.beginTransaction();
 
-        // Șterge preferințele alimentare ale utilizatorului
+       
         const deleteUserFoodsQuery = 'DELETE FROM user_foods WHERE user_id = ?';
         await connection.query(deleteUserFoodsQuery, [userId]);
 
-        // Șterge elementele de listă asociate cu listele utilizatorului
+       
         const deleteListItemsQuery = `
             DELETE list_items FROM list_items
             JOIN user_lists ON list_items.list_id = user_lists.id
@@ -192,11 +191,11 @@ const deleteUser = async (req, res, userId) => {
         `;
         await connection.query(deleteListItemsQuery, [userId]);
 
-        // Șterge listele utilizatorului
+       
         const deleteUserListsQuery = 'DELETE FROM user_lists WHERE user_id = ?';
         await connection.query(deleteUserListsQuery, [userId]);
 
-        // Șterge utilizatorul
+        
         const deleteUserQuery = 'DELETE FROM users WHERE id = ?';
         const [result] = await connection.query(deleteUserQuery, [userId]);
 

@@ -26,9 +26,9 @@ const userRoutes = async (req, res) => {
                 return;
             }
     
-            const { username, password } = req.body; // presupunem că acestea sunt datele pe care dorim să le actualizăm
+            const { username, password } = req.body; 
     
-            // Actualizăm datele utilizatorului în baza de date
+           
             updateUser(userId, username, password, (err, result) => {
                 if (err) {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -37,7 +37,7 @@ const userRoutes = async (req, res) => {
                 }
             });
     
-            // După actualizare, trimiteți un răspuns corespunzător
+          
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: 'User updated successfully' }));
         });
@@ -102,7 +102,7 @@ const userRoutes = async (req, res) => {
         });
     } else if (req.method === 'GET' && req.url.startsWith('/api/lists/') && req.url.endsWith('/items')) {
         const urlParts = req.url.split('/');
-        const listId = urlParts[3];  // Extragem listId din URL
+        const listId = urlParts[3];  
         authenticateToken(req, res, () => {
             getListItems(req, res, listId);
         });

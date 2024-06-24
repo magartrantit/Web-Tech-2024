@@ -47,9 +47,9 @@ function submitModifyUser() {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` // Includeți token-ul de autorizare
+            'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify(requestData), // Converteste obiectul requestData într-un șir JSON
+        body: JSON.stringify(requestData), 
     })
         .then(response => {
             if (!response.ok) {
@@ -58,13 +58,13 @@ function submitModifyUser() {
             return response.json();
         })
         .then(data => {
-            window.alert('User modified successfully'); // Mesajul de succes
+            window.alert('User modified successfully'); 
             fetchUsers();
             closeModifyUserPopup();
         })
         .catch(error => {
             console.error('Error updating user:', error);
-            window.alert('Error updating user'); // Mesajul de eroare
+            window.alert('Error updating user'); 
         });
 }
 
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fetchUsers() {
     const userSelect = document.getElementById('userSelect');
-    userSelect.innerHTML = ''; // Curăță opțiunile existente
+    userSelect.innerHTML = ''; 
 
     fetch('/api/users')
         .then(response => response.json())
@@ -151,25 +151,25 @@ async function deleteUser() {
     })
     .then(response => {
         if (response.ok) {
-            window.alert('User deleted successfully'); // Mesajul de succes
+            window.alert('User deleted successfully'); 
             setTimeout(() => location.reload(), 1000);
         } else {
-            window.alert('Error deleting user'); // Mesajul de eroare
+            window.alert('Error deleting user'); 
         }
     })
     .catch(error => console.error('Error deleting user:', error));
 }
 
 document.getElementById('signout').addEventListener('click', () => {
-    // La click pe butonul de delogare, se elimină tokenul din stocarea locală
+    
     localStorage.removeItem('token');
-    // Și se redirecționează utilizatorul către pagina de autentificare
+   
     window.location.href = '/login';
 });
 
 document.getElementById('signout1').addEventListener('click', () => {
-    // La click pe butonul de delogare, se elimină tokenul din stocarea locală
+    
     localStorage.removeItem('token');
-    // Și se redirecționează utilizatorul către pagina de autentificare
+   
     window.location.href = '/login';
 });

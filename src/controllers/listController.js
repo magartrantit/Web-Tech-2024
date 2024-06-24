@@ -12,7 +12,7 @@ const addFoodList = async (req, res) => {
             const { listId, foodCode } = JSON.parse(body);
             console.log(`Adding food to list: ${listId}, food: ${foodCode}`);
 
-            // Check if the item already exists in the list
+        
             const [existingItem] = await pool.query(
                 'SELECT * FROM list_items WHERE list_id = ? AND food_code = ?',
                 [listId, foodCode]
@@ -24,7 +24,7 @@ const addFoodList = async (req, res) => {
                 return;
             }
 
-            // Add the new item to the list
+           
             await pool.query('INSERT INTO list_items (list_id, food_code) VALUES (?, ?)', [listId, foodCode]);
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Food added to list successfully' }));
@@ -83,13 +83,13 @@ const getListItems = async (req, res, listId) => {
         `;
         const [items] = await pool.query(query, [listId]);
 
-        // Calculează statisticile
+      
         const numProducts = items.length;
         const totalPrice = items.reduce((sum, item) => sum + (item.price ? parseFloat(item.price) : 0), 0);
         const allergens = [...new Set(items.map(item => item.allergens).filter(allergen => allergen && allergen !== 'None'))].join(', ');
         const additives = [...new Set(items.map(item => item.additives_en).filter(additive => additive && additive !== 'None'))].join(', ');
 
-        console.log("Items fetched from database:", items); // Adaugă acest log
+        console.log("Items fetched from database:", items); 
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ items, numProducts, totalPrice, allergens, additives }));

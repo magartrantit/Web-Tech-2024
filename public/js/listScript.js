@@ -54,7 +54,7 @@ async function createList() {
 
     if (response.ok) {
         const result = await response.json();
-        alert(result.message); // Afișează mesajul de succes
+        alert(result.message); 
         closePopup();
         loadLists();
     } else {
@@ -85,7 +85,7 @@ async function loadLists() {
             listItem.style.border = '1px solid #000';
             listItem.style.padding = '10px';
             listItem.style.margin = '10px 0';
-            listItem.dataset.listId = list.id; // Adăugăm ID-ul listei ca atribut de date
+            listItem.dataset.listId = list.id; 
             listItem.addEventListener('click', () => openListPopup(list.id));
             listsContainer.appendChild(listItem);
         });
@@ -95,7 +95,7 @@ async function loadLists() {
 }
 
 async function openListPopup(listId) {
-    console.log(`Opening list popup for list ID: ${listId}`); // Log pentru deschiderea popup-ului
+    console.log(`Opening list popup for list ID: ${listId}`); 
     const token = localStorage.getItem('token');
     const response = await fetch(`/api/lists/${listId}/items`, {
         method: 'GET',
@@ -109,19 +109,19 @@ async function openListPopup(listId) {
         const data = await response.json();
         const { items, numProducts, totalPrice, allergens, additives } = data;
 
-        console.log("Items received from backend:", items); // Adaugă acest log
+        console.log("Items received from backend:", items); 
 
         const listProducts = document.getElementById('list-products');
         if (!listProducts) {
             console.error('Element with ID "list-products" not found.');
             return;
         }
-        listProducts.innerHTML = ''; // Golește conținutul anterior
+        listProducts.innerHTML = ''; 
 
         items.forEach(item => {
             const product = document.createElement('div');
             product.className = 'product-item';
-            product.textContent = item.product_name; // Asigură-te că folosești câmpul corect
+            product.textContent = item.product_name; 
             listProducts.appendChild(product);
         });
 
@@ -137,7 +137,7 @@ async function openListPopup(listId) {
         }
 
         document.getElementById('list-popup').style.display = 'flex';
-        console.log('Popup displayed'); // Log pentru afișarea popup-ului
+        console.log('Popup displayed'); 
     } else {
         console.error('Failed to load list items');
     }
