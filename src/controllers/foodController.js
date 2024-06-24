@@ -205,8 +205,8 @@ const searchFoods = async (req, res) => {
         console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
 
         if (result.length === 0) {
-            res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Product not found' }));
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify([])); // Trimitem un array gol
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -217,6 +217,7 @@ const searchFoods = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
+
 
 const getFoodsByRestaurant = async (req, res) => {
     const restaurant = req.params.restaurant;
@@ -241,7 +242,10 @@ const getFoodsByRestaurant = async (req, res) => {
 };
 
 const getFoodsByPrice = async (req, res) => {
-    const { minPrice, maxPrice } = req.params;
+    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+    const minPrice = parseFloat(urlParams.get('min'));
+    const maxPrice = parseFloat(urlParams.get('max'));
+
     console.log(`Received request for price range: ${minPrice} - ${maxPrice}`); // Debug
 
     try {
@@ -250,8 +254,8 @@ const getFoodsByPrice = async (req, res) => {
         console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
 
         if (result.length === 0) {
-            res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'No products found in this price range' }));
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify([])); // Trimitem un array gol
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -265,8 +269,12 @@ const getFoodsByPrice = async (req, res) => {
 
 
 
+
 const getFoodsByCalories = async (req, res) => {
-    const { minCal, maxCal } = req.params;
+    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+    const minCal = parseFloat(urlParams.get('min'));
+    const maxCal = parseFloat(urlParams.get('max'));
+
     console.log(`Received request for calory range: ${minCal} - ${maxCal}`); // Debug
 
     try {
@@ -275,8 +283,8 @@ const getFoodsByCalories = async (req, res) => {
         console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
 
         if (result.length === 0) {
-            res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'No products found in this price range' }));
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify([])); // Trimitem un array gol
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -287,6 +295,7 @@ const getFoodsByCalories = async (req, res) => {
         res.end(JSON.stringify({ error: 'Database error' }));
     }
 };
+
 
 const filterFoods = async (req, res) => {
     let body = '';
