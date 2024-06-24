@@ -188,11 +188,11 @@
                 const listStatistics = document.getElementById('list-statistics');
                 if (listStatistics) {
                     listStatistics.innerHTML = `
-                        <p>Număr produse: ${numProducts}</p>
-                        <p>Preț total: ${totalPrice.toFixed(2)} RON</p>
-                        <p>Alergeni: ${allergens || 'Niciunul'}</p>
-                        <p>Aditivi: ${additives || 'Niciunul'}</p>
-                    `;
+                <p>Număr produse: ${numProducts}</p>
+                <p>Preț total: ${totalPrice ? totalPrice.toFixed(2) : '0.00'} RON</p>
+                <p>Alergeni: ${allergens || 'Niciunul'}</p>
+                <p>Aditivi: ${additives || 'Niciunul'}</p>
+            `;
                 }
 
                 document.getElementById('list-popup').style.display = 'flex';
@@ -201,6 +201,7 @@
                 console.error('Failed to load list items');
             }
         }
+
 
         function hideSidebar() {
             document.querySelector('.sidebar').style.display = 'none';

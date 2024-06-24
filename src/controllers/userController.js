@@ -566,7 +566,7 @@ const getUserLists = async (req, res) => {
 const getListItems = async (req, res, listId) => {
     try {
         const query = `
-            SELECT food.*, list_items.list_id FROM food
+            SELECT food.*, list_items.list_id, IFNULL(food.price, 0) as price FROM food
             JOIN list_items ON food.code = list_items.food_code
             WHERE list_items.list_id = ?
         `;
@@ -574,7 +574,7 @@ const getListItems = async (req, res, listId) => {
 
         // Calculează statisticile
         const numProducts = items.length;
-        const totalPrice = items.reduce((sum, item) => sum + parseFloat(item.price), 0);
+        const totalPrice = items.reduce((sum, item) => sum + (item.price ? parseFloat(item.price) : 0), 0);
         const allergens = [...new Set(items.map(item => item.allergens).filter(allergen => allergen && allergen !== 'None'))].join(', ');
         const additives = [...new Set(items.map(item => item.additives_en).filter(additive => additive && additive !== 'None'))].join(', ');
 
