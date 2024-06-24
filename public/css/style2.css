@@ -40,7 +40,6 @@ body {
   margin-right: 20px;
 }
 
-
 .sidebar li a {
   color: var(--alb);
   text-decoration: none;
@@ -52,7 +51,6 @@ body {
   transition: color .2s ease-in-out;
 }
 
-
 .main {
   position: fixed;
   width: 80%;
@@ -61,7 +59,6 @@ body {
   height: 100%;
   background-color: var(--rosuDeschis);
   color: var(--alb);
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,7 +127,7 @@ body {
   width: 77%;
   height: 55%;
   background-color: var(--maroDeschis);
-  box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -186,23 +183,23 @@ body {
 
 @keyframes popupAnimation {
   from {
-      opacity: 0;
-      transform: scale(0.9);
+    opacity: 0;
+    transform: scale(0.9);
   }
   to {
-      opacity: 1;
-      transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @keyframes popupHideAnimation {
   from {
-      opacity: 1;
-      transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
   }
   to {
-      opacity: 0;
-      transform: scale(0.9);
+    opacity: 0;
+    transform: scale(0.9);
   }
 }
 
@@ -257,8 +254,7 @@ body {
 }
 
 .mancare {
-  
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
   background-size: cover;
   background-position: center;
   width: 150px;
@@ -275,13 +271,11 @@ body {
   filter: brightness(0.7);
 }
 
-
 @media (max-width: 900px) {
   .mancare {
     flex-basis: 30%;
   }
 }
-
 
 @media (max-width: 600px) {
   .mancare {
@@ -297,7 +291,6 @@ body {
   .ics {
     display: none;
   }
-
 }
 
 @media(max-width: 850px) {
@@ -325,20 +318,36 @@ body {
 
   .main {
     width: 100%;
+    padding-left: 0;
   }
-}
 
-
-
-@media (max-width: 900px) {
-  .mancare {
-    flex-basis: 30%;
+  .profile-container {
+    flex-direction: column;
+    align-items: flex-start;
+    position: static;
+    margin: 20px;
   }
-}
 
+  .username-display {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    position: static;
+  }
 
-@media (max-width: 600px) {
-  .mancare {
-    flex-basis: 45%;
+  .user-preferences {
+    margin: 20px 0;
+  }
+
+  .preferinte {
+    width: 95%;
+    right: 2.5%;
+    height: auto;
+  }
+
+  .produse {
+    width: 95%;
+    right: 2.5%;
+    height: auto;
+    top: calc(50% + 10px);
   }
 }
