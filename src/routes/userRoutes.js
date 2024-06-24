@@ -23,7 +23,9 @@ const {
     getUserLists,
     addFoodList,
     getListItems,
-    deleteUser // Importă funcția pentru ștergerea unui utilizator
+    deleteUser,
+    exportCulinaryPreferencesToCSV,
+    exportCulinaryPreferencesToPDF
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -211,7 +213,15 @@ const userRoutes = async (req, res) => {
                 createUserList(req, res);
             });
         });
-    } else {
+    } else  if (req.method === 'GET' && req.url === '/api/export-csv') {
+        authenticateToken(req, res, () => {
+            exportCulinaryPreferencesToCSV(req, res);
+        });
+    }else  if (req.method === 'GET' && req.url === '/api/export-pdf') {
+        authenticateToken(req, res, () => {
+            exportCulinaryPreferencesToPDF(req, res);
+        });
+    }else{
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }

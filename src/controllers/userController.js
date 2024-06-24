@@ -6,6 +6,7 @@ const path = require('path');
 const formidable = require('formidable');
 const db = require('../config/dbConfig');
 const { get } = require('http');
+const PDFDocument = require('pdfkit');
 const saltRounds = 10;
 
 // Cheia secretă folosită pentru semnarea token-urilor JWT
@@ -632,6 +633,95 @@ const deleteUser = async (req, res, userId) => {
     }
 };
 
+const { Parser } = require('json2csv');
+
+
+
+const exportCulinaryPreferencesToCSV = async (req, res) => {
+    const userId = req.user.id;
+
+    const query = `
+        SELECT f.code, f.product_name, f.brands, f.categories_en, f.ingredients_text, f.allergens, f.additives_en, f.price
+        FROM food f
+        JOIN user_foods uf ON f.code = uf.food_code
+        WHERE uf.user_id = ?
+    `;
+
+    try {
+        const [results] = await db.query(query, [userId]);
+        if (results.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No culinary preferences found for this user' }));
+            return;
+        }
+
+        const json2csvParser = new Parser();
+        const csv = json2csvParser.parse(results);
+
+        res.setHeader('Content-Disposition', 'attachment; filename=culinary_preferences.csv');
+        res.setHeader('Content-Type', 'text/csv');
+        res.writeHead(200);
+        res.end(csv);
+    } catch (error) {
+        console.error('Error exporting culinary preferences to CSV:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Failed to export culinary preferences' }));
+    }
+};
+
+const exportCulinaryPreferencesToPDF = async (req, res) => {
+    const userId = req.user.id;
+
+    const query = `
+        SELECT f.code, f.product_name, f.brands, f.categories_en, f.ingredients_text, f.allergens, f.additives_en, f.price
+        FROM food f
+        JOIN user_foods uf ON f.code = uf.food_code
+        WHERE uf.user_id = ?
+    `;
+
+    try {
+        const [results] = await db.query(query, [userId]);
+        if (results.length === 0) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'No culinary preferences found for this user' }));
+            return;
+        }
+
+        const doc = new PDFDocument();
+        let buffers = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+            let pdfData = Buffer.concat(buffers);
+            res.setHeader('Content-Disposition', 'attachment; filename=culinary_preferences.pdf');
+            res.setHeader('Content-Type', 'application/pdf');
+            res.writeHead(200);
+            res.end(pdfData);
+        });
+
+        doc.fontSize(16).text('Culinary Preferences', { align: 'center' });
+        doc.moveDown();
+
+        results.forEach(item => {
+            doc.fontSize(12).text(`Product Name: ${item.product_name}`);
+            doc.text(`Brand: ${item.brands}`);
+            doc.text(`Category: ${item.categories_en}`);
+            doc.text(`Ingredients: ${item.ingredients_text}`);
+            doc.text(`Allergens: ${item.allergens}`);
+            doc.text(`Additives: ${item.additives_en}`);
+            doc.text(`Price: ${item.price}`);
+            doc.moveDown();
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error('Error exporting culinary preferences to PDF:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Failed to export culinary preferences' }));
+    }
+};
+
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -657,5 +747,7 @@ module.exports = {
     getUserLists,
     addFoodList,
     getListItems,
-    deleteUser
+    deleteUser,
+    exportCulinaryPreferencesToCSV,
+    exportCulinaryPreferencesToPDF
 };

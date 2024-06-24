@@ -31,6 +31,7 @@
     </div>
 
     <div class="main">
+
         <h1 id="username" class="username-display">Hello, Nume utilizator</h1>
         <div class="profile-container">
             <div id="profileImageContainer">
@@ -39,8 +40,11 @@
                 <button id="changePictureButton">Change Picture</button>
             </div>
             <div class="user-preferences">
+                
                 <p>My Culinary Preferences: <span id="collectionCount"></span></p>
             </div>
+            <button id="exportCsvButton">Export Preferences to CSV</button>
+        <button id="exportPdfButton">Export Preferences to PDF</button>
         </div>
 
         <div class="preferinte" id="preferinteContainer">
@@ -48,6 +52,53 @@
     </div>
 
     <script>
+         document.getElementById('exportCsvButton').addEventListener('click', function () {
+            const token = localStorage.getItem('token');
+            fetch('/api/export-csv', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'culinary_preferences.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => console.error('Error exporting preferences to CSV:', error));
+        });
+
+        document.getElementById('exportPdfButton').addEventListener('click', function () {
+            const token = localStorage.getItem('token');
+            fetch('/api/export-pdf', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'culinary_preferences.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => console.error('Error exporting preferences to PDF:', error));
+        });
+        
         window.onload = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
