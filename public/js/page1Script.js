@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Ascultător pentru butonul "All"
+   
     document.getElementById('selectAllButton').addEventListener('click', function () {
         showAllProducts();
     });
@@ -90,9 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/categories')
         .then(response => response.json())
         .then(data => {
-            console.log('Categories:', data); // Debug
+            console.log('Categories:', data); 
             const dropdownContent = document.getElementById('categories-dropdown');
-            dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+            dropdownContent.innerHTML = '';
             data.forEach(category => {
                 const a = document.createElement('a');
                 a.href = "#";
@@ -109,9 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/countries')
         .then(response => response.json())
         .then(data => {
-            console.log('Countries:', data); // Debug
+            console.log('Countries:', data); 
             const dropdownContent = document.getElementById('countries-dropdown');
-            dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+            dropdownContent.innerHTML = ''; 
             data.forEach(country => {
                 const a = document.createElement('a');
                 a.href = "#";
@@ -128,9 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/restaurants')
         .then(response => response.json())
         .then(data => {
-            console.log('Restaurants:', data); // Debug
+            console.log('Restaurants:', data); 
             const dropdownContent = document.getElementById('restaurants-dropdown');
-            dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+            dropdownContent.innerHTML = ''; 
             data.forEach(restaurant => {
                 const a = document.createElement('a');
                 a.href = "#";
@@ -172,19 +172,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function showAllProducts() {
-    console.log('Showing all products'); // Debug
+    console.log('Showing all products');
     fetch('/api/foods')
         .then(response => {
             if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                console.error(`Network response was not ok: ${response.statusText}`);
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log('All foods:', data); // Debug
+            console.log('All foods:', data); 
             const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = ''; // Golește containerul existent
+            produseContainer.innerHTML = ''; 
             data.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -198,19 +198,19 @@ function showAllProducts() {
 }
 
 function filterProductsByCategory(category) {
-    console.log('Selected category:', category); // Debug
+    console.log('Selected category:', category); 
     fetch(`/api/foods/category/${encodeURIComponent(category)}`)
         .then(response => {
             if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                console.error(`Network response was not ok: ${response.statusText}`); 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Filtered foods:', data); // Debug
+            console.log('Filtered foods:', data); 
             const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = ''; // Golește containerul existent
+            produseContainer.innerHTML = ''; 
             data.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -224,19 +224,19 @@ function filterProductsByCategory(category) {
 }
 
 function filterProductsByCountry(country) {
-    console.log('Selected country:', country); // Debug
+    console.log('Selected country:', country); 
     fetch(`/api/foods/country/${encodeURIComponent(country)}`)
         .then(response => {
             if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                console.error(`Network response was not ok: ${response.statusText}`); 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Filtered foods:', data); // Debug
+            console.log('Filtered foods:', data); 
             const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = ''; // Golește containerul existent
+            produseContainer.innerHTML = ''; 
             data.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -250,19 +250,19 @@ function filterProductsByCountry(country) {
 }
 
 function filterProductsByRestaurant(restaurant) {
-    console.log('Selected restaurant:', restaurant); // Debug
+    console.log('Selected restaurant:', restaurant);
     fetch(`/api/foods/restaurant/${encodeURIComponent(restaurant)}`)
         .then(response => {
             if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                console.error(`Network response was not ok: ${response.statusText}`); 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Filtered foods:', data); // Debug
+            console.log('Filtered foods:', data); 
             const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = ''; // Golește containerul existent
+            produseContainer.innerHTML = ''; 
             data.forEach(food => {
                 const foodDiv = document.createElement('div');
                 foodDiv.className = 'mancare';
@@ -288,7 +288,7 @@ async function filterProductsByPriceRange(minPrice, maxPrice) {
         console.log('Filtered foods:', results);
 
         const produseContainer = document.getElementById('produseContainer');
-        produseContainer.innerHTML = ''; // Golește containerul existent
+        produseContainer.innerHTML = ''; 
 
         if (results.length === 0) {
             const noResultsMessage = document.createElement('p');
@@ -308,7 +308,7 @@ async function filterProductsByPriceRange(minPrice, maxPrice) {
     } catch (error) {
         console.error(`Error fetching foods: ${error}`);
         const produseContainer = document.getElementById('produseContainer');
-        produseContainer.innerHTML = ''; // Golește containerul existent
+        produseContainer.innerHTML = '';
         const errorMessage = document.createElement('p');
         errorMessage.textContent = 'An error occurred while fetching foods.';
         produseContainer.appendChild(errorMessage);
@@ -319,7 +319,7 @@ function filterProductsByCalRange(min, max) {
     fetch(`/api/foods/calories?min=${min}&max=${max}`)
         .then(response => {
             if (!response.ok) {
-                console.error(`Network response was not ok: ${response.statusText}`); // Debug
+                console.error(`Network response was not ok: ${response.statusText}`); 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
@@ -348,7 +348,7 @@ function filterProductsByCalRange(min, max) {
         .catch(error => {
             console.error('Error fetching foods:', error);
             const produseContainer = document.getElementById('produseContainer');
-            produseContainer.innerHTML = ''; // Golește containerul existent
+            produseContainer.innerHTML = ''; 
             const errorMessage = document.createElement('p');
             errorMessage.textContent = 'An error occurred while fetching foods.';
             produseContainer.appendChild(errorMessage);
@@ -360,18 +360,18 @@ document.querySelectorAll('.categorii .dropdown button').forEach(button => {
     button.addEventListener('click', function () {
         var dropdownContent = this.nextElementSibling;
 
-        // Close all other dropdowns
+        
         document.querySelectorAll('.dropdown-content').forEach(content => {
             if (content !== dropdownContent) {
                 content.classList.remove('show');
             }
         });
 
-        // Check if dropdownContent is not null before toggling class
+        
         if (dropdownContent) {
             dropdownContent.classList.toggle('show');
         } else {
-            // console.error('Dropdown content not found for button', this);
+           
         }
 
         adjustProduseContainer();
@@ -396,7 +396,7 @@ function adjustProduseContainer() {
     produseContainer.style.height = `calc(${originalHeight}px - ${totalHeight}px)`;
 }
 
-// Close the dropdown if the user clicks outside of it
+
 window.onclick = function (event) {
     if (!event.target.matches('.categorii .dropdown button')) {
         var dropdowns = document.querySelectorAll('.dropdown-content');
@@ -511,13 +511,13 @@ async function showProductDetails(productId) {
         overlay.appendChild(popup);
         document.body.appendChild(overlay);
 
-        // Populate the dropdown with user lists
+       
         populateList(product.code);
     }
 }
 
 async function populateList(foodCode) {
-    console.log("Populating list with foodCode:", foodCode);  // Debug log
+    console.log("Populating list with foodCode:", foodCode);  
     const token = localStorage.getItem('token');
     const response = await fetch('/api/lists', {
         method: 'GET',
@@ -530,7 +530,7 @@ async function populateList(foodCode) {
     if (response.ok) {
         const lists = await response.json();
         const dropdownContent = document.getElementById('lists-dropdown');
-        dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+        dropdownContent.innerHTML = '';
         lists.forEach(list => {
             const a = document.createElement('a');
             a.href = "#";
@@ -542,7 +542,7 @@ async function populateList(foodCode) {
             dropdownContent.appendChild(a);
         });
 
-        // Toggle dropdown display
+      
         dropdownContent.classList.toggle('show');
     } else {
         console.error('Failed to load user lists');
@@ -631,7 +631,7 @@ async function filterProducts(filters) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ filters })  // Verificați dacă filters este un array de string-uri
+            body: JSON.stringify({ filters })  
         });
 
         if (!response.ok) {
@@ -642,7 +642,7 @@ async function filterProducts(filters) {
         console.log('Filter results:', results);
 
         const produseContainer = document.getElementById('produseContainer');
-        produseContainer.innerHTML = ''; // Golește containerul existent
+        produseContainer.innerHTML = ''; 
 
         results.forEach(food => {
             const foodDiv = document.createElement('div');
@@ -673,7 +673,7 @@ const filterFoods = async () => {
 
     const filteredFoods = await response.json();
     console.log(filteredFoods);
-    // Afișează produsele filtrate în interfața de utilizator
+    
 };
 
 document.getElementById('signout').addEventListener('click', () => {

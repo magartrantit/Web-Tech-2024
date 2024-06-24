@@ -3,7 +3,7 @@ const PDFDocument = require('pdfkit');
 const pool = require('../config/dbConfig');
 const db = require('../config/dbConfig');
 
-// Funcția pentru obținerea tuturor alimentelor din baza de date
+
 const getAllFoods = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM food');
@@ -34,7 +34,7 @@ const getProductDetails = async (req, res) => {
     }
 };
 
-// Funcția pentru adăugarea unui aliment în preferințele utilizatorului
+
 const addUserFoodPreference = async (req, res) => {
     let body = '';
     req.on('data', chunk => {
@@ -57,7 +57,6 @@ const addUserFoodPreference = async (req, res) => {
                 return;
             }
 
-            // Add the new preference
             await pool.query('INSERT INTO user_foods (user_id, food_code) VALUES (?, ?)', [userId, productCode]);
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Food preference added successfully' }));
@@ -71,7 +70,7 @@ const addUserFoodPreference = async (req, res) => {
 
 
 
-// Funcția pentru obținerea preferințelor culinare ale utilizatorului
+
 const getUserFoodPreferences = async (req, res) => {
     const userId = req.params.userId;
     console.log(`Fetching food preferences for user: ${userId}`);
@@ -91,7 +90,6 @@ const getUserFoodPreferences = async (req, res) => {
     }
 };
 
-// Funcția pentru obținerea categoriilor distincte
 const getCategories = async (req, res) => {
     try {
         const [result] = await pool.query('SELECT DISTINCT categories_en FROM food');
@@ -104,14 +102,14 @@ const getCategories = async (req, res) => {
     }
 };
 
-// Funcția pentru obținerea alimentelor după categorie
+
 const getFoodsByCategory = async (req, res) => {
     const category = req.params.category;
-    console.log(`Received request for category: ${category}`); // Debug
+    console.log(`Received request for category: ${category}`); 
 
     try {
         const [result] = await pool.query('SELECT * FROM food WHERE categories_en LIKE ?', [`%${category}%`]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -153,11 +151,11 @@ const getCountries = async (req, res) => {
 
 const getFoodsByCountry = async (req, res) => {
     const country = req.params.country;
-    console.log(`Received request for country: ${country}`); // Debug
+    console.log(`Received request for country: ${country}`); 
 
     try {
         const [result] = await pool.query('SELECT * FROM food WHERE countries_en LIKE ?', [`%${country}%`]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -198,15 +196,15 @@ const getRestaurants = async (req, res) => {
 
 const searchFoods = async (req, res) => {
     const searchQuery = req.params.searchQuery;
-    console.log(`Received search query: ${searchQuery}`); // Debug
+    console.log(`Received search query: ${searchQuery}`); 
 
     try {
         const [result] = await pool.query('SELECT * FROM food WHERE product_name LIKE ?', [`%${searchQuery}%`]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify([])); // Trimitem un array gol
+            res.end(JSON.stringify([])); 
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -221,11 +219,11 @@ const searchFoods = async (req, res) => {
 
 const getFoodsByRestaurant = async (req, res) => {
     const restaurant = req.params.restaurant;
-    console.log(`Received request for restaurant: ${restaurant}`); // Debug
+    console.log(`Received request for restaurant: ${restaurant}`); 
 
     try {
         const [result] = await pool.query('SELECT * FROM food WHERE restaurants LIKE ?', [`%${restaurant}%`]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -246,16 +244,16 @@ const getFoodsByPrice = async (req, res) => {
     const minPrice = parseFloat(urlParams.get('min'));
     const maxPrice = parseFloat(urlParams.get('max'));
 
-    console.log(`Received request for price range: ${minPrice} - ${maxPrice}`); // Debug
+    console.log(`Received request for price range: ${minPrice} - ${maxPrice}`); 
 
     try {
         const query = 'SELECT * FROM food WHERE price BETWEEN ? AND ?';
         const [result] = await pool.query(query, [minPrice, maxPrice]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify([])); // Trimitem un array gol
+            res.end(JSON.stringify([])); 
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -275,16 +273,16 @@ const getFoodsByCalories = async (req, res) => {
     const minCal = parseFloat(urlParams.get('min'));
     const maxCal = parseFloat(urlParams.get('max'));
 
-    console.log(`Received request for calory range: ${minCal} - ${maxCal}`); // Debug
+    console.log(`Received request for calory range: ${minCal} - ${maxCal}`); 
 
     try {
         const query = 'SELECT * FROM food WHERE energy_kcal_100g BETWEEN ? AND ?';
         const [result] = await pool.query(query, [minCal, maxCal]);
-        console.log(`Database query result: ${JSON.stringify(result)}`); // Debug
+        console.log(`Database query result: ${JSON.stringify(result)}`); 
 
         if (result.length === 0) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify([])); // Trimitem un array gol
+            res.end(JSON.stringify([])); 
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
@@ -307,7 +305,7 @@ const filterFoods = async (req, res) => {
         const parsedBody = JSON.parse(body);
         const filters = parsedBody.filters;
 
-        console.log('Filters received on server:', filters);  // Adăugați acest log pentru a vedea filtrele primite
+        console.log('Filters received on server:', filters); 
 
         let query = 'SELECT * FROM food WHERE 1=1';
 
@@ -318,11 +316,11 @@ const filterFoods = async (req, res) => {
             query += ' AND allergens = "None"';
         }
 
-        console.log('SQL Query:', query);  // Adăugați acest log pentru a vedea interogarea SQL
+        console.log('SQL Query:', query); 
 
         try {
             const [results] = await db.query(query);
-            console.log('SQL Results:', results);  // Adăugați acest log pentru a vedea rezultatele interogării
+            console.log('SQL Results:', results); 
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(results));
         } catch (err) {
