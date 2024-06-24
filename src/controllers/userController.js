@@ -491,6 +491,46 @@ const updateUser = (userId, username, password, callback) => {
     });
 };
 
+const createUserList = (req, res) => {
+    const { userId, listName } = req.body;
+    if (!userId || !listName) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'UserId and ListName are required.' }));
+        return;
+    }
+
+    const query = 'INSERT INTO user_lists (user_id, list_name) VALUES (?, ?)';
+    db.query(query, [userId, listName], (err, result) => {
+        if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error inserting list into database' }));
+            return;
+        }
+
+        res.writeHead(201, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'List added successfully', id: result.insertId, userId, listName }));
+    });
+};
+
+const getUserLists = async (req, res) => {
+    const userId = req.params.userId;
+    console.log(`Fetching lists for user: ${userId}`);
+
+    try {
+        const [results] = await db.query('SELECT * FROM user_lists WHERE user_id = ?', [userId]);
+        console.log(`Found ${results.length} lists for user: ${userId}`);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(results));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Error fetching lists from database' }));
+    }
+};
+
+
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -511,5 +551,7 @@ module.exports = {
     getFoodsByCalories,
     filterFoods,
     bodyParser,
-    updateUser
+    updateUser,
+    createUserList,
+    getUserLists
 };

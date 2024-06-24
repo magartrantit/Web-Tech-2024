@@ -44,16 +44,12 @@
     </div>
 
     <script>
-        // Verificarea autentificării la încărcarea paginii
         window.onload = async () => {
-            // Se obține tokenul de autentificare din stocarea locală
             const token = localStorage.getItem('token');
-            // Dacă nu există niciun token, utilizatorul este redirecționat către pagina de autentificare
             if (!token) {
                 window.location.href = '/login';
             }
 
-            // Se trimite o cerere GET către endpoint-ul '/api/protected', cu tokenul în header
             const response = await fetch('/api/protected', {
                 method: 'GET',
                 headers: {
@@ -62,25 +58,19 @@
                 }
             });
 
-            // Dacă răspunsul nu este OK (tokenul nu este valid), utilizatorul este redirecționat către pagina de autentificare
             if (!response.ok) {
                 window.location.href = '/login';
             }
 
-            // Populăm listele existente
             loadLists();
         };
 
-        // Eveniment pentru delogare
         document.getElementById('signout').addEventListener('click', () => {
-            // La click pe butonul de delogare, se elimină tokenul din stocarea locală
             localStorage.removeItem('token');
-            localStorage.removeItem('userId'); // Asigură-te că elimini și userId
-            // Și se redirecționează utilizatorul către pagina de autentificare
+            localStorage.removeItem('userId');
             window.location.href = '/login';
         });
 
-        // Funcții pentru gestionarea pop-up-ului
         function openPopup() {
             document.getElementById('popup').style.display = 'flex';
         }
@@ -108,7 +98,8 @@
             });
 
             if (response.ok) {
-                alert('List created successfully');
+                const result = await response.json();
+                alert(result.message); // Afișează mesajul de succes
                 closePopup();
                 loadLists();
             } else {
@@ -119,6 +110,7 @@
 
         async function loadLists() {
             const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
             const response = await fetch('/api/lists', {
                 method: 'GET',
                 headers: {
@@ -136,6 +128,9 @@
                     const listItem = document.createElement('div');
                     listItem.className = 'list-item';
                     listItem.textContent = list.list_name;
+                    listItem.style.border = '1px solid #000';
+                    listItem.style.padding = '10px';
+                    listItem.style.margin = '10px 0';
                     listsContainer.appendChild(listItem);
                 });
             } else {
@@ -143,16 +138,15 @@
             }
         }
 
-        // Ascunde sidebar-ul când ecranul este mic și este apăsat pe X
         function hideSidebar() {
             document.querySelector('.sidebar').style.display = 'none';
         }
 
-        // Afișează sidebar-ul când ecranul este mic și este apăsat pe butonul burger
         function showSidebar() {
             document.querySelector('.sidebar').style.display = 'flex';
         }
     </script>
+
 
 </body>
 

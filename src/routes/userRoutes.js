@@ -12,10 +12,15 @@ const {
     getFoodsByCountry,
     refreshToken,
     getRestaurants,
-    getFoodsByRestaurant, searchFoods,
-    getFoodsByPrice, getFoodsByCalories, filterFoods,
+    getFoodsByRestaurant, 
+    searchFoods,
+    getFoodsByPrice, 
+    getFoodsByCalories, 
+    filterFoods,
     bodyParser,
-    updateUser
+    updateUser,
+    createUserList, // Importă funcția pentru crearea unei liste
+    getUserLists, // Importă funcția pentru obținerea listelor unui utilizator
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -23,7 +28,7 @@ const db = require('../config/dbConfig');
 const userRoutes = async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/users') {
         createUser(req, res);
-    }else if (req.method === 'PUT' && req.url.startsWith('/api/users/')) {
+    } else if (req.method === 'PUT' && req.url.startsWith('/api/users/')) {
         const userId = req.url.split('/').pop();
     
         bodyParser(req, (err) => {
@@ -48,9 +53,7 @@ const userRoutes = async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: 'User updated successfully' }));
         });
-    }
-    
-    else if (req.method === 'POST' && req.url === '/api/login') {
+    } else if (req.method === 'POST' && req.url === '/api/login') {
         loginUser(req, res);
     } else if (req.method === 'POST' && req.url === '/api/uploadProfileImage') {
         uploadProfileImage(req, res);
@@ -63,11 +66,9 @@ const userRoutes = async (req, res) => {
         const searchQuery = decodeURIComponent(req.url.split('/api/foods/search/')[1]);
         req.params = { searchQuery };
         searchFoods(req, res);
-    }
-    else if (req.method === 'POST' && req.url === '/api/foods/filter') {
+    } else if (req.method === 'POST' && req.url === '/api/foods/filter') {
         filterFoods(req, res);
-    }
-    else if (req.method === 'GET' && req.url === '/api/foods') {
+    } else if (req.method === 'GET' && req.url === '/api/foods') {
         getAllFoods(req, res);
     } else if (req.method === 'GET' && req.url.startsWith('/api/foods/category/')) {
         const category = decodeURIComponent(req.url.split('/').pop());
@@ -93,8 +94,7 @@ const userRoutes = async (req, res) => {
         const maxCal = parseFloat(urlParams.get('max'));
         req.params = { minCal, maxCal };
         getFoodsByCalories(req, res);
-    }
-    else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/')) {
         const productId = req.url.split('/').pop();
         req.params = { id: productId };
         getProductDetails(req, res);
@@ -192,8 +192,25 @@ const userRoutes = async (req, res) => {
         getCountries(req, res);
     } else if (req.method === 'GET' && req.url === '/api/restaurants') {
         getRestaurants(req, res);
-    }
-    else {
+    } else if (req.method === 'GET' && req.url === '/api/lists') {
+        authenticateToken(req, res, () => {
+            const userId = req.user.id;
+            req.params = { userId };
+            getUserLists(req, res);
+        });
+    } else if (req.method === 'POST' && req.url === '/api/lists') {
+        authenticateToken(req, res, () => {
+            bodyParser(req, (err) => {
+                if (err) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Bad request, invalid JSON' }));
+                    return;
+                }
+                req.body.userId = req.user.id;
+                createUserList(req, res);
+            });
+        });
+    } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }

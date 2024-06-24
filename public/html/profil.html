@@ -180,7 +180,7 @@
                         </ul>
                         <p><strong>Restaurants:</strong> ${product.restaurants}</p>
                         <p><strong>Price:</strong> ${product.price}</p>
-                        <button onclick="addToCart('${product.code}')">Add</button>
+                        
                     </div>
                 `;
                 overlay.appendChild(popup);
@@ -199,28 +199,7 @@
             }
         }
 
-        async function addToCart(productCode) {
-            const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('userId');
-            console.log('Adding to cart', { userId, productCode });
-            const response = await fetch('/api/user/food-preferences', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ userId, foodCode: productCode })
-            });
-
-            if (response.ok) {
-                alert('Food added to preferences');
-                closePopup();
-            } else {
-                alert('Failed to add food to preferences');
-            }
-        }
-
-    </script>
+       </script>
 
 </body>
 

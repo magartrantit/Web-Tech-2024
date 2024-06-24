@@ -555,12 +555,73 @@
                         <p><strong>Restaurants:</strong> ${product.restaurants}</p>
                         <p><strong>Price:</strong> ${product.price}</p>
                         <button onclick="addToCart('${product.code}')">Add</button>
+                        <div class="dropdown">
+                            <button type="button" onclick="populateList()">Add to...</button>
+                            <div class="dropdown-content" id="lists-dropdown">
+                                <!-- Listele vor fi populate aici -->
+                            </div>
+                        </div>
                     </div>
                 `;
                 overlay.appendChild(popup);
                 document.body.appendChild(overlay);
+
+                // Populate the dropdown with user lists
+                populateList();
             }
         }
+
+        async function populateList() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/lists', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const lists = await response.json();
+                const dropdownContent = document.getElementById('lists-dropdown');
+                dropdownContent.innerHTML = ''; // Golește dropdown-ul existent
+                lists.forEach(list => {
+                    const a = document.createElement('a');
+                    a.href = "#";
+                    a.textContent = list.list_name;
+                    a.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        addToUserList(list.id);
+                    });
+                    dropdownContent.appendChild(a);
+                });
+
+                // Toggle dropdown display
+                dropdownContent.classList.toggle('show');
+            } else {
+                console.error('Failed to load user lists');
+            }
+        }
+
+        async function addToUserList(listId, productId) {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/user-lists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ listId, productId })
+            });
+
+            if (response.ok) {
+                alert('Product added to the list successfully');
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to add product to the list: ${errorData.error}`);
+            }
+        }
+
 
         function closePopup() {
             const overlay = document.querySelector('.overlay');
