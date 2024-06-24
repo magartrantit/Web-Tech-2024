@@ -81,6 +81,8 @@ nav a.active svg path {
     margin-top: 30px;
 }
 
+
+
 section{
     min-height: 100vh;
     display: flex;
@@ -307,6 +309,13 @@ h1 {
     font-size: 2.0em;
 }
 
+
+@media (max-width: 880px) {
+    .textAbout {
+        font-size: 1.9em; 
+    }
+}
+
 @media(max-width: 800px){
     .hideOnMobile{
         display: none;
@@ -315,14 +324,17 @@ h1 {
         display: block;
     }
     .textAbout{
-        font-size: 1.3em;
+        font-size: 1.5em;
     }
 }
 
-@media(max-width: 550px)
+@media(max-width: 600px)
 {
     .textAbout{
-        font-size: 1.0em;
+        font-size: 1.2em;
+    }
+    .about-text{
+        font-size: 3.0em;
     }
 }
 
@@ -339,6 +351,12 @@ h1 {
     }
     .sidebar{
         width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: fixed;
     }
     .sect2{
         display:flex;
@@ -362,10 +380,36 @@ h1 {
         display: none;
     }
     .textAbout{
-        font-size: 2.0em;
+        font-size: 2.5em;
     }
     .welcome{
         font-size: 2.0em;
+    }
+    .sidebar a{
+        font-size: 40px;
+    }
+    .sidebar svg{
+        width: 40px;
+        height: 40px;
+    }
+    
+}
+@media(max-width: 350px)
+{
+    .textAbout{
+        font-size: 1.9em;
+    }
+}
+
+@media(max-height: 800px){
+    .about-text{
+        font-size: 3.0em;
+    }
+    .textAbout{
+        font-size: 1.7em;
+    }
+    .about{
+        height: 60vh;
     }
 }
 
@@ -383,8 +427,17 @@ h1 {
     .signup label{
         size: 1.5em;
     }
-    .about .textAbout{
-        font-size: 1.5em;
-        
+    .about-text{
+        font-size: 2.5em;
     }
-}   
+    .textAbout{
+        font-size: 1.3em;
+    }
+    .about{
+        height: 50vh;
+    }
+    
+} 
+
+
+

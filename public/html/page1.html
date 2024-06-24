@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuPo</title>
     <link rel="stylesheet" href="../css/style1.css">
-    
 </head>
-
 <body>
     <nav>
         <ul class="sidebar">
-            <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                    viewBox="0 -960 960 960" width="24">
-                    <path fill="white"
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                </svg></li>
-            <li><a href="/page1">Home</a></li>
-            <li><a href="/profil">Profile</a></li>
-            <li><a href="/list">Grocery</a></li>
-            <li><a href="#" id="signout">Sign out</a></li>
+            <li onclick="hideSidebar()" class="ics">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path fill="#fbf2c0"
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg>
+            </li>
+            <li><a href="/page1" class="menu-link">Home</a></li>
+            <li><a href="/profil" class="menu-link">Profile</a></li>
+            <li><a href="/list" class="menu-link">Grocery</a></li>
+            <li><a href="#" id="signout" class="menu-link">Sign out</a></li>
         </ul>
     </nav>
-    <div onclick="showSidebar()" class="burger"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-            viewBox="0 -960 960 960" width="24">
+    <div onclick="showSidebar()" class="burger">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-        </svg></div>
+        </svg>
+    </div>
     <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
     <div class="indicatie">
         <p>Choose a category</p>
@@ -97,6 +96,4 @@
     <script src="../js/script.js"></script>
     <script src="../js/page1Script.js"></script>
 </body>
-
 </html>
-

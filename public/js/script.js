@@ -9,11 +9,34 @@ function hideSidebar() {
     sidebar.style.display = 'none';
 }
 
-
-
 // Funcție pentru delogare
 function logout() {
-    localStorage.removeItem('token'); // Elimină token-ul din localStorage
-    window.location.href = '/login'; // Redirecționează utilizatorul la pagina de login
+    localStorage.removeItem('token'); 
+    window.location.href = '/login'; 
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const menuLinks = document.querySelectorAll('.sidebar li a');
+
+    menuLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            if (window.innerWidth <= 650) {
+                event.preventDefault(); 
+                
+                    window.location.href = link.href; 
+                
+                hideSidebar(); 
+            }
+        });
+    });
+
+    
+    window.showSidebar = function() {
+        sidebar.style.display = 'flex'; 
+    };
+
+    window.hideSidebar = function() {
+        sidebar.style.display = 'none'; 
+    };
+});
