@@ -1,32 +1,15 @@
+const { 
+    createUser, loginUser, uploadProfileImage, refreshToken, bodyParser, updateUser,deleteUser 
+} = require('../controllers/userController');
 const {
-    createUser,
-    loginUser,
-    uploadProfileImage,
-    getAllFoods,
-    getProductDetails,
-    addUserFoodPreference,
-    getUserFoodPreferences,
-    getCategories,
-    getFoodsByCategory,
-    getCountries,
-    getFoodsByCountry,
-    refreshToken,
-    getRestaurants,
-    getFoodsByRestaurant, 
-    searchFoods,
-    getFoodsByPrice, 
-    getFoodsByCalories, 
-    filterFoods,
-    bodyParser,
-    updateUser,
+    getAllFoods, getProductDetails, addUserFoodPreference, getUserFoodPreferences,getCategories, getFoodsByCategory, getCountries, getFoodsByCountry, getRestaurants,searchFoods, getFoodsByRestaurant, getFoodsByPrice, getFoodsByCalories, filterFoods,exportCulinaryPreferencesToCSV, exportCulinaryPreferencesToPDF
+} = require('../controllers/foodController');
+const{
+    addFoodList,
     createUserList,
     getUserLists,
-    addFoodList,
-    getListItems,
-    deleteUser,
-    exportCulinaryPreferencesToCSV,
-    exportCulinaryPreferencesToPDF
-} = require('../controllers/userController');
+    getListItems
+} = require('../controllers/listController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
