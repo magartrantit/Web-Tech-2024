@@ -181,13 +181,13 @@ const addUserFoodPreference = async (req, res) => {
     });
     req.on('end', async () => {
         try {
-            const { userId, foodCode } = JSON.parse(body);
-            console.log(`Adding food preference for user: ${userId}, food: ${foodCode}`);
+            const { userId, productCode } = JSON.parse(body);
+            console.log(`Adding food preference for user: ${userId}, food: ${productCode}`);
 
             // Check if the preference already exists
             const [existingPreference] = await pool.query(
                 'SELECT * FROM user_foods WHERE user_id = ? AND food_code = ?',
-                [userId, foodCode]
+                [userId, productCode]
             );
 
             if (existingPreference.length > 0) {
@@ -197,9 +197,43 @@ const addUserFoodPreference = async (req, res) => {
             }
 
             // Add the new preference
-            await pool.query('INSERT INTO user_foods (user_id, food_code) VALUES (?, ?)', [userId, foodCode]);
+            await pool.query('INSERT INTO user_foods (user_id, food_code) VALUES (?, ?)', [userId, productCode]);
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Food preference added successfully' }));
+        } catch (err) {
+            console.error('Database error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Database error' }));
+        }
+    });
+};
+
+const addFoodList = async (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', async () => {
+        try {
+            const { listId, foodCode } = JSON.parse(body);
+            console.log(`Adding food to list: ${listId}, food: ${foodCode}`);
+
+            // Check if the item already exists in the list
+            const [existingItem] = await pool.query(
+                'SELECT * FROM list_items WHERE list_id = ? AND food_code = ?',
+                [listId, foodCode]
+            );
+
+            if (existingItem.length > 0) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Food already exists in the list' }));
+                return;
+            }
+
+            // Add the new item to the list
+            await pool.query('INSERT INTO list_items (list_id, food_code) VALUES (?, ?)', [listId, foodCode]);
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Food added to list successfully' }));
         } catch (err) {
             console.error('Database error:', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -553,5 +587,6 @@ module.exports = {
     bodyParser,
     updateUser,
     createUserList,
-    getUserLists
+    getUserLists,
+    addFoodList
 };

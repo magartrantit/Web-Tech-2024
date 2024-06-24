@@ -21,6 +21,7 @@ const {
     updateUser,
     createUserList, // Importă funcția pentru crearea unei liste
     getUserLists, // Importă funcția pentru obținerea listelor unui utilizator
+    addFoodList
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -108,7 +109,12 @@ const userRoutes = async (req, res) => {
         authenticateToken(req, res, () => {
             getUserFoodPreferences(req, res);
         });
-    } else if (req.method === 'POST' && req.url === '/api/refreshToken') {
+    }else  if (req.method === 'POST' && req.url === '/api/user-lists') {
+        authenticateToken(req, res, () => {
+            addFoodList(req, res);
+        });
+    }
+     else if (req.method === 'POST' && req.url === '/api/refreshToken') {
         refreshToken(req, res);
     } else if (req.method === 'POST' && req.url === '/api/products') {
         authenticateToken(req, res, async () => {

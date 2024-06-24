@@ -571,7 +571,7 @@
             }
         }
 
-        async function populateList() {
+        async function populateList(foodCode) {
             const token = localStorage.getItem('token');
             const response = await fetch('/api/lists', {
                 method: 'GET',
@@ -591,7 +591,7 @@
                     a.textContent = list.list_name;
                     a.addEventListener('click', function (event) {
                         event.preventDefault();
-                        addToUserList(list.id);
+                        addToUserList(list.id, foodCode);
                     });
                     dropdownContent.appendChild(a);
                 });
@@ -603,7 +603,7 @@
             }
         }
 
-        async function addToUserList(listId, productId) {
+        async function addToUserList(listId, foodCode) {
             const token = localStorage.getItem('token');
             const response = await fetch('/api/user-lists', {
                 method: 'POST',
@@ -611,7 +611,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ listId, productId })
+                body: JSON.stringify({ listId, foodCode })
             });
 
             if (response.ok) {
@@ -621,7 +621,6 @@
                 alert(`Failed to add product to the list: ${errorData.error}`);
             }
         }
-
 
         function closePopup() {
             const overlay = document.querySelector('.overlay');
@@ -644,7 +643,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ userId, foodCode: productCode })
+                body: JSON.stringify({ userId, productCode: productCode })
             });
 
             if (response.ok) {
