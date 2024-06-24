@@ -15,7 +15,7 @@
             <li onclick="hideSidebar()" class="ics"><svg xmlns="http://www.w3.org/2000/svg" height="24"
                     viewBox="0 -960 960 960" width="24">
                     <path fill="white"
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224-224 224Z" />
                 </svg></li>
             <li><a href="/page1">Home</a></li>
             <li><a href="/profil">Profile</a></li>
@@ -50,9 +50,9 @@
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             <h2>List Products</h2>
-            <!-- Aici puteți afișa elementele listei -->
+            <div id="list-products"></div>
             <h2>List Statistics</h2>
-            <!-- Aici puteți afișa statistici despre lista -->
+            <div id="list-statistics"></div>
         </div>
     </div>
 
@@ -145,7 +145,7 @@
                     listItem.style.padding = '10px';
                     listItem.style.margin = '10px 0';
                     listItem.dataset.listId = list.id; // Adăugăm ID-ul listei ca atribut de date
-                    listItem.addEventListener('click', () => openListPopup(listItem.dataset.listId));
+                    listItem.addEventListener('click', () => openListPopup(list.id));
                     listsContainer.appendChild(listItem);
                 });
             } else {
@@ -153,51 +153,54 @@
             }
         }
 
-
-        function openListPopup(listId) {
+        async function openListPopup(listId) {
+            console.log(`Opening list popup for list ID: ${listId}`); // Log pentru deschiderea popup-ului
             const token = localStorage.getItem('token');
-
-            fetch(`/api/list/items/${listId}`, {
+            const response = await fetch(`/api/lists/${listId}/items`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error(data.error);
-                        alert('Error fetching list items');
-                    } else {
-                        displayListItems(data);
-                        document.getElementById('list-popup').style.display = 'flex';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while fetching list items');
-                });
-        }
-
-        function displayListItems(items) {
-            const popupContent = document.querySelector('#list-popup .popup-content');
-            const listContainer = document.createElement('div');
-            listContainer.innerHTML = '';
-
-            items.forEach(item => {
-                const itemElement = document.createElement('p');
-                itemElement.textContent = item.product_name; 
-                listContainer.appendChild(itemElement);
             });
 
-            // Eliminați conținutul vechi al listei și adăugați elementele noi
-            popupContent.innerHTML = '<span class="close-btn" onclick="closePopup()">&times;</span><h2>List Products</h2>';
-            popupContent.appendChild(listContainer);
-            popupContent.innerHTML += '<h2>List Statistics</h2>'; // Adăugați secțiunea de statistici aici, dacă este necesar
+            if (response.ok) {
+                const data = await response.json();
+                const { items, numProducts, totalPrice, allergens, additives } = data;
+
+                console.log("Items received from backend:", items); // Adaugă acest log
+
+                const listProducts = document.getElementById('list-products');
+                if (!listProducts) {
+                    console.error('Element with ID "list-products" not found.');
+                    return;
+                }
+                listProducts.innerHTML = ''; // Golește conținutul anterior
+
+                items.forEach(item => {
+                    const product = document.createElement('div');
+                    product.className = 'product-item';
+                    product.textContent = item.product_name; // Asigură-te că folosești câmpul corect
+                    listProducts.appendChild(product);
+                });
+
+                // Afișează statisticile
+                const listStatistics = document.getElementById('list-statistics');
+                if (listStatistics) {
+                    listStatistics.innerHTML = `
+                        <p>Număr produse: ${numProducts}</p>
+                        <p>Preț total: ${totalPrice.toFixed(2)} RON</p>
+                        <p>Alergeni: ${allergens || 'Niciunul'}</p>
+                        <p>Aditivi: ${additives || 'Niciunul'}</p>
+                    `;
+                }
+
+                document.getElementById('list-popup').style.display = 'flex';
+                console.log('Popup displayed'); // Log pentru afișarea popup-ului
+            } else {
+                console.error('Failed to load list items');
+            }
         }
-
-
 
         function hideSidebar() {
             document.querySelector('.sidebar').style.display = 'none';
@@ -207,7 +210,6 @@
             document.querySelector('.sidebar').style.display = 'flex';
         }
     </script>
-
 
 </body>
 

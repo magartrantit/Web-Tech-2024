@@ -19,10 +19,10 @@ const {
     filterFoods,
     bodyParser,
     updateUser,
-    createUserList, // Importă funcția pentru crearea unei liste
-    getUserLists, // Importă funcția pentru obținerea listelor unui utilizator
+    createUserList,
+    getUserLists,
     addFoodList,
-    getListItems
+    getListItems // Importăm funcția pentru obținerea produselor dintr-o listă
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -64,8 +64,7 @@ const userRoutes = async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Protected route accessed', user: req.user }));
         });
-    }
-     else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) {
         const searchQuery = decodeURIComponent(req.url.split('/api/foods/search/')[1]);
         req.params = { searchQuery };
         searchFoods(req, res);
@@ -111,19 +110,17 @@ const userRoutes = async (req, res) => {
         authenticateToken(req, res, () => {
             getUserFoodPreferences(req, res);
         });
-    }else  if (req.method === 'POST' && req.url === '/api/user-lists') {
+    } else if (req.method === 'POST' && req.url === '/api/user-lists') {
         authenticateToken(req, res, () => {
             addFoodList(req, res);
         });
-    }
-    else if (req.method === 'GET' && req.url.startsWith('/api/list/items/')) {
+    } else if (req.method === 'GET' && req.url.startsWith('/api/lists/') && req.url.endsWith('/items')) {
+        const urlParts = req.url.split('/');
+        const listId = urlParts[3];  // Extragem listId din URL
         authenticateToken(req, res, () => {
-            const listId = req.url.split('/').pop();
-            req.params = { listId };
-            getListItems(req, res);
+            getListItems(req, res, listId);
         });
-    }
-     else if (req.method === 'POST' && req.url === '/api/refreshToken') {
+    } else if (req.method === 'POST' && req.url === '/api/refreshToken') {
         refreshToken(req, res);
     } else if (req.method === 'POST' && req.url === '/api/products') {
         authenticateToken(req, res, async () => {

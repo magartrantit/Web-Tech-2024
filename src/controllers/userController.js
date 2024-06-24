@@ -563,27 +563,31 @@ const getUserLists = async (req, res) => {
 };
 
 
-const getListItems = (req, res) => {
-    const listId = req.params.listId;
-    
+const getListItems = async (req, res, listId) => {
+    try {
+        const query = `
+            SELECT food.*, list_items.list_id FROM food
+            JOIN list_items ON food.code = list_items.food_code
+            WHERE list_items.list_id = ?
+        `;
+        const [items] = await pool.query(query, [listId]);
 
-        pool.query(
-            'SELECT food.product_name FROM list_items JOIN food ON list_items.food_code = food.code WHERE list_items.list_id = ?',
-            [listId],
-            (error, results) => {
-                if (error) {
-                    console.error('Database error:', error); // Adăugare log
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Database error' }));
-                } else {
-                    console.log('Query results:', results); // Adăugare log
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify(results));
-                }
-            }
-        );
-    };
+        // Calculează statisticile
+        const numProducts = items.length;
+        const totalPrice = items.reduce((sum, item) => sum + parseFloat(item.price), 0);
+        const allergens = [...new Set(items.map(item => item.allergens).filter(allergen => allergen && allergen !== 'None'))].join(', ');
+        const additives = [...new Set(items.map(item => item.additives_en).filter(additive => additive && additive !== 'None'))].join(', ');
 
+        console.log("Items fetched from database:", items); // Adaugă acest log
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ items, numProducts, totalPrice, allergens, additives }));
+    } catch (err) {
+        console.error('Database error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+    }
+};
 
 
 
