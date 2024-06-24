@@ -58,12 +58,13 @@ const userRoutes = async (req, res) => {
         loginUser(req, res);
     } else if (req.method === 'POST' && req.url === '/api/uploadProfileImage') {
         uploadProfileImage(req, res);
-    } else if (req.method === 'GET' && req.url === '/api/protected') {
+    } else if (req.method === 'GET' && req.url === '/api/protected' ) {
         authenticateToken(req, res, () => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Protected route accessed', user: req.user }));
         });
-    } else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) {
+    }
+     else if (req.method === 'GET' && req.url.startsWith('/api/foods/search/')) {
         const searchQuery = decodeURIComponent(req.url.split('/api/foods/search/')[1]);
         req.params = { searchQuery };
         searchFoods(req, res);
