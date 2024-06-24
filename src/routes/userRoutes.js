@@ -22,7 +22,8 @@ const {
     createUserList,
     getUserLists,
     addFoodList,
-    getListItems // Importăm funcția pentru obținerea produselor dintr-o listă
+    getListItems,
+    deleteUser // Importă funcția pentru ștergerea unui utilizator
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
@@ -173,20 +174,8 @@ const userRoutes = async (req, res) => {
         });
     } else if (req.method === 'DELETE' && req.url.startsWith('/api/users/')) {
         const userId = req.url.split('/').pop();
-        const query = 'DELETE FROM users WHERE id = ?';
-        db.query(query, [userId], (err, results) => {
-            if (err) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Error deleting user' }));
-                return;
-            }
-            if (results.affectedRows === 0) {
-                res.writeHead(404, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'User not found' }));
-                return;
-            }
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'User deleted successfully' }));
+        authenticateToken(req, res, () => {
+            deleteUser(req, res, userId);
         });
     } else if (req.method === 'GET' && req.url === '/api/users') {
         const query = 'SELECT id, username FROM users where admin = 0';

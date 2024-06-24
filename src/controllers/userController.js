@@ -589,7 +589,48 @@ const getListItems = async (req, res, listId) => {
     }
 };
 
+const deleteUser = async (req, res, userId) => {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
 
+        // Șterge preferințele alimentare ale utilizatorului
+        const deleteUserFoodsQuery = 'DELETE FROM user_foods WHERE user_id = ?';
+        await connection.query(deleteUserFoodsQuery, [userId]);
+
+        // Șterge elementele de listă asociate cu listele utilizatorului
+        const deleteListItemsQuery = `
+            DELETE list_items FROM list_items
+            JOIN user_lists ON list_items.list_id = user_lists.id
+            WHERE user_lists.user_id = ?
+        `;
+        await connection.query(deleteListItemsQuery, [userId]);
+
+        // Șterge listele utilizatorului
+        const deleteUserListsQuery = 'DELETE FROM user_lists WHERE user_id = ?';
+        await connection.query(deleteUserListsQuery, [userId]);
+
+        // Șterge utilizatorul
+        const deleteUserQuery = 'DELETE FROM users WHERE id = ?';
+        const [result] = await connection.query(deleteUserQuery, [userId]);
+
+        if (result.affectedRows === 0) {
+            throw new Error('User not found');
+        }
+
+        await connection.commit();
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'User deleted successfully' }));
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error deleting user:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Error deleting user' }));
+    } finally {
+        connection.release();
+    }
+};
 
 module.exports = {
     createUser,
@@ -615,5 +656,6 @@ module.exports = {
     createUserList,
     getUserLists,
     addFoodList,
-    getListItems
+    getListItems,
+    deleteUser
 };

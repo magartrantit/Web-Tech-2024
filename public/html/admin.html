@@ -16,7 +16,7 @@
                 <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24"
                             viewBox="0 -960 960 960" width="24">
                             <path fill="white"
-                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224-224 224Z" />
                         </svg></a></li>
                 <a href="#" id="signout1">Sign out</a>
 
@@ -62,7 +62,6 @@
             </div>
         </div>
 
-
         <div id="addProductPopup" class="popup">
             <div class="popup-content">
                 <span class="close" onclick="closePopup()">&times;</span>
@@ -95,8 +94,8 @@
                     <input type="text" id="proteins_100g" name="proteins_100g" placeholder="Proteins/100g">
                     <input type="text" id="salt_100g" name="salt_100g" placeholder="Salt/100g">
                     <input type="text" id="sodium_100g" name="sodium_100g" placeholder="Sodium/100g">
-                    <input type="text" id="restaurants" name="restaurants" placeholder="Price">
-                    <input type="text" id="price" name="price" placeholder="Restaurants">
+                    <input type="text" id="restaurants" name="restaurants" placeholder="Restaurants">
+                    <input type="text" id="price" name="price" placeholder="Price">
                     <button type="button" onclick="submitProduct()">Submit</button>
                 </form>
             </div>
@@ -109,8 +108,6 @@
                 <p>All fields must be filled and an image URL must be provided.</p>
             </div>
         </div>
-
-
     </div>
 
     <script>
@@ -158,10 +155,12 @@
             if (newPassword) requestData.password = newPassword;
 
             // Asigurați-vă că utilizați JSON.stringify pentru a converti obiectul requestData într-un șir JSON
+            const token = localStorage.getItem('token');
             fetch(`/api/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Includeți token-ul de autorizare
                 },
                 body: JSON.stringify(requestData), // Converteste obiectul requestData într-un șir JSON
             })
@@ -172,11 +171,12 @@
                     return response.json();
                 })
                 .then(data => {
-                    
+                    window.alert('User modified successfully'); // Mesajul de succes
                     closeModifyUserPopup();
                 })
                 .catch(error => {
                     console.error('Error updating user:', error);
+                    window.alert('Error updating user'); // Mesajul de eroare
                 });
         }
 
@@ -218,8 +218,6 @@
             });
         }
 
-
-
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM fully loaded and parsed');
             fetchUsers();
@@ -241,21 +239,36 @@
                 .catch(error => console.error('Error fetching users:', error));
         }
 
-        function deleteUser() {
+        function showMessage(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        async function deleteUser() {
             const userId = document.getElementById('userSelect').value;
             console.log('Deleting user with ID:', userId);
+            const token = localStorage.getItem('token');
+
             fetch(`/api/users/${userId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             })
-                .then(response => {
-                    if (response.ok) {
-                        showMessage('User deleted successfully');
-                        setTimeout(() => location.reload(), 1000);
-                    } else {
-                        alert('Error deleting user');
-                    }
-                })
-                .catch(error => console.error('Error deleting user:', error));
+            .then(response => {
+                if (response.ok) {
+                    window.alert('User deleted successfully'); // Mesajul de succes
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    window.alert('Error deleting user'); // Mesajul de eroare
+                }
+            })
+            .catch(error => console.error('Error deleting user:', error));
         }
 
         document.getElementById('signout').addEventListener('click', () => {
@@ -264,7 +277,6 @@
             // Și se redirecționează utilizatorul către pagina de autentificare
             window.location.href = '/login';
         });
-
 
         document.getElementById('signout1').addEventListener('click', () => {
             // La click pe butonul de delogare, se elimină tokenul din stocarea locală

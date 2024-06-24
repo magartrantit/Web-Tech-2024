@@ -95,6 +95,14 @@
     </div>
 
     <script>
+        function hideSidebar() {
+            document.querySelector('.sidebar').style.display = 'none';
+        }
+
+        function showSidebar() {
+            document.querySelector('.sidebar').style.display = 'block';
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const searchInput = document.getElementById("searchInput");
             const applyFiltersButton = document.getElementById("applyFiltersButton");
@@ -139,8 +147,6 @@
                 }
             }
 
-
-
             if (searchInput) {
                 searchInput.addEventListener("keydown", (event) => {
                     if (event.key === "Enter") {
@@ -153,8 +159,6 @@
             }
         });
 
-
-
         document.addEventListener('DOMContentLoaded', function () {
             var dropdowns = document.querySelectorAll('.dropdown-content.stop-propagation');
             dropdowns.forEach(function (dropdown) {
@@ -162,8 +166,6 @@
                     event.stopPropagation();
                 });
             });
-
-
 
             // Ascultător pentru butonul "All"
             document.getElementById('selectAllButton').addEventListener('click', function () {
@@ -250,8 +252,6 @@
                     console.error('Invalid price range');
                 }
             });
-
-
         });
 
         function showAllProducts() {
@@ -383,7 +383,6 @@
                 })
                 .catch(error => console.error('Error fetching foods:', error));
         }
-
 
         function filterProductsByCalRange(min, max) {
             console.log(`Fetching products with cal range: ${min} - ${max}`);
@@ -616,7 +615,12 @@
             });
 
             if (response.ok) {
-                alert('Product added to the list successfully');
+                const result = await response.json();
+                if (result.message === 'Food already exists in the list') {
+                    alert('This product is already in the list.');
+                } else if (result.message === 'Food added to list successfully') {
+                    alert('Product added to the list successfully');
+                }
             } else {
                 const errorData = await response.json();
                 alert(`Failed to add product to the list: ${errorData.error}`);
@@ -726,3 +730,4 @@
 </body>
 
 </html>
+

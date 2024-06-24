@@ -66,8 +66,7 @@
                     <div class="signup">
                         <form id="signupForm">
                             <label for="check" aria-hidden="true">Sign up</label>
-                            <input type="email" id="signupEmail" name="mil" placeholder="Mail" required
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                            <input type="email" id="signupEmail" name="mil" placeholder="Mail" required>
                             <input type="text" id="signupUsername" name="txt" placeholder="User name" required="">
                             <input type="password" id="signupPassword" name="pswd" placeholder="Password" required="">
                             <button type="submit">Sign up</button>
@@ -87,7 +86,11 @@
     </div>
 
     <script>
-        
+        // Functie pentru validarea email-ului
+        function validateEmail(email) {
+            const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+            return re.test(String(email).toLowerCase());
+        }
 
         // Adauga un event listener pentru formularul de inregistrare
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -96,6 +99,12 @@
             const email = document.getElementById('signupEmail').value;
             const username = document.getElementById('signupUsername').value;
             const password = document.getElementById('signupPassword').value;
+
+            // Valideaza email-ul
+            if (!validateEmail(email)) {
+                alert('Invalid email format');
+                return;
+            }
 
             // Trimite o cerere POST catre server pentru a crea un nou utilizator
             const response = await fetch('/api/users', {
