@@ -12,16 +12,9 @@
     <header>
         <a href="#" class="logo">ADMIN</a>
         <nav>
-            <ul class="sidebar">
-                <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path fill="white" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                        </svg></a></li>
-                <a href="#" id="signout1">Sign out</a>
-            </ul>
+            
             <a href="#" id="signout">Sign out</a>
-            <a href="#" class="menu-button" onclick=showSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -1200 960 960" width="24">
-                    <path fill="white" d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                </svg></a>
+            
         </nav>
     </header>
 
@@ -31,13 +24,6 @@
             <select id="userSelect"></select>
             <button onclick="deleteUser()">Delete User</button>
             <button onclick="modifyDates()">Modify Dates</button>
-        </div>
-
-        <div id="userMessages">
-            <h2>Messages from Users</h2>
-            <p id="messageContent">Message content goes here</p>
-            <button onclick="respondToMessage()">Respond</button>
-            <button onclick="deleteMessage()">Delete</button>
         </div>
 
         <div id="addProduct">

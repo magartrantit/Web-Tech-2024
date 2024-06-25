@@ -203,20 +203,61 @@ body {
   padding: 10px;
 }
 
+
+button {
+  background-color: #0ac510; 
+  color: white;
+  padding: 10px 20px; 
+  border: none; 
+  cursor: pointer; 
+  border-radius: 5px; 
+  transition: background-color 0.3s; 
+}
+
+
+.close-btn {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  background-color: transparent; 
+}
+
+
+.close-btn:hover svg {
+  stroke: #f9a825; 
+}
+
+
+button:hover {
+  background-color: #45a049; 
+}
+
+
+.dropdown button {
+  background-color: #006f91; 
+  color: #ffffff; 
+}
+
+
+
+
+
 .categorii button {
   padding: 10px 15px;
   font-size: 16px;
   color: #ffffff;
-  background-color: var(--rosuInchis);
+  background-color: #4c9e53;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
 .categorii button:hover {
-  background-color: #0056b3;
+  background-color: #b30071;
 }
 
 .dropdown {
@@ -348,17 +389,17 @@ input[type="checkbox"]:hover+label::before {
 }
 
 .mancare {
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2);
   background-size: cover;
   background-position: center;
-  background-color:  rgba(230, 142, 11, 0.397);/* Adaugă un fundal solid albastru */
-  width: 150px; /* Lățimea cercului */
-  height: 150px; /* Înălțimea cercului */
+  background-color:  rgba(230, 142, 11, 0.397);
+  width: 150px; 
+  height: 150px; 
   margin: 25px;
   cursor: pointer;
   transition: transform 0.2s, filter 0.2s;
   border: 5px solid rgba(230, 142, 11, 0.397);
-  border-radius: 50%; /* Face elementul complet rotund */
+  border-radius: 50%; 
 }
 
 .mancare:hover {

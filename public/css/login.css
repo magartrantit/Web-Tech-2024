@@ -301,7 +301,7 @@ h1 {
     overflow: auto;
     margin: 100px auto;
     border-radius: 10px;
-    box-shadow: 5px 10px 30px #000;
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
 .textAbout{

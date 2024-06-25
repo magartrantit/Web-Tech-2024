@@ -75,7 +75,7 @@ window.onload = async () => {
             document.getElementById('profileImageDisplay').style.display = 'block';
         }
 
-        document.getElementById('collectionCount').innerText = data.user.collectionCount || 0;
+        
 
         const preferencesResponse = await fetch(`/api/user/food-preferences/${userId}`, {
             method: 'GET',
