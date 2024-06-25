@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
 const db = require('./config/dbConfig');
-const userRoutes = require('./routes/userRoutes');
+const Routes = require('./routes/Routes');
 const querystring = require('querystring');
 
 // Asigură-te că directorul 'uploads' există
@@ -105,7 +105,7 @@ const server = http.createServer((req, res) => {
                 });
             });
         } else {
-            userRoutes(req, res);
+            Routes(req, res);
         }
     } else if (req.url.startsWith('/uploads')) {
         // Servim fișierele din directorul 'uploads'

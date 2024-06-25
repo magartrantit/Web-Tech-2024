@@ -167,9 +167,4 @@ document.getElementById('signout').addEventListener('click', () => {
     window.location.href = '/login';
 });
 
-document.getElementById('signout1').addEventListener('click', () => {
-    
-    localStorage.removeItem('token');
-   
-    window.location.href = '/login';
-});
+
