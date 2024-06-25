@@ -13,7 +13,7 @@ const{
 const authenticateToken = require('../middleware/authMiddleware');
 const db = require('../config/dbConfig');
 
-const userRoutes = async (req, res) => {
+const Routes = async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/users') {
         createUser(req, res);
     } else if (req.method === 'PUT' && req.url.startsWith('/api/users/')) {
@@ -210,4 +210,4 @@ const userRoutes = async (req, res) => {
     }
 };
 
-module.exports = userRoutes;
+module.exports = Routes;
