@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,11 @@
     <link rel="stylesheet" href="https://w3c.github.io/scholarly-html/css/scholarly.min.css">
     <script src="https://w3c.github.io/scholarly-html/js/scholarly.min.js"></script>
 </head>
+
 <body>
     <header>
         <h1>CuPO: Culinary Preferences Organizer - Raport Scholarly HTML</h1>
     </header>
-
     <div role="contentinfo">
         <dl>
             <dt>Autori</dt>
@@ -21,164 +22,180 @@
             </dd>
         </dl>
     </div>
-
     <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
         <h2>Abstract</h2>
-        <p>Acest document detaliaza aspectele tehnice si interactiunea cu utilizator ale proiectului CuPO,o platforma de gestionat preferintele culinare.</p>
+        <p>Acest document detaliaza aspectele tehnice si interactiunea cu utilizator ale proiectului CuPO,o platforma de
+            gestionat preferintele culinare.</p>
     </section>
 
     <!-- 1. Introducere -->
     <section id="introduction" role="doc-introduction">
-        <h2>Introducere</h2>            
+        <h2>Introducere</h2>
         <section id="purpose">
             <h3>Scop</h3>
-            <p>
-                Platforma CuPO are scopul de a oferi o mai buna perspectiva asupra alimentelor si preferintelor culinare ale utilizatorilor.</p>
+            <p>Scopul acestei aplicații este de a oferi utilizatorilor o platformă pentru organizarea și gestionarea
+                preferințelor culinare, facilitând descoperirea și administrarea alimentelor și a preferințelor
+                alimentare. Aplicația urmărește să ofere suport pentru o varietate de funcționalități, inclusiv
+                managementul datelor despre alimente (cum ar fi categorii, prețuri, imagini, restricții, disponibilitate
+                regională, și restaurante specifice), crearea listelor de cumpărături, administrarea utilizatorilor, și
+                generarea de statistici diverse care pot fi exportate în formate deschise. Prin integrarea cu Open Food
+                Facts și utilizarea unui API REST propriu, aplicația își propune să ofere o perspectivă mai bună asupra
+                alimentelor și preferințelor culinare ale utilizatorilor, îmbunătățind astfel experiența lor culinară și
+                facilitând alegeri alimentare informate.</p>
         </section>
-
         <section id="intended-audience">
             <h3>Audienta tinta</h3>
-            <p>Utilizatorii principali ai CuPO sunt persoanele care pun un accent mare asupra alimentatiei.</p>
+            <p>Audiența țintă a acestui proiect sunt persoanele care pun un accent mare asupra alimentației. Aceasta
+                include indivizi interesați de gestionarea și organizarea preferințelor culinare, precum și de
+                descoperirea și administrarea alimentelor și a preferințelor alimentare într-un mod informat și
+                structurat.</p>
         </section>
-
         <section id="product-scope">
             <h3>Viziune</h3>
-            <p>CuPO reprezinta o platforma de organizare a preferintelor culinare, oferind utilizatorilor posibilitatea de a-si gestiona si descoperi preferintele alimentare.</p>
-               </p>
-               
+            <p>Viziunea acestui proiect este de a reprezenta o platformă de organizare a preferințelor culinare, oferind
+                utilizatorilor posibilitatea de a-și gestiona și descoperi preferințele alimentare într-un mod
+                structurat și informat.</p>
         </section>
     </section>
 
-<section id="description" role="doc-introduction">
-    <h2>Descriere generala</h2>
-    <p>Platforma integreaza diverse functionalitati pentru a simplifica procesul de gestionare a informatiilor despre alimente.</p>
-    <section id="product-perspective">
-        <h2>Perspectiva Produsului</h2>
-        <p>Aplicatia isi propune sa ofere un acces foarte usor la informatii legate de alimente.</p>
+    <!-- 2. Descriere Generala -->
+    <section id="description" role="doc-introduction">
+        <h2>Descriere generala</h2>
+        <p>Platforma CuPO (Culinary Preferences Organizer) este concepută pentru a ajuta utilizatorii să gestioneze și
+            să organizeze preferințele lor culinare. Aceasta integrează diverse funcționalități pentru a simplifica
+            procesul de gestionare a informațiilor despre alimente și preferințele culinare. Utilizând o interfață
+            intuitivă și modernă, CuPO permite utilizatorilor să acceseze rapid și ușor informații detaliate despre
+            alimente, inclusiv categorii, prețuri, imagini, restricții alimentare, disponibilitate regională și locații
+            de restaurante specifice.</p>
 
-</section>        
-    <section id="product-functions">
-        <h3>Functiile produsului</h3>
+        <p>CuPO oferă o gamă largă de funcționalități, inclusiv:</p>
         <ul>
-            <li>Publicare preferintelor culinare ale utilizatorilor</li>
-            <li>Sistem de autentificare si inregistrare al utilizatorului</li>
-            <li>Sistem de partajat preferintele culinare cu alti utilizatori</li>
-            <li>Posibilitatea de a obtine diverse informatii despre produsele alementare</li>
-            <li><b>ADMIN Dashboard: </b>Gestionarea conturilor de utilizatori precum si a produselor</li>
+            <li>Crearea și gestionarea listelor de cumpărături personalizate.</li>
+            <li>Posibilitatea de a partaja preferințele culinare cu alți utilizatori.</li>
+            <li>Acces la informații detaliate despre produsele alimentare, prin integrarea cu baza de date Open Food
+                Facts.</li>
+            <li>Sistem de autentificare și înregistrare pentru securizarea conturilor utilizatorilor.</li>
+            <li>Generarea de statistici și rapoarte personalizate care pot fi exportate în diverse formate deschise.
+            </li>
         </ul>
     </section>
     <section id="operating-environment">
         <h3>Mediu de operare</h3>
-        <p>
-            Aceasta aplicatie web este optimizata pentru accesibilitate universala fiind responsive pentru orice tip de dispozitiv.</p>
+        <p>Aceasta aplicatie web este optimizata pentru accesibilitate universala fiind responsive pentru orice tip de
+            dispozitiv.</p>
+            <p>Platforma este dezvoltată folosind tehnologii moderne, precum HTML5, CSS3, JavaScript, și RESTful API-uri, pentru a asigura o experiență de utilizare fluidă și eficientă. De asemenea, CuPO este proiectată pentru a fi complet responsive, oferind o experiență optimizată pe toate tipurile de dispozitive, de la desktop-uri la smartphone-uri.</p>
     </section>
     <section id="constrangeri">
         <h3>Constrangeri</h3>
         <p>Aplicatia nu include functionalitati de comanda sau de cumparare a produselor alimentare.</p>
-        </p>
     </section>
-    <section id="User documentation">
+    <section id="user-documentation">
         <h3>Ghid al utilizatorului</h3>
-        <p>Pagina de home are rolul de a prezenta conceptul aplicatiei si totodata ofera posibilitatea de inregistrare/logare</p>
+        <p>Pagina de home are rolul de a prezenta conceptul aplicatiei si totodata ofera posibilitatea de
+            inregistrare/logare</p>
+            <p>Un alt aspect important al platformei este accentul pus pe securitate și protecția datelor utilizatorilor. Sistemul implementează măsuri de securitate avansate pentru a preveni accesul neautorizat și pentru a proteja informațiile personale ale utilizatorilor.</p>
     </section>
-</section>
-
-<!-- 3. Cerinte pentru interfete externe -->
-<section id="interfaces">
-    <h2>Cerinte pentru interfete externe</h2>
-    <section id="user-interfaces">
-        <h3>Interfete utilizator</h3>
-        <p>
-          Aplicatia CuPO ofera o interfata atractiva in relationare cu domeniul culinar.</p>
-    </section>
-</section>
-
-<section id="system-features">
-    <h2>Functionalitati</h2>
-    <section id="login">
-        <h3>Autentificarea</h3>
-        <p>
-
-            Autentificarea utilizatorilor se efectueaza pe pagina home deoarece nu se doreste ca utilizatorul sa poata utiliza aplicatia fara un cont stocat in baza de date.</p>
-    </section>
-    <section id="register">
-        <h3>Inregistrarea</h3>
-        <p>
-            Inregistrarea utilizatorilor se realizeaza in aceeasi maniera ca logarea acestora prin oferirea email-ului ca informatie suplimentara. </p>
     </section>
 
-    <section id="preferences-visualisation">
-        <h3>Sistem de afisare al preferintelor culinare</h3>
-        <p>
-            Pe pagina de profil se vor putea vizualiza preferintele culinare selectate de catre utilizator.
-        </p>
+    <!-- 3. Cerinte pentru interfete externe -->
+    <section id="interfaces">
+        <h2>Cerinte pentru interfete externe</h2>
+        <section id="user-interfaces">
+            <h3>Interfete utilizator</h3>
+            <p>Aplicatia CuPO ofera o interfata atractiva in relationare cu domeniul culinar.</p>
+            <p>CuPO are potențialul de a transforma modul în care utilizatorii își organizează și gestionează preferințele culinare, oferind o soluție centralizată și eficientă. Prin facilitarea accesului la informații detaliate despre alimente și prin oferirea de funcționalități avansate de gestionare, platforma își propune să îmbunătățească experiența culinară a utilizatorilor și să le permită să facă alegeri alimentare mai informate și sănătoase.</p>
+        </section>
     </section>
 
-    <section id="admin-dashboard">
-        <h3>Admin Dashboard</h3>
-        <p>
-            Administratorul are la dispozitie un meniu ce ii permite sa efectueze urmatoarele operatiuni:
+    <!-- 4. Functionalitati -->
+    <section id="system-features">
+        <h2>Functionalitati</h2>
+        <section id="login">
+            <h3>Autentificarea</h3>
+            <p>Autentificarea utilizatorilor se efectueaza pe pagina login deoarece nu se doreste ca utilizatorul sa
+                poata utiliza aplicatia fara un cont stocat in baza de date. Dupa ce utilizatorul a fost autentificat, aplicatia il va redirectiona catre pagina home unde acesta va putea interactiona direct cu alimentele.</p>
+        </section>
+        <section id="register">
+            <h3>Inregistrarea</h3>
+            <p>Inregistrarea utilizatorilor se realizeaza in aceeasi maniera ca logarea acestora prin oferirea
+                email-ului ca informatie suplimentara.</p>
+        </section>
+        <section id="preferences-visualisation">
+            <h3>Sistem de afisare al preferintelor culinare</h3>
+            <p>Pe pagina de profil se vor putea vizualiza preferintele culinare selectate de catre utilizator, imaginea sa de profil, fiind capabil sa o schimbe si de asemenea va putea da export intr-un format CSV sau PDF la preferintele sale culinare.</p>
+        </section>
+        <section id="admin-dashboard">
+            <h3>Admin Dashboard</h3>
+            <p>Administratorul are la dispozitie un meniu ce ii permite sa efectueze urmatoarele operatiuni:</p>
             <ul>
                 <li>Administrare cont de user:</li>
-                <p>Administratorul poate cauta un user si are posibilitatea sa-l stearga/blocheze.</p>
+                <p>Administratorul poate cauta un user si are posibilitatea sa-l stearga sau sa schimbe datele acelui utilizator(user, parola)</p>
                 <li>Gestionarea materialelor:</li>
-                <p> Administratorul poate adauga, sterge sau modifica materialele din baza de date.
-                <li>Comunicarea cu userul:</li>
-                <p>Administratorul poate comunica cu userul pentru a implementa feedbackul direct de la utilizatori</p>
-                </p>
+                <p>Administratorul poate adauga materialele in baza de date a alimentelor.</p>
             </ul>
-        </p>
+        </section>
     </section>
 
     <!-- 5. UI/UX -->
     <section id="user-interface" role="doc-introduction">
         <h2>Interfata si Motivatie</h2>
-        <p>
-            Interfata aplicatitei este simpla si in acelasi timp moderna deoarece contine concepte curente cum ar fi: colturi rotunjite si  elemente menite sa atraga utilizatorul.
-        </p>
-        <p>
-            Pentru crearea layout-ului fiecare pagina s-a structurat folosind flexbox.
-        </p>
-        <p>
-            Foile de stil css sunt create pentru fiecare pagina in parte, astfel incat sa se evite suprascrierea stilurilor si pentru a se asigura ca fiecare pagina are un aspect unic.
-        </p>
-        <p>
-            Aplicatia este responsive, astfel incat sa se poata adapta la orice tip de dispozitiv.
-        </p>
-        <p>
-            Pentru a naviga pe pagina web:
-            -Veti incepe pe pagina de home, unde este sectiunea de login/signup, dupa care va puteti face un cont sau va puteti loga, care mai apoi va va trimite pe pagina principala a siteului.
-            -Aceasta pagina are sectiunile cu tipurile de mancare si alimentele din acea familie. In partea din stanga aveti sidebaarul, cu care fa puteti deloga, sau va puteti accesa profilul si lista de cumparaaturi.
-            -In pagina cu lista de cumparaturi va puteti creea mai multe liste si le puteti customiza
-            -In pagina profilului aveti cataloagele cu preferintele culinare si va urma sa implementam si sectiunea cu grupurile de persoane.
-            -De asemenea, pagina adminului o puteti accesa din pagina de logare cu butonul admin din sectiunea de login.
-        </p>
+        <p>Interfata aplicatitei este simpla si in acelasi timp moderna deoarece contine concepte curente cum ar fi:
+            colturi rotunjite si elemente menite sa atraga utilizatorul.</p>
+        <p>Pentru crearea layout-ului fiecare pagina s-a structurat folosind flexbox.</p>
+        <p>Foile de stil css sunt create pentru fiecare pagina in parte, astfel incat sa se evite suprascrierea
+            stilurilor si pentru a se asigura ca fiecare pagina are un aspect unic.</p>
+        <p>Aplicatia este responsive, astfel incat sa se poata adapta la orice tip de dispozitiv.</p>
+        <p>Pentru a naviga pe pagina web:</p>
+        <ul>
+            <li>Utilizatorul incepe pe pagina de home, unde este sectiunea de login/signup, dupa care isi va putea crea un cont sau
+                se va putea autentifica. Ulterior va fi trimis pe pagina principala a site-ului</li>
+            <li>Aceasta pagina are sectiunile de search, in care puteti cauta orice aliment disponibil in aplicatie. Mai jos se afla filtrele pentru produse, acestea find: butonul All, care afiseaza toate alimentele existente, butonul Categories, care filtreaza alimentele dupa categoriile in care se afla(carne, fructe, legume), butonul de Countries, care filtreaza alimentele dupa tari, butonul de Restaurants care filtreaza alimentele dupa restaurantele in care se pot servi, butonul de Price, care seteaza un interval de pret in care sa se incadreze alimentele, butonul de Calories care functioneaza asemanator cu butonul de Price si butonul Doesn't contain, care are optiunile de aditivi si alergeni, selectand alimentele care nu au adivi sau/si alergeni.In partea din
+                stanga aveti sidebaarul, cu care va puteti deloga, sau va puteti accesa profilul si lista de
+                cumparaturi.</li>
+            <li>In pagina cu lista de cumparaturi va puteti crea mai multe liste si le puteti customiza.</li>
+            <li>In pagina profilului aveti cataloagele cu preferintele culinare si butoanele de export in CSV siPDF.</li>
+            <li>De asemenea, pagina adminului o puteti accesa din pagina de logare cu butonul admin din sectiunea de
+                login.</li>
+        </ul>
     </section>
 
+    <!-- 6. Alte cerinte nonfunctionale -->
     <section id="admin-page">
         <h2>Pagina Administratorului</h2>
-            <p>
-                Pagina administratorului are menirea de a putea modifica parti importante ale bazei de date precum: modificarea sau stergerea unui nou utilizator, adaugarea unui nou produs sau stergerea unuia deja existent.
-            </p>
+        <p>Pagina administratorului are menirea de a putea modifica parti importante ale bazei de date precum:
+            modificarea sau stergerea unui utilizatorsi adaugarea unui nou produs.
+        </p>
     </section>
-</section>
-
-<!-- 5. Alte cerinte nonfunctionale -->
-<section id="nonfunctional-requirements">
-    <h2>Alte cerinte nonfunctionale</h2>
-    <section id="performance-requirements">
-        <h3>Cerinte de performanta</h3>
-        <p>Platforma este optimizata pentru performanta ridicata, cu timpuri de incarcare rapide si interactiuni receptive.</p>
+    <section id="nonfunctional-requirements">
+        <h2>Alte cerinte nonfunctionale</h2>
+        <section id="performance-requirements">
+            <h3>Cerinte de performanta</h3>
+            <p>Platforma este optimizata pentru performanta ridicata, cu timpuri de incarcare rapide si interactiuni
+                receptive.</p>
+        </section>
+        <section id="security-requirements">
+            <h3>Cerinte de securitate</h3>
+            <p>Aplicatia include masuri de securitate adecvate pentru a proteja datele utilizatorilor si a preveni
+                accesul neautorizat.</p>
+        </section>
+        <section id="scalability-requirements">
+            <h3>Cerinte de scalabilitate</h3>
+            <p>Aplicatia va fi scalabila pentru a putea gestiona un numar mare de utilizatori si date fara a afecta
+                performanta.</p>
+        </section>
     </section>
-</section>
 
-<!-- Referinte -->
-<section id="references">
-    <h2>Referinte</h2>
-    <ul>
-        <li><a href="https://www.w3.org/">Standardele W3C</a></li>
-        <li><a href="https://developer.mozilla.org/">Documente MDN Web</a></li>
-    </ul>
-</section>
+    <!-- 7. Referinte -->
+    <section id="references">
+        <h2>Referinte</h2>
+        <ul>
+            <li><a href="https://www.w3.org/">Standardele W3C</a></li>
+            <li><a href="https://developer.mozilla.org/">Documente MDN Web</a></li>
+            <li><a href="https://world.openfoodfacts.org/">Open Food Facts</a></li>
+            <li><a href="https://restfulapi.net/">RESTful API</a></li>
+            <li><a href="https://chatgpt.com/"></a></li>
+        </ul>
+    </section>
 </body>
+
 </html>
